@@ -52,5 +52,3 @@ wheels/
 # Logs
 *.log
 
-# Local Junction
-.agents/
