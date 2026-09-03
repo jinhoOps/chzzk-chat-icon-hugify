@@ -14,3 +14,15 @@
   - Open Knowledge Format (OKF v0.1) 기반 LLM-Wiki 토폴로지 구조화
 - **영향 파일**: `AGENTS.md`, `GEMINI.md`, `.gemini/`, `.agents/`
 - **상태**: 정상 가동 준비 완료
+
+---
+
+## [2026-09-04] setup | CodeGraph CLI 설치 및 프로젝트 인덱스 초기화 완료
+
+- **작업 내용**: AI 코딩 에이전트의 코드베이스 심볼 분석 및 영향도 평가를 위해 CodeGraph 인프라 연동
+  - CLI 글로벌 버전 확인 및 에이전트 MCP 바인딩 갱신 (`codegraph install -y`)
+  - 저장소 내 CodeGraph 프로젝트 초기화 (`codegraph init -y`)
+  - `.codegraph/.gitignore`를 통한 로컬 인덱스 DB(`codegraph.db`) 커밋 차단 및 Git 위생 준수
+  - `AGENTS.md` 및 지식 하네스에 CodeGraph 운영 가이드라인 반영
+- **영향 파일**: `.codegraph/.gitignore`, `AGENTS.md`, `log.md`
+- **상태**: 인덱스 정상 초기화 완료 (`codegraph status` 검증 통과)

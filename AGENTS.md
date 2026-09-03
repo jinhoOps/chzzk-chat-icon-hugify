@@ -65,7 +65,16 @@
 
 ---
 
-## 6. Canonical Documents Map (핵심 문서 맵)
+## 6. CodeGraph (코드 지식 그래프 가이드)
+
+저장소에는 `.codegraph/`가 초기화되어 로컬 지식 그래프 인덱스를 관리합니다.
+- **용도**: AI 에이전트의 심볼 영향 분석(`codegraph impact`), 호출 관계 탐색(`codegraph callers`/`callees`), 복합 컨텍스트 구축(`codegraph explore`/`context`)에 활용합니다.
+- **운영 규칙**: 일반 작업자는 매번 재초기화(`codegraph init`)하지 않으며, 코드 변경 후 인덱스 갱신이 필요할 때는 `codegraph sync`를 사용합니다.
+- **Git 위생**: `.codegraph/.gitignore`를 통해 로컬 SQLite DB 및 소켓/로그 파일이 커밋되지 않도록 보호합니다.
+
+---
+
+## 7. Canonical Documents Map (핵심 문서 맵)
 
 - **마스터 지식 인덱스**: [.gemini/knowledge/wiki/index.md](.gemini/knowledge/wiki/index.md)
 - **운영 헌법**: [.gemini/knowledge/wiki/core/operating_principles.md](.gemini/knowledge/wiki/core/operating_principles.md)
