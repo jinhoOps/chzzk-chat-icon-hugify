@@ -26,6 +26,14 @@ describe('online installer test suite (install-online.ps1)', () => {
         scriptContent.includes('https://github.com/jinhoOps/chzzk-chat-icon-hugify/archive/refs/heads/main.zip'),
         'Must construct canonical zip archive URL'
       );
+      assert.ok(
+        scriptContent.includes('https://api.github.com/repos/$RepoOwner/$RepoName/releases/latest'),
+        'Must query the latest GitHub Release metadata'
+      );
+      assert.ok(
+        scriptContent.includes('hugify-extension.zip'),
+        'Must use the stable Release asset name'
+      );
     });
 
     it('defaults to Google Chrome as the primary target', () => {
@@ -45,6 +53,10 @@ describe('online installer test suite (install-online.ps1)', () => {
         !scriptContent.includes('--load-extension='),
         'Must use existing profiles'
       );
+      assert.ok(scriptContent.includes('Get-LatestRelease'), 'Must resolve Release metadata');
+      assert.ok(scriptContent.includes('manifestData.version'), 'Must compare installed manifest version');
+      assert.ok(scriptContent.includes('staging'), 'Must stage downloaded files before replacement');
+      assert.ok(scriptContent.includes('backup'), 'Must keep a rollback directory during replacement');
     });
   });
 
@@ -75,6 +87,12 @@ describe('online installer test suite (install-online.ps1)', () => {
       `;
       const res = spawnSync('powershell', ['-NoProfile', '-Command', psCommand], { encoding: 'utf8' });
       assert.equal(res.status, 0, `[scriptblock]::Create failed: ${res.stderr || res.stdout}`);
+    });
+
+    it('keeps the Release and branch fallback paths in the script', () => {
+      assert.match(scriptContent, /Release API|GitHub Release/, 'Must explain Release resolution');
+      assert.match(scriptContent, /main\.zip/, 'Must retain main.zip fallback');
+      assert.match(scriptContent, /\$Refresh/, 'Must retain forced refresh support');
     });
   });
 

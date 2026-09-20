@@ -146,13 +146,15 @@
 - 사용자 요청에 따라 README 제목을 `커져라! Hugify!`로 바꾸고 소개 문구를 통일했다.
 - 설치 명령, 저장소 주소, 확장 프로그램 코드는 변경하지 않는다.
 
----
+## [2026-09-20] feature | GitHub Release 기반 최신 버전 갱신
 
-## [2026-09-20] fix | 원격 설치기 UTF-8 BOM 제거 및 대화형 브라우저 선택(Chrome/Whale) 지원
-
-- **작업 내용**: 원라인 부트스트랩 명령(`irm ... | iex`) 실행 시 PowerShell 5.1 구문 파싱 예외 해결 및 브라우저 선택 편의성 제공
-  - `install-online.ps1`: UTF-8 BOM(`\uFEFF`) 제거로 `irm | iex` 및 `[scriptblock]::Create` 실행 시 토큰 파싱 에러(식 또는 문에서 예기치 않은 param/CmdletBinding 토큰) 원천 해결
-  - `install-online.ps1`: 스크립트 상단 주석 및 내부 주석을 ASCII로 정제하여 PowerShell 5.1 파일 시스템 ANSI 코드페이지(CP949) 오프셋 불일치 현상 방지
+- 원격 설치기가 `releases/latest`의 `hugify-extension.zip`과 로컬 `manifest.json` 버전을 비교하도록 확장했다.
+- 새 버전이 있을 때만 내려받고, `-Refresh`는 같은 버전도 강제 재설치한다. Release API가 없으면 기존 `main.zip` fallback을 유지한다.
+- 다운로드 파일은 manifest 검증 후 staging에서 기존 설치 폴더와 교체하고, 교체 실패 시 backup 복구를 시도한다.
+- `.github/workflows/release.yml`은 `vX.Y.Z` 태그와 `manifest.json`/`package.json` 버전을 확인한 뒤 확장 런타임 ZIP을 GitHub Release로 만든다.
+- `README.md`에 사용자 갱신과 태그 기반 배포 절차를 추가했다. 이름 표기는 `치지직 이모티콘 커져라! Hugify!`로 유지한다.
+- 검증: `npm test` 56/56 통과, Release ZIP 교체 통합 테스트 통과, Chrome/Whale dry-run 및 PowerShell AST 통과.
+- 계약: [Release 기반 최신 버전 갱신](./plans/sprint_release_update.md).
   - `install-online.ps1`: 브라우저 옵션(-Browser) 미지정 시 Chrome과 Whale이 동시 설치되어 있으면 대화형 선택 메뉴(1. Chrome, 2. Whale)를 제공하도록 개선 ($b 단축 변수도 계속 지원)
   - `tests/online_installer.test.js`: UTF-8 BOM 부재 검증 및 `[scriptblock]::Create` 유효성 검증 테스트 추가
 - **영향 파일**: `install-online.ps1`, `tests/online_installer.test.js`, `.gemini/knowledge/wiki/log.md`

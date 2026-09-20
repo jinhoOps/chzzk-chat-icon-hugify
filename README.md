@@ -40,11 +40,37 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 <details>
 <summary>🔄 이미 설치된 버전 갱신하기</summary>
 
-최신 버전으로 다시 받으려면 `-Refresh` 옵션을 붙여 실행하세요. 기존에 설치한 프로필을 선택하고 확장 관리 화면에서 Hugify의 새로고침 버튼을 누르세요. Whale은 `-Browser whale`도 붙입니다.
+처음 설치할 때와 같은 Chrome 명령을 다시 실행하면 최신 GitHub Release를 자동으로 확인합니다.
+
+- 새 버전이 있으면 최신 파일만 내려받아 기존 설치 폴더를 교체합니다.
+- 이미 최신이면 파일을 다시 받지 않습니다.
+- 다운로드나 교체에 실패하면 기존 파일을 보존합니다.
+
+파일을 강제로 다시 받거나 설치를 복구하려면 `-Refresh`를 붙이세요. Whale은 `-Browser whale`도 함께 붙입니다. 파일 갱신 뒤 열려 있는 확장 관리 화면에서 Hugify의 **새로고침** 버튼을 누르고 치지직 페이지도 새로고침하세요.
 
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Refresh
 ```
+</details>
+
+<details>
+<summary>📦 개발자가 새 버전 배포하는 방법</summary>
+
+확장 기능을 수정한 뒤 `manifest.json`과 `package.json`의 버전을 같은 값으로 올리고 태그를 푸시하면 됩니다.
+
+```powershell
+# 예: 1.0.0 → 1.0.1
+# manifest.json, package.json의 version을 모두 1.0.1로 수정
+npm test
+git add manifest.json package.json src icons README.md
+git commit -m "release: v1.0.1"
+git push origin main
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+태그가 `v1.0.1` 형식이면 GitHub Actions가 버전을 확인하고 `hugify-extension.zip` Release를 자동으로 만듭니다. 사용자가 다음에 설치 명령을 실행하면 이 Release를 기준으로 갱신합니다. 태그와 두 manifest의 버전이 다르면 Release 생성을 중단합니다.
+
 </details>
 
 ---
@@ -53,7 +79,7 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 <summary>🛡️ 설치 방식과 보안 설명</summary>
 
 - **원격 코드 투명성**: 위 명령은 GitHub 공식 저장소의 [`install-online.ps1`](https://github.com/jinhoOps/chzzk-chat-icon-hugify/blob/main/install-online.ps1) 스크립트를 다운로드하여 실행합니다. 실행 전 누구나 링크를 통해 원본 코드를 직접 검토하실 수 있습니다.
-- **안정적인 영구 설치 경로**: GitHub `main` 브랜치의 최신 소스를 임시 폴더가 아닌 `%LOCALAPPDATA%\ChzzkIconMagnifier\app`에 안전하게 보관합니다. 실행 후 소스 파일이 임의로 삭제되어 브라우저의 확장 참조가 깨지는 문제를 원천 차단합니다.
+- **안정적인 영구 설치 경로**: 최신 GitHub Release 자산을 임시 폴더가 아닌 `%LOCALAPPDATA%\ChzzkIconMagnifier\app`에 안전하게 보관합니다. Release가 아직 없으면 `main` 브랜치를 fallback으로 사용합니다.
 - **기존 프로필 선택**: 저장된 프로필 이름과 폴더를 읽어 선택한 프로필의 확장 관리 화면을 엽니다. 별도 테스트 프로필을 만들지 않습니다.
 - **비침습성 보장**: 관리자 권한이나 Windows 레지스트리 수정을 일절 요구하지 않으며, 기존 일상 브라우저 프로필의 설정이나 개발자 모드를 강제로 변조하지 않습니다.
 
