@@ -21,24 +21,32 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 ```
 *(또는 간단히: `$b="whale"; irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1 | iex`)*
 
-> [!TIP]
-> **최신 버전 갱신(Update)**이 필요할 때는 `-Refresh` 옵션을 붙여 실행하면 GitHub `main`의 최신 소스로 안전하게 재설치됩니다:
-> ```powershell
-> & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Refresh
-> ```
+<details>
+<summary>🔄 이미 설치된 버전 갱신하기</summary>
+
+최신 버전으로 다시 받으려면 `-Refresh` 옵션을 붙여 실행하세요.
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Refresh
+```
+</details>
 
 ---
 
-## 🛡️ 원격 실행 보안 및 동작 원리 안내
+<details>
+<summary>🛡️ 설치 방식과 보안 설명</summary>
 
 - **원격 코드 투명성**: 위 명령은 GitHub 공식 저장소의 [`install-online.ps1`](https://github.com/jinhoOps/chzzk-chat-icon-hugify/blob/main/install-online.ps1) 스크립트를 다운로드하여 실행합니다. 실행 전 누구나 링크를 통해 원본 코드를 직접 검토하실 수 있습니다.
 - **안정적인 영구 설치 경로**: GitHub `main` 브랜치의 최신 소스를 임시 폴더가 아닌 `%LOCALAPPDATA%\ChzzkIconMagnifier\app`에 안전하게 보관합니다. 실행 후 소스 파일이 임의로 삭제되어 브라우저의 확장 참조가 깨지는 문제를 원천 차단합니다.
 - **격리 프로필(`--user-data-dir`) 사용**: Chromium 보안 정책상 기본 프로필이 이미 켜져 있으면 `--load-extension` 플래그가 무시됩니다. 따라서 기존 브라우저 창과 충돌 없이 확장을 즉시 띄우기 위해 전용 격리 프로필(`%LOCALAPPDATA%\ChzzkIconMagnifier\profile`)을 생성하여 안전하게 실행합니다.
 - **비침습성 보장**: 관리자 권한이나 Windows 레지스트리 수정을 일절 요구하지 않으며, 기존 일상 브라우저 프로필의 설정이나 개발자 모드를 강제로 변조하지 않습니다.
 
+</details>
+
 ---
 
-## 🛠️ 기존 메인 프로필에 영구 등록하고 싶은 경우 (Fallback)
+<details>
+<summary>🛠️ 기존 메인 프로필에 영구 등록하고 싶은 경우 (선택)</summary>
 
 일상적으로 사용하시는 기본 브라우저 프로필에 확장을 상시 등록해두고 싶다면, 아래 명령어로 확장 관리자 페이지를 열고 안내에 따라 1회 등록하시면 됩니다:
 
@@ -54,9 +62,12 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
    - `C:\Users\<사용자이름>\AppData\Local\ChzzkIconMagnifier\app`
 5. 등록이 완료되면 치지직 라이브에서 영구적으로 호버 확대가 작동합니다.
 
+</details>
+
 ---
 
-## 💻 로컬 저장소에서 실행하는 방법 (개발자용)
+<details>
+<summary>💻 로컬 저장소에서 실행하는 방법 (개발자용)</summary>
 
 이미 프로젝트를 클론했거나 로컬 폴더에 소스를 다운로드한 경우, 폴더 내의 런처를 직접 사용하실 수 있습니다:
 
@@ -76,9 +87,12 @@ npm run launch:whale             :: Whale 실행
 npm test                         :: 단위 테스트 실행
 ```
 
+</details>
+
 ---
 
-## ✨ 핵심 기능
+<details>
+<summary>✨ 핵심 기능</summary>
 
 | 기능 | 설명 |
 |---|---|
@@ -89,9 +103,12 @@ npm test                         :: 단위 테스트 실행
 | **📏 확대 크기 선택** | **원본 (60×60px)**, **확대 (90×90px, 추천 기본값)**, **대형 (120×120px)** 원클릭 선택 |
 | **이모티콘 코드 표시** | `{:slp1:}` 등 이모티콘 고유 호출 코드를 툴팁 하단에 배지로 함께 안내 |
 
+</details>
+
 ---
 
-## 📁 프로젝트 파일 구조
+<details>
+<summary>📁 프로젝트 파일 구조 (개발자용)</summary>
 
 ```
 치지직아이콘/
@@ -119,11 +136,16 @@ npm test                         :: 단위 테스트 실행
 └── README.md
 ```
 
+</details>
+
 ---
 
-## 🧪 테스트 실행
+<details>
+<summary>🧪 테스트 실행 (개발자용)</summary>
 
 ```bash
 npm test
 ```
-*Node.js 기본 테스트 러너(`node:test`)를 사용하여 외부 무거운 종속성 없이 **43개 전체 검증 테스트가 3초 이내로 통과**합니다.*
+*Node.js 기본 테스트 러너(`node:test`)를 사용하여 외부 무거운 종속성 없이 **45개 전체 검증 테스트가 통과**합니다.*
+
+</details>

@@ -110,3 +110,11 @@
   - 실제 사용자 HTML 스니펫 기반 회귀 테스트 추가 및 단위 테스트 모의 DOM CSS 셀렉터 매칭 고도화 (`tests/content_logic.test.js`, `tests/utils.test.js`)
 - **영향 파일**: `src/utils.js`, `src/content.js`, `src/popup.html`, `src/popup.js`, `tests/content_logic.test.js`, `tests/utils.test.js`, `.gemini/knowledge/wiki/log.md`
 - **상태**: 45/45 테스트 전원 통과 완료
+
+---
+
+## [2026-09-20] docs | README 빠른 시작과 부가 설명 접기
+
+- **작업 내용**: README 상단에는 Windows 11 Chrome 기본 명령과 Whale 명령만 우선 노출하고, 갱신/보안/수동 등록/개발자용 내용을 HTML `<details>` 접기 영역으로 정리
+- **추가 정합성 수정**: 최신 테스트 수를 45개로 갱신
+- **영향 파일**: `README.md`, `.gemini/knowledge/wiki/log.md`
