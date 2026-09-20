@@ -219,3 +219,11 @@
 - `manifest.json`, `package.json`, 팝업 표시 버전을 `1.0.1`로 일치시켰다.
 - `v1.0.1` 태그를 `main`에 푸시하고 GitHub Actions Release workflow를 성공적으로 완료했다.
 - Release asset `hugify-extension.zip`이 생성되어 최신 설치 명령에서 사용할 수 있다.
+
+---
+
+## [2026-09-20] docs | README v1.0.1 배포 정보 갱신
+
+- README 상단과 설치 갱신 섹션에 현재 배포 버전 `v1.0.1` 및 GitHub Release 링크를 추가했다.
+- 개발자 배포 예시는 다음 릴리스인 `v1.0.2` 기준으로 수정하고, 브랜딩/아이콘 회귀 테스트 파일을 프로젝트 구조에 반영했다.
+- `v1.0.1` Release와 `hugify-extension.zip` asset 존재를 확인했다.

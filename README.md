@@ -2,6 +2,8 @@
 
 치지직 이모티콘, 커져라! 마우스를 올리면 크게 미리 볼 수 있는 확장 프로그램입니다.
 
+현재 배포 버전은 **v1.0.1**입니다. [GitHub Release](https://github.com/jinhoOps/chzzk-chat-icon-hugify/releases/latest)에서 설치 파일을 직접 받을 수도 있습니다.
+
 ---
 
 ## 빠른 시작 · 설치
@@ -43,6 +45,8 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 
 처음 설치할 때와 같은 Chrome 명령을 다시 실행하면 최신 GitHub Release를 자동으로 확인합니다.
 
+현재 최신 버전은 [v1.0.1](https://github.com/jinhoOps/chzzk-chat-icon-hugify/releases/tag/v1.0.1)이며, 설치기가 기존 버전과 비교해 필요한 경우에만 갱신합니다.
+
 - 새 버전이 있으면 최신 파일만 내려받아 기존 설치 폴더를 교체합니다.
 - 이미 최신이면 파일을 다시 받지 않습니다.
 - 다운로드나 교체에 실패하면 기존 파일을 보존합니다.
@@ -60,17 +64,17 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 확장 기능을 수정한 뒤 `manifest.json`과 `package.json`의 버전을 같은 값으로 올리고 태그를 푸시하면 됩니다.
 
 ```powershell
-# 예: 1.0.0 → 1.0.1
-# manifest.json, package.json의 version을 모두 1.0.1로 수정
+# 예: 1.0.1 → 1.0.2
+# manifest.json, package.json의 version을 모두 1.0.2로 수정
 npm test
 git add manifest.json package.json src icons README.md
-git commit -m "release: v1.0.1"
+git commit -m "release: v1.0.2"
 git push origin main
-git tag v1.0.1
-git push origin v1.0.1
+git tag v1.0.2
+git push origin v1.0.2
 ```
 
-태그가 `v1.0.1` 형식이면 GitHub Actions가 버전을 확인하고 `hugify-extension.zip` Release를 자동으로 만듭니다. 사용자가 다음에 설치 명령을 실행하면 이 Release를 기준으로 갱신합니다. 태그와 두 manifest의 버전이 다르면 Release 생성을 중단합니다.
+태그가 `v1.0.2` 형식이면 GitHub Actions가 버전을 확인하고 `hugify-extension.zip` Release를 자동으로 만듭니다. 사용자가 다음에 설치 명령을 실행하면 이 Release를 기준으로 갱신합니다. 태그와 두 manifest의 버전이 다르면 Release 생성을 중단합니다.
 
 </details>
 
@@ -185,6 +189,7 @@ npm test                         :: 단위 테스트 실행
 ├── tests/
 │   ├── utils.test.js          # 핵심 유틸리티 단위 테스트
 │   ├── content_logic.test.js  # 사용자 HTML 샘플 호환 및 설정 테스트
+│   ├── branding.test.js       # Hugify 브랜딩 및 아이콘 크기 검증 테스트
 │   ├── launcher.test.js       # 브라우저 탐지 및 CLI 인자 단위 테스트
 │   └── online_installer.test.js # 원격 부트스트랩 AST/인자/오프라인 검증 테스트
 ├── scripts/
