@@ -5,7 +5,8 @@ import {
   isMagnifierActive,
   calculateTooltipPosition,
   extractEmoticonInfo,
-  DEFAULT_SETTINGS
+  DEFAULT_SETTINGS,
+  SIZE_PRESETS
 } from '../src/utils.js';
 
 describe('utils.js test suite', () => {
@@ -46,6 +47,17 @@ describe('utils.js test suite', () => {
 
     it('ignores legacy snooze values', () => {
       assert.equal(isMagnifierActive({ enabled: true, snoozedUntil: Date.now() + 5000 }), true);
+    });
+  });
+
+  describe('size settings', () => {
+    it('uses 90 as the default and exposes the two supported sizes', () => {
+      assert.deepEqual(DEFAULT_SETTINGS, { enabled: true, size: 90 });
+      assert.deepEqual(SIZE_PRESETS, [90, 120]);
+    });
+
+    it('does not expose the removed original size', () => {
+      assert.equal(SIZE_PRESETS.includes(60), false);
     });
   });
 

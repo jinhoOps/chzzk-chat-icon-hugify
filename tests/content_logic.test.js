@@ -164,7 +164,7 @@ describe('Chzzk user snippet test suite', () => {
     assert.equal(extractEmoticonInfo(donateBtn), null, 'Donation button must be excluded');
   });
 
-  it('keeps only the enabled setting by default', () => {
-    assert.deepEqual(DEFAULT_SETTINGS, { enabled: true });
+  it('keeps enabled and the default size as the only settings', () => {
+    assert.deepEqual(DEFAULT_SETTINGS, { enabled: true, size: 90 });
   });
 });

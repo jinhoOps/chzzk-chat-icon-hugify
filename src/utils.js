@@ -4,7 +4,10 @@
 
 export const DEFAULT_SETTINGS = {
   enabled: true,
+  size: 90,
 };
+
+export const SIZE_PRESETS = [90, 120];
 
 /**
  * 네이버 치지직 CDN(pstatic)의 썸네일 축소 쿼리스트링(?type=f60_60 등)을 제거하여

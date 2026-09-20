@@ -6,9 +6,10 @@
 (function () {
   'use strict';
 
-  const MAGNIFIER_SIZE = 90;
+  const DEFAULT_MAGNIFIER_SIZE = 90;
+  const MAGNIFIER_SIZES = [90, 120];
   const TOOLTIP_PADDING = 16;
-  let settings = { enabled: true };
+  let settings = { enabled: true, size: DEFAULT_MAGNIFIER_SIZE };
 
   let tooltipEl = null;
   let tooltipImg = null;
@@ -37,6 +38,11 @@
 
   function isMagnifierActive() {
     return Boolean(settings && settings.enabled !== false);
+  }
+
+  function getMagnifierSize() {
+    const size = Number(settings?.size);
+    return MAGNIFIER_SIZES.includes(size) ? size : DEFAULT_MAGNIFIER_SIZE;
   }
 
   function calculateTooltipPosition(
@@ -165,6 +171,11 @@
 
     tooltipEl.appendChild(imgWrap);
     document.body.appendChild(tooltipEl);
+    applySizeStyle();
+  }
+
+  function applySizeStyle() {
+    document.documentElement.style.setProperty('--chzzk-mag-size', `${getMagnifierSize()}px`);
   }
 
   function showTooltip(info) {
@@ -182,8 +193,9 @@
     tooltipImg.src = highResSrc;
 
     const anchorRect = anchor.getBoundingClientRect();
-    const tooltipWidth = MAGNIFIER_SIZE + TOOLTIP_PADDING;
-    const tooltipHeight = MAGNIFIER_SIZE + TOOLTIP_PADDING;
+    const tooltipSize = getMagnifierSize();
+    const tooltipWidth = tooltipSize + TOOLTIP_PADDING;
+    const tooltipHeight = tooltipSize + TOOLTIP_PADDING;
     const position = calculateTooltipPosition(
       anchorRect,
       tooltipWidth,
@@ -258,15 +270,28 @@
   function initSettings() {
     if (typeof chrome === 'undefined' || !chrome.storage?.local) return;
 
-    chrome.storage.local.get(['enabled'], (result) => {
-      settings = { enabled: result?.enabled !== false };
+    chrome.storage.local.get(['enabled', 'size'], (result) => {
+      const size = Number(result?.size);
+      settings = {
+        enabled: result?.enabled !== false,
+        size: MAGNIFIER_SIZES.includes(size) ? size : DEFAULT_MAGNIFIER_SIZE,
+      };
+      applySizeStyle();
     });
 
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area !== 'local' || !Object.prototype.hasOwnProperty.call(changes, 'enabled')) return;
+      if (area !== 'local') return;
 
-      settings.enabled = changes.enabled.newValue !== false;
-      if (!settings.enabled) hideTooltip(true);
+      if (Object.prototype.hasOwnProperty.call(changes, 'enabled')) {
+        settings.enabled = changes.enabled.newValue !== false;
+        if (!settings.enabled) hideTooltip(true);
+      }
+
+      if (Object.prototype.hasOwnProperty.call(changes, 'size')) {
+        const size = Number(changes.size.newValue);
+        settings.size = MAGNIFIER_SIZES.includes(size) ? size : DEFAULT_MAGNIFIER_SIZE;
+        applySizeStyle();
+      }
     });
   }
 
@@ -275,7 +300,7 @@
     document.addEventListener('mouseover', handleMouseOver, { passive: true });
     document.addEventListener('mouseout', handleMouseOut, { passive: true });
     document.addEventListener('click', handleClick, { passive: true });
-    console.log('[CHZZK Icon Magnifier] 치지직 채팅 이모티콘 확대가 활성화됨');
+    console.log('[CHZZK Hugify] 치지직 이모티콘 확대가 활성화됨');
   }
 
   if (document.readyState === 'loading') {

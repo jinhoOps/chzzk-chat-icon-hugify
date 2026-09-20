@@ -1,6 +1,7 @@
 /* 치지직 채팅 이모티콘 확대 미리보기 */
 
 :root {
+  --chzzk-mag-size: 90px;
   --chzzk-mag-green: #00ffa3;
   --chzzk-mag-card-bg: #1f2126;
   --chzzk-mag-border: rgba(0, 255, 163, 0.35);
@@ -37,8 +38,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 90px;
-  height: 90px;
+  width: var(--chzzk-mag-size, 90px);
+  height: var(--chzzk-mag-size, 90px);
   overflow: hidden;
   background: rgba(0, 0, 0, 0.35);
   border-radius: 6px;
@@ -46,8 +47,8 @@
 
 #chzzk-icon-magnifier-tooltip img.chzzk-mag-img {
   display: block;
-  width: 90px;
-  height: 90px;
+  width: var(--chzzk-mag-size, 90px);
+  height: var(--chzzk-mag-size, 90px);
   object-fit: contain;
   image-rendering: auto;
 }
