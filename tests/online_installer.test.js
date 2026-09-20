@@ -63,6 +63,19 @@ describe('online installer test suite (install-online.ps1)', () => {
       const res = spawnSync('powershell', ['-NoProfile', '-Command', psCommand], { encoding: 'utf8' });
       assert.equal(res.status, 0, `PowerShell parse failed: ${res.stderr || res.stdout}`);
     });
+
+    it('has no UTF-8 BOM and creates a valid scriptblock for irm | iex', () => {
+      const buf = fs.readFileSync(INSTALL_ONLINE_PS1);
+      assert.ok(buf[0] !== 0xef || buf[1] !== 0xbb || buf[2] !== 0xbf, 'Must not contain UTF-8 BOM');
+
+      const psCommand = `
+        $raw = Get-Content -Raw -Encoding UTF8 '${INSTALL_ONLINE_PS1.replace(/\\/g, '\\\\')}'
+        [scriptblock]::Create($raw) | Out-Null
+        exit 0
+      `;
+      const res = spawnSync('powershell', ['-NoProfile', '-Command', psCommand], { encoding: 'utf8' });
+      assert.equal(res.status, 0, `[scriptblock]::Create failed: ${res.stderr || res.stdout}`);
+    });
   });
 
   describe('Offline Dry-Run Executions (No Network Calls)', () => {

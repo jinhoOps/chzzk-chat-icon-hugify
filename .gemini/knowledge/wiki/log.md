@@ -145,3 +145,15 @@
 
 - 사용자 요청에 따라 README 제목을 `커져라! Hugify!`로 바꾸고 소개 문구를 통일했다.
 - 설치 명령, 저장소 주소, 확장 프로그램 코드는 변경하지 않는다.
+
+---
+
+## [2026-09-20] fix | 원격 설치기 UTF-8 BOM 제거 및 대화형 브라우저 선택(Chrome/Whale) 지원
+
+- **작업 내용**: 원라인 부트스트랩 명령(`irm ... | iex`) 실행 시 PowerShell 5.1 구문 파싱 예외 해결 및 브라우저 선택 편의성 제공
+  - `install-online.ps1`: UTF-8 BOM(`\uFEFF`) 제거로 `irm | iex` 및 `[scriptblock]::Create` 실행 시 토큰 파싱 에러(식 또는 문에서 예기치 않은 param/CmdletBinding 토큰) 원천 해결
+  - `install-online.ps1`: 스크립트 상단 주석 및 내부 주석을 ASCII로 정제하여 PowerShell 5.1 파일 시스템 ANSI 코드페이지(CP949) 오프셋 불일치 현상 방지
+  - `install-online.ps1`: 브라우저 옵션(-Browser) 미지정 시 Chrome과 Whale이 동시 설치되어 있으면 대화형 선택 메뉴(1. Chrome, 2. Whale)를 제공하도록 개선 ($b 단축 변수도 계속 지원)
+  - `tests/online_installer.test.js`: UTF-8 BOM 부재 검증 및 `[scriptblock]::Create` 유효성 검증 테스트 추가
+- **영향 파일**: `install-online.ps1`, `tests/online_installer.test.js`, `.gemini/knowledge/wiki/log.md`
+- **상태**: 52/52 전체 테스트 통과 완료

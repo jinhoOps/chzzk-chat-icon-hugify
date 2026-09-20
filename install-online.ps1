@@ -1,30 +1,3 @@
-﻿<#
-.SYNOPSIS
-치지직 채팅 아이콘 확대기 - 원격 부트스트랩 설치 및 런처 스크립트
-
-.DESCRIPTION
-Git이나 Node.js가 없는 Windows 11 / Windows 10 환경에서도
-GitHub main 브랜치의 최신 소스를 %LOCALAPPDATA%의 안정적인 디렉터리에 다운로드/압축해제하고,
-Google Chrome 또는 Naver Whale의 기존 프로필에서 확장 등록 화면을 엽니다.
-
-.PARAMETER Browser
-실행할 브라우저를 선택합니다 ('chrome', 'whale', 'auto'). 기본값: 'chrome'
-
-.PARAMETER Refresh
-이미 설치된 소스가 있더라도 GitHub에서 최신 소스를 다시 다운로드하여 갱신합니다.
-
-.PARAMETER DryRun
-실제 다운로드나 브라우저 실행 없이 계획된 경로와 인자만 출력하고 검증합니다.
-
-.PARAMETER Fallback
-브라우저의 확장 프로그램 관리자 페이지를 열고 수동 설치 가이드를 터미널에 안내합니다.
-
-.PARAMETER InstallDir
-확장 프로그램이 설치될 로컬 디렉터리를 직접 지정합니다. (기본값: %LOCALAPPDATA%\ChzzkIconMagnifier\app)
-
-.PARAMETER ProfileDir
-이전 옵션입니다. 기존 프로필 선택에는 -Profile, -UserDataDir를 사용하세요.
-#>
 
 [CmdletBinding()]
 param(
@@ -41,12 +14,12 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-# TLS 1.2 강제 활성화 (PowerShell 5.1 호환)
+# Force TLS 1.2 (PowerShell 5.1 compatibility)
 try {
     [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 } catch {}
 
-# GitHub 원격 저장소 정보
+# GitHub Repository Information
 $RepoOwner  = "jinhoOps"
 $RepoName   = "chzzk-chat-icon-hugify"
 $RepoBranch = "main"
@@ -54,7 +27,7 @@ $RepoUrl    = "https://github.com/jinhoOps/chzzk-chat-icon-hugify"
 $ZipUrl     = "https://github.com/jinhoOps/chzzk-chat-icon-hugify/archive/refs/heads/main.zip"
 $RawBaseUrl = "https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main"
 
-# 종료 코드 정의
+# Exit Codes
 $ExitCodes = @{
     SUCCESS             = 0
     INVALID_ARG         = 1
@@ -63,7 +36,7 @@ $ExitCodes = @{
     PROCESS_START_ERROR = 4
 }
 
-# 1. 안정적인 설치 디렉터리 결정
+# 1. Install Directory
 if (-not $InstallDir) {
     $InstallDir = Join-Path $env:LOCALAPPDATA "ChzzkIconMagnifier\app"
 }
@@ -74,7 +47,7 @@ Write-Host " 🔍 치지직 채팅 아이콘 확대기 (CHZZK Icon Magnifier) �
 Write-Host " 저장소: $RepoUrl (Branch: $RepoBranch)" -ForegroundColor Gray
 Write-Host "========================================================================" -ForegroundColor Cyan
 
-# 2. 브라우저 실행 파일 후보 경로 탐색 함수
+# 2. Find Browser Executable
 function Find-BrowserExe ([string]$target) {
     $progFiles    = $env:ProgramFiles
     $progFilesX86 = ${env:ProgramFiles(x86)}
@@ -104,7 +77,7 @@ function Find-BrowserExe ([string]$target) {
         return $null
     }
     if ($target -eq 'auto') {
-        # auto: Chrome 우선 탐지 -> Whale 폴백
+        # auto: Chrome first, then Whale
         foreach ($p in $chromePaths) {
             if (Test-Path -LiteralPath $p) { return @{ Type = 'chrome'; Name = 'Google Chrome'; Exe = $p } }
         }
@@ -161,6 +134,41 @@ function Select-ExistingProfile($Profiles, [string]$Requested, [switch]$Preview)
         Write-Host '목록에 있는 번호를 입력해주세요.'
     }
 }
+
+# $b variable shortcut support (e.g. $b="whale"; irm ... | iex)
+if (-not $PSBoundParameters.ContainsKey('Browser') -and $b -and ($b -in @('chrome', 'whale', 'auto'))) {
+    $Browser = $b
+}
+
+# Interactive browser selection if not explicitly specified via CLI
+if (-not $PSBoundParameters.ContainsKey('Browser') -and -not $b) {
+    $chromeDetected = Find-BrowserExe 'chrome'
+    $whaleDetected  = Find-BrowserExe 'whale'
+
+    if ($chromeDetected -and $whaleDetected) {
+        if (-not $DryRun) {
+            Write-Host '설치할 브라우저를 선택하세요:' -ForegroundColor Cyan
+            Write-Host '1. Google Chrome'
+            Write-Host '2. Naver Whale'
+            while ($true) {
+                $choice = Read-Host '브라우저 번호 (기본값: 1, 취소: q)'
+                if ($choice -eq 'q') { throw 'Cancelled.' }
+                if ($choice -eq '' -or $choice -eq '1') {
+                    $Browser = 'chrome'
+                    break
+                }
+                if ($choice -eq '2') {
+                    $Browser = 'whale'
+                    break
+                }
+                Write-Host '1 또는 2를 입력해주세요.' -ForegroundColor Yellow
+            }
+        }
+    } elseif ($whaleDetected -and -not $chromeDetected) {
+        $Browser = 'whale'
+    }
+}
+
 $browserInfo = Find-BrowserExe $Browser
 if (-not $browserInfo) {
     Write-Host "❌ 요청한 브라우저($Browser)의 실행 파일을 찾을 수 없습니다." -ForegroundColor Red
@@ -189,7 +197,7 @@ if ($selectedProfile) {
     )
 }
 
-# 4. 소스 코드 설치 또는 확인
+# 4. Source code download or verify
 $manifestFile = Join-Path $InstallDir "manifest.json"
 $needsDownload = $Refresh -or (-not (Test-Path -LiteralPath $manifestFile))
 
@@ -219,7 +227,7 @@ if ($needsDownload) {
     $tempDir = Join-Path $env:TEMP "chzzk-extract-$([Guid]::NewGuid().ToString('N'))"
 
     try {
-        # PowerShell 5.1/7.x 호환 다운로드
+        # Download source archive
         if (Get-Command Invoke-RestMethod -ErrorAction SilentlyContinue) {
             Invoke-RestMethod -Uri $ZipUrl -OutFile $tempZip
         } else {
@@ -230,12 +238,12 @@ if ($needsDownload) {
             throw "다운로드된 ZIP 파일을 찾을 수 없습니다: $tempZip"
         }
 
-        # 압축 해제
+        # Unzip source archive
         Write-Host "📂 소스 코드 압축을 푸는 중입니다..." -ForegroundColor Yellow
         New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
         Expand-Archive -LiteralPath $tempZip -DestinationPath $tempDir -Force
 
-        # GitHub ZIP 내부의 루트 폴더 탐색 (chzzk-chat-icon-hugify-main)
+        # Find extracted root directory
         $extractedRoot = Get-ChildItem -LiteralPath $tempDir | Where-Object { $_.PSIsContainer } | Select-Object -First 1
         if (-not $extractedRoot) {
             $extractedRoot = Get-Item -LiteralPath $tempDir
@@ -243,7 +251,7 @@ if ($needsDownload) {
 
         $downloadManifest = Get-Content -Raw -Encoding UTF8 -LiteralPath (Join-Path $extractedRoot.FullName 'manifest.json') | ConvertFrom-Json
         if ($downloadManifest.manifest_version -ne 3 -or -not $downloadManifest.name) { throw 'Invalid extension manifest.' }
-        # 영구 디렉터리로 복사/이동
+        # Copy to install directory
         if (-not (Test-Path -LiteralPath $InstallDir)) {
             New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
         }
@@ -257,7 +265,7 @@ if ($needsDownload) {
         return $ExitCodes.INSTALL_FAILED
     }
     finally {
-        # 임시 다운로드 파일만 정리하고 영구 설치 폴더는 보존
+        # Cleanup temp files
         Remove-Item -LiteralPath $tempZip -Force -ErrorAction SilentlyContinue
         $resolvedTemp = [IO.Path]::GetFullPath($tempDir)
         $tempRoot = [IO.Path]::GetFullPath($env:TEMP).TrimEnd('\') + '\'
@@ -270,7 +278,7 @@ if ($needsDownload) {
     Write-Host "   (최신 코드로 갱신하려면 -Refresh 옵션을 사용하세요)" -ForegroundColor Gray
 }
 
-# manifest.json 최종 무결성 검증
+# Final manifest.json integrity check
 if (-not (Test-Path -LiteralPath $manifestFile)) {
     Write-Host "❌ manifest.json 검증 실패: 확장 프로그램 파일이 완전하지 않습니다 ($manifestFile)" -ForegroundColor Red
     if ($MyInvocation.InvocationName -ne '.') { exit $ExitCodes.INSTALL_FAILED }
