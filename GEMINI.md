@@ -5,6 +5,17 @@
 
 ---
 
+## 📚 필수 선행 문서 (Gemini CLI / Antigravity)
+
+Gemini CLI 또는 Antigravity에서 작업을 시작할 때는 반드시 다음 두 문서를 모두 읽고 적용하십시오.
+
+1. 현재 문서인 `GEMINI.md`
+2. 저장소 루트의 [AGENTS.md](AGENTS.md)
+
+`GEMINI.md`는 Gemini CLI와 Antigravity의 진입점 및 빠른 라우터이고, 역할·검증·변경·지식 관리에 대한 상세 규칙과 충돌 해결 기준은 `AGENTS.md`를 따릅니다. 두 문서가 다르게 보일 때는 [AGENTS.md](AGENTS.md)의 최신 규칙과 사용자 지시를 우선 확인하십시오.
+
+---
+
 ## ⚡ 빠른 시작 가이드 (Quick Start)
 
 1. **지식 베이스 탐색**: 프로젝트 지형을 파악하려면 먼저 [.gemini/knowledge/wiki/index.md](.gemini/knowledge/wiki/index.md)를 읽으십시오.

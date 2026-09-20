@@ -177,3 +177,10 @@
   - `tests/online_installer.test.js`: UTF-8 BOM 부재 검증 및 `[scriptblock]::Create` 유효성 검증 테스트 추가
 - **영향 파일**: `install-online.ps1`, `tests/online_installer.test.js`, `.gemini/knowledge/wiki/log.md`
 - **상태**: 52/52 전체 테스트 통과 완료
+
+---
+
+## [2026-09-20] docs | Gemini CLI 및 Antigravity 선행 문서 안내
+
+- `GEMINI.md`에 작업 시작 시 `GEMINI.md`와 저장소 루트 `AGENTS.md`를 모두 읽고 적용하라는 절차를 명시했다.
+- `GEMINI.md`는 진입점·빠른 라우터로 유지하고, 상세 운영 규칙의 SSOT는 `AGENTS.md`로 유지한다.
