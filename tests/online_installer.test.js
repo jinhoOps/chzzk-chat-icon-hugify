@@ -16,14 +16,14 @@ describe('online installer test suite (install-online.ps1)', () => {
   describe('Static URL and Repository Consistency', () => {
     it('references the correct GitHub repository URL and branch', () => {
       assert.ok(scriptContent.includes('jinhoOps'), 'Must specify owner jinhoOps');
-      assert.ok(scriptContent.includes('chzzk-chat-icon-magnifier'), 'Must specify repo name');
+      assert.ok(scriptContent.includes('chzzk-chat-icon-hugify'), 'Must specify repo name');
       assert.ok(scriptContent.includes('main'), 'Must specify default branch main');
       assert.ok(
-        scriptContent.includes('https://github.com/jinhoOps/chzzk-chat-icon-magnifier'),
+        scriptContent.includes('https://github.com/jinhoOps/chzzk-chat-icon-hugify'),
         'Must specify canonical GitHub repo URL'
       );
       assert.ok(
-        scriptContent.includes('https://github.com/jinhoOps/chzzk-chat-icon-magnifier/archive/refs/heads/main.zip'),
+        scriptContent.includes('https://github.com/jinhoOps/chzzk-chat-icon-hugify/archive/refs/heads/main.zip'),
         'Must construct canonical zip archive URL'
       );
     });

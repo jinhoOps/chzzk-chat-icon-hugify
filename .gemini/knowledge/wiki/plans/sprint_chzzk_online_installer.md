@@ -9,7 +9,7 @@
 
 ## 1. 스프린트 목표 (Objective)
 - 사용자가 로컬 폴더나 Git 설치 없이 GitHub README의 코드블럭 1줄만 복사하여 Windows 11 + Google Chrome(기본) 및 Naver Whale에 확장프로그램을 즉시 다운로드/설치/실행할 수 있는 원격 부트스트랩 스크립트(`install-online.ps1`) 및 README 개편.
-- 저장소 기준: `https://github.com/jinhoOps/chzzk-chat-icon-magnifier` (기본 브랜치: `main`).
+- 저장소 기준: `https://github.com/jinhoOps/chzzk-chat-icon-hugify` (기본 브랜치: `main`).
 
 ---
 
@@ -45,7 +45,7 @@
 
 ## 4. 기술적 제약 및 규칙 (Technical Constraints)
 - Windows PowerShell 5.1 기본 탑재 모듈(`Invoke-RestMethod`, `Invoke-WebRequest`, `Expand-Archive`, `Start-Process`)만 사용.
-- GitHub 원격 주소 SSOT: `https://github.com/jinhoOps/chzzk-chat-icon-magnifier` / `main`.
+- GitHub 원격 주소 SSOT: `https://github.com/jinhoOps/chzzk-chat-icon-hugify` / `main`.
 - 레지스트리 수정이나 관리자 권한 요구 절대 금지.
 - 네트워크 요청을 포함하는 모의 테스트는 오프라인/mock으로 격리 수행.
 

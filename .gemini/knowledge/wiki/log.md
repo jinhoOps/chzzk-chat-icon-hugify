@@ -84,3 +84,17 @@
   - `tests/online_installer.test.js` 7개 단위 테스트 추가 (정적 URL 검증, AST 파싱, 오프라인 dry-run)
 - **영향 파일**: `install-online.ps1`, `install.ps1`, `tests/online_installer.test.js`, `README.md`, `log.md`
 - **상태**: 43/43 테스트 전원 통과, dry-run 검증 완료
+
+---
+
+## [2026-09-20] chore | 원격 저장소 명칭 확정 변경 반영 (chzzk-chat-icon-hugify)
+
+- **작업 내용**: GitHub 원격 저장소 공식 명칭을 `chzzk-chat-icon-hugify`로 확정 반영
+  - `install-online.ps1`: `RepoName`, `RepoUrl`, `ZipUrl`, `RawBaseUrl` 갱신
+  - `README.md`: 원격 부트스트랩 원라이너, Whale 코드블럭, 원격 코드 검토 링크 등 모든 URL 갱신
+  - `tests/online_installer.test.js`: URL 및 저장소 명칭 정합성 검증 테스트 갱신
+  - `package.json`: 패키지명 갱신 (`chzzk-chat-icon-hugify`)
+  - 스프린트 계약서 (`plans/sprint_chzzk_online_installer.md`) SSOT URL 갱신
+  - `git grep`을 통해 잔존 구 저장소명 URL 0건 확인 및 단위 테스트 43/43 전원 통과 확인
+- **영향 파일**: `install-online.ps1`, `README.md`, `tests/online_installer.test.js`, `package.json`, `plans/sprint_chzzk_online_installer.md`, `log.md`
+- **상태**: 43/43 테스트 전원 통과, Git 커밋 완료

@@ -52,11 +52,11 @@ try {
 
 # GitHub 원격 저장소 정보
 $RepoOwner  = "jinhoOps"
-$RepoName   = "chzzk-chat-icon-magnifier"
+$RepoName   = "chzzk-chat-icon-hugify"
 $RepoBranch = "main"
-$RepoUrl    = "https://github.com/jinhoOps/chzzk-chat-icon-magnifier"
-$ZipUrl     = "https://github.com/jinhoOps/chzzk-chat-icon-magnifier/archive/refs/heads/main.zip"
-$RawBaseUrl = "https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main"
+$RepoUrl    = "https://github.com/jinhoOps/chzzk-chat-icon-hugify"
+$ZipUrl     = "https://github.com/jinhoOps/chzzk-chat-icon-hugify/archive/refs/heads/main.zip"
+$RawBaseUrl = "https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main"
 
 # 종료 코드 정의
 $ExitCodes = @{
@@ -175,7 +175,7 @@ if ($needsDownload) {
         New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
         Expand-Archive -LiteralPath $tempZip -DestinationPath $tempDir -Force
 
-        # GitHub ZIP 내부의 루트 폴더 탐색 (chzzk-chat-icon-magnifier-main)
+        # GitHub ZIP 내부의 루트 폴더 탐색 (chzzk-chat-icon-hugify-main)
         $extractedRoot = Get-ChildItem -LiteralPath $tempDir | Where-Object { $_.PSIsContainer } | Select-Object -First 1
         if (-not $extractedRoot) {
             $extractedRoot = Get-Item -LiteralPath $tempDir

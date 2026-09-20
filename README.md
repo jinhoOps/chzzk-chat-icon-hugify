@@ -12,26 +12,26 @@ Windows 11(또는 Windows 10)에서 `PowerShell`을 열고 아래의 **한 줄 �
 
 ### 🌐 1. Google Chrome으로 실행 (기본 권장)
 ```powershell
-irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1 | iex
+irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1 | iex
 ```
 
 ### 🐳 2. Naver Whale로 실행
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1))) -Browser whale
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Browser whale
 ```
-*(또는 간단히: `$b="whale"; irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1 | iex`)*
+*(또는 간단히: `$b="whale"; irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1 | iex`)*
 
 > [!TIP]
 > **최신 버전 갱신(Update)**이 필요할 때는 `-Refresh` 옵션을 붙여 실행하면 GitHub `main`의 최신 소스로 안전하게 재설치됩니다:
 > ```powershell
-> & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1))) -Refresh
+> & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Refresh
 > ```
 
 ---
 
 ## 🛡️ 원격 실행 보안 및 동작 원리 안내
 
-- **원격 코드 투명성**: 위 명령은 GitHub 공식 저장소의 [`install-online.ps1`](https://github.com/jinhoOps/chzzk-chat-icon-magnifier/blob/main/install-online.ps1) 스크립트를 다운로드하여 실행합니다. 실행 전 누구나 링크를 통해 원본 코드를 직접 검토하실 수 있습니다.
+- **원격 코드 투명성**: 위 명령은 GitHub 공식 저장소의 [`install-online.ps1`](https://github.com/jinhoOps/chzzk-chat-icon-hugify/blob/main/install-online.ps1) 스크립트를 다운로드하여 실행합니다. 실행 전 누구나 링크를 통해 원본 코드를 직접 검토하실 수 있습니다.
 - **안정적인 영구 설치 경로**: GitHub `main` 브랜치의 최신 소스를 임시 폴더가 아닌 `%LOCALAPPDATA%\ChzzkIconMagnifier\app`에 안전하게 보관합니다. 실행 후 소스 파일이 임의로 삭제되어 브라우저의 확장 참조가 깨지는 문제를 원천 차단합니다.
 - **격리 프로필(`--user-data-dir`) 사용**: Chromium 보안 정책상 기본 프로필이 이미 켜져 있으면 `--load-extension` 플래그가 무시됩니다. 따라서 기존 브라우저 창과 충돌 없이 확장을 즉시 띄우기 위해 전용 격리 프로필(`%LOCALAPPDATA%\ChzzkIconMagnifier\profile`)을 생성하여 안전하게 실행합니다.
 - **비침습성 보장**: 관리자 권한이나 Windows 레지스트리 수정을 일절 요구하지 않으며, 기존 일상 브라우저 프로필의 설정이나 개발자 모드를 강제로 변조하지 않습니다.
@@ -43,7 +43,7 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/in
 일상적으로 사용하시는 기본 브라우저 프로필에 확장을 상시 등록해두고 싶다면, 아래 명령어로 확장 관리자 페이지를 열고 안내에 따라 1회 등록하시면 됩니다:
 
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1))) -Fallback
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Fallback
 ```
 
 **수동 등록 절차:**
