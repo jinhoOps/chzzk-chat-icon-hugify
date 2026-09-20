@@ -27,6 +27,7 @@ timestamp: 2026-09-04T00:00:00Z
 - [Release 기반 최신 버전 갱신](./plans/sprint_release_update.md)
 - [확장 관리 페이지 실행 보강 및 직접 주소 fallback](./plans/sprint_extension_manager_fallback.md)
 - [단일 목적 이모티콘 확대 UI 정리](./plans/sprint_clean_emoticon_magnifier.md)
+- [Hugify 브랜딩 및 아이콘 교체](./plans/sprint_brand_icon_cleanup.md)
 *현재 진행 중이거나 예정된 기획/스프린트 문서입니다.*
 
 - [SC-20260920-01: 치지직 채팅 아이콘 확대 크롬 확장프로그램 개발](./plans/sprint_chzzk_icon_magnifier.md)

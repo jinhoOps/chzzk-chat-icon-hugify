@@ -143,8 +143,8 @@ export function buildLaunchArgs({ extensionPath, profileDir, targetUrl, fallback
  */
 export function printHelp() {
   console.log(`
-🔍 치지직 채팅 아이콘 확대기 - 원클릭 브라우저 런처
-======================================================
+✨ 치지직 이모티콘 커져라! Hugify! - 원클릭 브라우저 런처
+==============================================================
 설치 없이 로컬 확장 프로그램을 Chrome 또는 Naver Whale에서 즉시 실행합니다.
 
 [사용법]

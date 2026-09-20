@@ -202,3 +202,12 @@
 - 레거시 저장값은 삭제하지 않고 무시하도록 `enabled` 단일 설정으로 정리했다.
 - `tests/popup.test.js` 정적 회귀 검증을 추가하고 `npm test` 57/57, `git diff --check`, JavaScript 구문 검사를 통과했다.
 - 계약: [단일 목적 이모티콘 확대 UI 정리](./plans/sprint_clean_emoticon_magnifier.md).
+
+---
+
+## [2026-09-20] fix | Hugify 브랜딩 및 제공 아이콘 적용
+
+- 사용자가 제공한 투명 이모티콘 이미지를 확장 프로그램 아이콘 `16/48/128` 에셋으로 리사이즈해 적용했다.
+- `manifest.json`, `package.json`, 런처 도움말의 사용자 노출 명칭을 `치지직 이모티콘 커져라! Hugify!` 기준으로 통일하고 `확대기` 표기를 제거했다.
+- `tests/branding.test.js`에서 manifest 브랜딩과 PNG 실제 크기를 회귀 검증하도록 추가했다.
+- 계약: [Hugify 브랜딩 및 아이콘 교체](./plans/sprint_brand_icon_cleanup.md).

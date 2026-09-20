@@ -1,7 +1,7 @@
 {
   "name": "chzzk-chat-icon-hugify",
   "version": "1.0.0",
-  "description": "치지직(CHZZK) 방송 채팅 이모티콘 및 아이콘 마우스 호버 확대 크롬 확장프로그램",
+  "description": "치지직 이모티콘에 마우스를 올리면 커져서 선명하게 미리 확인하는 Chrome 확장 프로그램",
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.js",
