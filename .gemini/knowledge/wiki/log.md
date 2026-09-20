@@ -211,3 +211,11 @@
 - `manifest.json`, `package.json`, 런처 도움말의 사용자 노출 명칭을 `치지직 이모티콘 커져라! Hugify!` 기준으로 통일하고 `확대기` 표기를 제거했다.
 - `tests/branding.test.js`에서 manifest 브랜딩과 PNG 실제 크기를 회귀 검증하도록 추가했다.
 - 계약: [Hugify 브랜딩 및 아이콘 교체](./plans/sprint_brand_icon_cleanup.md).
+
+---
+
+## [2026-09-20] release | Hugify v1.0.1 배포 완료
+
+- `manifest.json`, `package.json`, 팝업 표시 버전을 `1.0.1`로 일치시켰다.
+- `v1.0.1` 태그를 `main`에 푸시하고 GitHub Actions Release workflow를 성공적으로 완료했다.
+- Release asset `hugify-extension.zip`이 생성되어 최신 설치 명령에서 사용할 수 있다.
