@@ -80,14 +80,6 @@
   letter-spacing: -0.2px;
 }
 
-/* 크기 표시 라벨 */
-#chzzk-icon-magnifier-tooltip .chzzk-mag-size-tag {
-  font-family: monospace;
-  font-size: 9px;
-  color: #8b929d;
-  align-self: flex-end;
-  margin-top: -2px;
-}
 
 /* 일시 중지 / 상태 알림 토스트 */
 #chzzk-mag-toast {

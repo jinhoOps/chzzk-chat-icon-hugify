@@ -18,7 +18,6 @@
   let tooltipEl = null;
   let tooltipImg = null;
   let tooltipAlt = null;
-  let tooltipTag = null;
   let toastEl = null;
   let toastTimer = null;
   let currentTarget = null;
@@ -209,12 +208,8 @@
     tooltipAlt = document.createElement('div');
     tooltipAlt.className = 'chzzk-mag-alt';
 
-    tooltipTag = document.createElement('span');
-    tooltipTag.className = 'chzzk-mag-size-tag';
-
     tooltipEl.appendChild(imgWrap);
     tooltipEl.appendChild(tooltipAlt);
-    tooltipEl.appendChild(tooltipTag);
 
     document.body.appendChild(tooltipEl);
     applySizeStyle();
@@ -230,10 +225,6 @@
       } else {
         tooltipImg.classList.remove('chzzk-mag-crisp');
       }
-    }
-
-    if (tooltipTag) {
-      tooltipTag.textContent = `${size}×${size}px`;
     }
   }
 
@@ -289,9 +280,10 @@
     }
 
     // 위치 계산
+    const showAlt = Boolean(settings.showAltBadge && info.alt);
     const anchorRect = anchor.getBoundingClientRect();
     const tooltipWidth = (Number(settings.size) || 90) + 16;
-    const tooltipHeight = (Number(settings.size) || 90) + (info.alt ? 42 : 24);
+    const tooltipHeight = (Number(settings.size) || 90) + (showAlt ? 40 : 16);
 
     const pos = calculateTooltipPosition(
       anchorRect,

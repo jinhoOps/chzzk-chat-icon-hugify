@@ -119,3 +119,14 @@
 - **추가 정합성 수정**: 최신 테스트 수를 45개로 갱신
 - **설치 안내 간소화**: 첫 화면에 PowerShell 열기와 Chrome 설치 명령을 배치하고, Whale 설치 및 모든 추가 설명은 기본적으로 접힌 상태로 제공
 - **영향 파일**: `README.md`, `.gemini/knowledge/wiki/log.md`
+
+---
+
+## [2026-09-20] fix | 확대 툴팁 하단 px 크기 태그 제거 및 높이 보정
+
+- **작업 내용**: 마우스 호버 확대 툴팁에서 불필요한 크기 라벨(예: `90×90px`) 제거
+  - `src/content.js`: `tooltipTag`(`chzzk-mag-size-tag`) 생성/주입 및 텍스트 갱신 로직 완전 제거
+  - `src/content.js`: 크기 태그 제거 및 `showAltBadge` 상태를 반영한 툴팁 높이(`tooltipHeight`) 정밀 계산 보정
+  - `src/content.css`: 사용되지 않는 `.chzzk-mag-size-tag` 스타일 규칙 제거
+- **영향 파일**: `src/content.js`, `src/content.css`, `.gemini/knowledge/wiki/log.md`
+- **상태**: 툴팁 DOM 간소화 완료, 단위 테스트 38/38 통과 (관련 테스트 suites)
