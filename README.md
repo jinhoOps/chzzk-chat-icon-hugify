@@ -15,12 +15,17 @@
 irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1 | iex
 ```
 
-설치 파일을 내려받은 뒤 별도 Chrome 창을 엽니다. 평소 사용하던 창에 추가하려면 아래 **수동 등록 방법**을 펼쳐주세요.
+3. 프로필이 여러 개라면 **평소 사용하는 프로필의 번호**를 입력합니다. 하나면 자동 선택됩니다.
+4. 열린 확장 관리 화면에서 **개발자 모드**를 켜고 **압축해제된 확장 프로그램을 로드합니다**를 클릭합니다.
+5. PowerShell에 표시된 설치 폴더 경로를 폴더 선택 창에 붙여넣고 선택합니다.
+
+이제 같은 프로필의 치지직 페이지를 새로고침하고 이모티콘에 마우스를 올려보세요. **파일 다운로드와 프로필 선택은 설치기가 도와주며, 마지막 등록은 위 4~5단계에서 직접 클릭해야 합니다.**
 
 <details>
 <summary>Whale을 사용한다면? — 설치 명령 보기</summary>
 
 위 Chrome 명령 대신 아래 명령을 PowerShell에 붙여넣으세요.
+평소 사용하는 Whale 프로필을 선택한 뒤 위 4~5단계로 등록하면 됩니다.
 
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Browser whale
@@ -35,7 +40,7 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 <details>
 <summary>🔄 이미 설치된 버전 갱신하기</summary>
 
-최신 버전으로 다시 받으려면 `-Refresh` 옵션을 붙여 실행하세요.
+최신 버전으로 다시 받으려면 `-Refresh` 옵션을 붙여 실행하세요. 기존에 설치한 프로필을 선택하고 확장 관리 화면에서 Hugify의 새로고침 버튼을 누르세요. Whale은 `-Browser whale`도 붙입니다.
 
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Refresh
@@ -49,8 +54,25 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 
 - **원격 코드 투명성**: 위 명령은 GitHub 공식 저장소의 [`install-online.ps1`](https://github.com/jinhoOps/chzzk-chat-icon-hugify/blob/main/install-online.ps1) 스크립트를 다운로드하여 실행합니다. 실행 전 누구나 링크를 통해 원본 코드를 직접 검토하실 수 있습니다.
 - **안정적인 영구 설치 경로**: GitHub `main` 브랜치의 최신 소스를 임시 폴더가 아닌 `%LOCALAPPDATA%\ChzzkIconMagnifier\app`에 안전하게 보관합니다. 실행 후 소스 파일이 임의로 삭제되어 브라우저의 확장 참조가 깨지는 문제를 원천 차단합니다.
-- **격리 프로필(`--user-data-dir`) 사용**: Chromium 보안 정책상 기본 프로필이 이미 켜져 있으면 `--load-extension` 플래그가 무시됩니다. 따라서 기존 브라우저 창과 충돌 없이 확장을 즉시 띄우기 위해 전용 격리 프로필(`%LOCALAPPDATA%\ChzzkIconMagnifier\profile`)을 생성하여 안전하게 실행합니다.
+- **기존 프로필 선택**: 저장된 프로필 이름과 폴더를 읽어 선택한 프로필의 확장 관리 화면을 엽니다. 별도 테스트 프로필을 만들지 않습니다.
 - **비침습성 보장**: 관리자 권한이나 Windows 레지스트리 수정을 일절 요구하지 않으며, 기존 일상 브라우저 프로필의 설정이나 개발자 모드를 강제로 변조하지 않습니다.
+
+</details>
+
+<details>
+<summary>프로필을 직접 지정하거나 목록에 나오지 않을 때</summary>
+
+프로필이 여러 개면 번호를 입력하고, 취소하려면 `q`를 입력하세요. 프로필이 없으면 브라우저를 먼저 실행한 뒤 다시 시도하세요.
+
+폴더명을 알고 있다면 `-Profile 'Profile 1'`처럼 지정할 수 있습니다:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Browser whale -Profile 'Profile 1'
+```
+
+사용자 데이터 폴더를 다른 곳에 두었다면 `-UserDataDir 'D:\Browser\User Data'`를 추가하세요. 기존 경로와 프로필만 선택할 수 있습니다.
+프로필 정보 파일을 읽지 못하면 `Default`, `Profile 1` 같은 기존 폴더명으로 표시합니다.
+이전에 설치기가 만든 별도 창은 닫아도 됩니다. 그 테스트 프로필의 데이터는 자동으로 삭제하지 않습니다.
 
 </details>
 
@@ -81,7 +103,9 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 <details>
 <summary>💻 로컬 저장소에서 실행하는 방법 (개발자용)</summary>
 
-이미 프로젝트를 클론했거나 로컬 폴더에 소스를 다운로드한 경우, 폴더 내의 런처를 직접 사용하실 수 있습니다:
+기존 프로필에 로컬 파일을 등록하려면 `powershell -File install-online.ps1 -InstallDir .`를 사용하세요. Whale은 `-Browser whale`을 붙입니다.
+
+아래 Node 기반 런처는 개발용 별도 프로필 실행입니다. 일반 설치는 위 빠른 시작을 사용하세요:
 
 ```cmd
 :: CMD 환경
@@ -158,6 +182,6 @@ npm test                         :: 단위 테스트 실행
 ```bash
 npm test
 ```
-*Node.js 기본 테스트 러너(`node:test`)를 사용하여 외부 무거운 종속성 없이 **45개 전체 검증 테스트가 통과**합니다.*
+*Node.js 기본 테스트 러너(`node:test`)로 확장 기능, 설치기, 기존 프로필 선택을 검증합니다.*
 
 </details>

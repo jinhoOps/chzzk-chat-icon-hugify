@@ -42,8 +42,8 @@ describe('online installer test suite (install-online.ps1)', () => {
         'Must define stable app directory under %LOCALAPPDATA%'
       );
       assert.ok(
-        scriptContent.includes('ChzzkIconMagnifier\\profile'),
-        'Must define dedicated profile directory'
+        !scriptContent.includes('--load-extension='),
+        'Must use existing profiles'
       );
     });
   });

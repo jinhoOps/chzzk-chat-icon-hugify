@@ -130,3 +130,13 @@
   - `src/content.css`: 사용되지 않는 `.chzzk-mag-size-tag` 스타일 규칙 제거
 - **영향 파일**: `src/content.js`, `src/content.css`, `.gemini/knowledge/wiki/log.md`
 - **상태**: 툴팁 DOM 간소화 완료, 단위 테스트 38/38 통과 (관련 테스트 suites)
+
+---
+
+## [2026-09-20] fix | 원격 설치기의 기존 브라우저 프로필 선택
+
+- 원격 설치 명령은 기존 Chrome/Whale 프로필을 탐색하고 복수일 때 번호를 입력받는다. 단일 프로필은 자동 선택한다.
+- `-Profile`과 `-UserDataDir`로 기존 경로 지정 지원. 새 프로필 생성과 자동 확장 로드 대신 선택한 프로필의 확장 관리 화면에서 최종 등록 안내.
+- README 빠른 시작에 개발자 모드와 폴더 선택 단계를 명시. 상세 사용법은 접힌 영역 유지.
+- 검증: `npm test` 51/51 통과. 프로필 목록/한글·공백 경로/취소/없는 프로필/손상된 Local State/명시 선택/DryRun 검증. 브라우저 실행은 모킹했으며 실제 UI 등록은 자동 검증하지 않음.
+- 계약: [기존 프로필 설치 지원](./plans/sprint_existing_profile.md).
