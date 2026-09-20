@@ -25,7 +25,7 @@ timestamp: 2026-09-04T00:00:00Z
 ## 🚀 활성 작업 (Active Development & Plans)
 *현재 진행 중이거나 예정된 기획/스프린트 문서입니다.*
 
-- *(새로운 기능이나 마일스톤 기획서가 작성되면 여기에 등록됩니다)*
+- [SC-20260920-01: 치지직 채팅 아이콘 확대 크롬 확장프로그램 개발](./plans/sprint_chzzk_icon_magnifier.md)
 
 ---
 

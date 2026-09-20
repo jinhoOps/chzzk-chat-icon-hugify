@@ -1,37 +1,99 @@
-# Sandbox (Agent Harness Initialized)
+# 🔍 치지직 채팅 아이콘 확대기 (CHZZK Emoticon Magnifier)
 
-이 저장소는 **에이전트 하네스 엔지니어링(Agent Harness Engineering)** 체계가 초기화된 프로젝트 샌드박스입니다.
-AI 에이전트와 인간 개발자가 고도의 신뢰성과 반복 가능성을 바탕으로 자율 협업할 수 있도록 구조화되어 있습니다.
-
----
-
-## 🏛️ 하네스 아키텍처 구성
-
-```
-.
-├── AGENTS.md                  # 에이전트 마스터 라우터 및 거버넌스 규약
-├── GEMINI.md                  # Gemini/Antigravity 상호 운용 라우터
-├── .gemini/
-│   ├── agents/                # 특화 서브에이전트 정의
-│   │   ├── planner.md         # 요구사항 분석 및 아키텍처 설계
-│   │   ├── developer.md       # 계약 우선 TDD 구현
-│   │   └── evaluator.md       # 독립 품질 검증 및 회귀 평가
-│   ├── skills/                # 자율 실행 협업 스킬
-│   │   ├── orchestration/     # Planner -> Developer -> Evaluator 파이프라인
-│   │   ├── wiki-librarian/    # OKF v0.1 기반 지식 합성 및 인덱싱
-│   │   └── core-developer/    # 스프린트 계약 템플릿 및 DoD 규칙
-│   └── knowledge/wiki/        # Open Knowledge Format (OKF v0.1) LLM-Wiki
-│       ├── index.md           # 지식 베이스 마스터 토폴로지 맵
-│       ├── log.md             # 불변(Append-only) 연대기 감사 로그
-│       ├── core/              # 운영 헌법, 지식 하네스 명세, 아키텍처
-│       └── archive/           # 만료된 문서 보관소
-```
+> 치지직(CHZZK) 방송 채팅창 및 이모티콘 팝업에서 아이콘을 채팅에 전송하기 전에 **마우스 호버만으로 크고 선명하게 미리 확인**할 수 있는 크롬 확장프로그램입니다.
 
 ---
 
-## 🚀 워크플로우
+## ✨ 핵심 기능
 
-1. **시작**: 작업 전 [AGENTS.md](AGENTS.md)의 `Start Here` 섹션과 [Knowledge Index](.gemini/knowledge/wiki/index.md)를 확인합니다.
-2. **계약 우선**: 코드를 작성하기 전 [Sprint Contract](.gemini/skills/core-developer/SPRINT_CONTRACT_TEMPLATE.md)을 작성하여 완료 기준을 선언합니다.
-3. **오케스트레이션**: [orchestration](.gemini/skills/orchestration/SKILL.md) 스킬에 따라 기획(Planner) → 개발(Developer) → 평가(Evaluator) 사이클을 거칩니다.
-4. **지식 복리 축적**: 작업 완료 후 [wiki-librarian](.gemini/skills/wiki-librarian/SKILL.md) 스킬을 통해 [log.md](.gemini/knowledge/wiki/log.md)와 [index.md](.gemini/knowledge/wiki/index.md)를 갱신합니다.
+1. **마우스 호버 실시간 확대 미리보기**
+   - 치지직 라이브 방송(`https://chzzk.naver.com/live/*`)의 이모티콘 팝업 및 채팅 내 아이콘에 마우스를 올리면 자동으로 확대 툴팁이 뜹니다.
+   - 네이버 CDN(`pstatic.net`)의 썸네일 축소 쿼리스트링(`?type=f60_60`)을 실시간으로 감지/제거하여 **흐릿하지 않은 원본 고해상도 이미지**로 선명하게 표시합니다.
+   - 이모티콘 고유 코드명(예: `{:slp1:}`)을 툴팁 하단에 함께 안내합니다.
+
+2. **⏸️ 10초 임시 비활성화 (Snooze 10s)**
+   - 채팅을 빠르게 연타하거나 이모티콘을 가리지 않고 빠르게 선택하고 싶을 때 **10초 동안만 확대를 일시 중지**할 수 있습니다.
+   - 팝업 창에 실시간 잔여 시간 카운트다운 및 **[즉시 재개]** 버튼을 제공합니다.
+   - **단축키 지원**: 치지직 화면에서 언제든 `Alt + Z`를 누르면 10초 비활성화 / 즉시 재개가 토글됩니다.
+
+3. **🛑 상시 활성화 / 중지(비활성화) 토글**
+   - 팝업 상단의 마스터 토글 스위치로 기능을 언제든 켜고 끌 수 있습니다.
+   - 브라우저에 설정이 영구 저장되어 새로고침 후에도 유지됩니다.
+
+4. **📏 확대 크기 3단계 옵션**
+   - **원본 (60×60px)**: 기본 원본 규격
+   - **확대 (90×90px)**: 원본 대비 +50% 확대 (가장 시인성이 뛰어난 기본 권장값)
+   - **대형 (120×120px)**: 원본 대비 2배 대형 확대
+   - **픽셀 보정(Pixelated) 옵션**: 픽셀 도트 아트 스타일 이모티콘을 번짐 없이 선명하게 볼 수 있는 보정 모드 지원
+
+---
+
+## 🚀 크롬 확장프로그램 설치 방법 (1분 소요)
+
+설치 패키지 빌드 없이 **현재 폴더를 그대로 크롬에 로드**하여 즉시 사용하실 수 있습니다.
+
+1. 크롬 브라우저를 열고 주소창에 `chrome://extensions/` 를 입력하여 이동합니다.
+2. 우측 상단의 **[개발자 모드]** 스위치를 켭니다.
+3. 좌측 상단의 **[압축해제된 확장 프로그램을 로드합니다]** 버튼을 클릭합니다.
+4. 파일 탐색기에서 본 프로젝트 폴더(`치지직아이콘`)를 선택합니다.
+5. 브라우저 우측 상단 퍼즐 조각(확장 프로그램 목록)에서 **'치지직 채팅 아이콘 확대기'**를 확인하고 핀(고정)해 두면 편리하게 제어할 수 있습니다!
+6. 치지직 방송 페이지(`https://chzzk.naver.com/live/*`)로 이동하여 이모티콘 버튼 위에 마우스를 올려보세요!
+
+---
+
+## 🛠️ GitHub 저장소 생성 및 푸시 안내
+
+현재 로컬에 모든 소스 코드와 테스트가 준비되어 있습니다. 깃허브에 새 레포지토리를 만들어 올리는 방법은 다음과 같습니다:
+
+### 방법 1. GitHub CLI (`gh`) 사용 (추천)
+터미널(PowerShell)에서 아래 명령어를 순서대로 실행합니다:
+
+```bash
+# 1. 깃허브 로그인 (브라우저 인증 진행)
+gh auth login
+
+# 2. 내 깃허브에 신규 레포지토리 생성 및 로컬 코드 자동 push
+gh repo create chzzk-chat-icon-magnifier --public --source=. --remote=origin --push
+```
+
+### 방법 2. GitHub 웹사이트에서 생성 후 수동 연결
+1. [GitHub New Repository](https://github.com/new)에 접속하여 레포지토리(예: `chzzk-chat-icon-magnifier`)를 생성합니다.
+2. 터미널에서 다음 명령어를 실행하여 원격 주소를 연결하고 푸시합니다:
+```bash
+git remote add origin https://github.com/<내_깃허브_아이디>/chzzk-chat-icon-magnifier.git
+git branch -M main
+git push -u origin main
+```
+
+---
+
+## 📁 프로젝트 파일 구조
+
+```
+치지직아이콘/
+├── manifest.json              # Chrome Extension Manifest V3 메인 설정
+├── icons/                     # 확장프로그램 공식 아이콘 (16, 48, 128px)
+├── src/
+│   ├── content.js             # 치지직 페이지 내 마우스 호버 감지 및 실시간 툴팁 렌더링
+│   ├── content.css            # 툴팁 디자인 및 다크 테마 애니메이션 스타일
+│   ├── popup.html             # 설정 팝업 UI (토글, 10초 스누즈, 크기 선택)
+│   ├── popup.css              # 팝업 다크 모드 스타일
+│   ├── popup.js               # 팝업 제어 로직 및 실시간 타이머 동기화
+│   └── utils.js               # 핵심 알고리즘 (고해상도 URL 추출, 툴팁 좌표 연산)
+├── tests/
+│   ├── utils.test.js          # 핵심 유틸리티 단위 테스트
+│   └── content_logic.test.js  # 사용자 HTML 샘플 호환 및 스누즈 테스트
+├── scripts/
+│   └── generate_icons.js      # 무의존성 순수 Node.js PNG 아이콘 생성 스크립트
+├── package.json
+└── README.md
+```
+
+---
+
+## 🧪 테스트 실행
+
+```bash
+npm test
+```
+*Node.js 기본 테스트 러너(`node:test`)를 사용하여 외부 무거운 종속성 없이 17개 검증 테스트가 0.2초 이내로 신속하게 통과합니다.*
