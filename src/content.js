@@ -12,7 +12,7 @@
     snoozedUntil: 0,
     size: 90,
     crispScaling: false,
-    showAltBadge: true,
+    showAltBadge: false,
   };
 
   let tooltipEl = null;
@@ -86,6 +86,33 @@
   function extractEmoticonInfo(target) {
     if (!target || !target.nodeType) return null;
 
+    // 1. 철저한 배제 필터링 (불필요한 아이콘 호버 차단)
+    // (1) 프로필 이미지 및 설정 버튼 제외
+    if (target.closest('[class*="_profile_"], [class*="profile"], [class*="_setting_button_"], [class*="setting_button"]')) {
+      return null;
+    }
+
+    // (2) 채팅 입력창(<pre contenteditable>) 및 입력 영역 내부 요소 제외
+    if (target.closest('pre, [contenteditable="true"], [class*="_input_"], [class*="_input_button_"]')) {
+      return null;
+    }
+
+    // (3) 이모티콘 팝업 상단의 탭/카테고리 버튼 제외 (_category_, _menu_, flicking)
+    if (target.closest('[class*="_category_"], [class*="_menu_"], .flicking-viewport, [class*="_flicking_"]')) {
+      return null;
+    }
+
+    // (4) 후원/치즈 도네이션 및 도구 버튼 제외
+    if (target.closest('[class*="_donation_"], [class*="_tools_"], [class*="_action_"]')) {
+      return null;
+    }
+
+    // (5) 팝업 닫기 버튼 등 제어 버튼 제외
+    if (target.closest('button[aria-label="팝업 닫기"], button[aria-label*="닫기"]')) {
+      return null;
+    }
+
+    // 2. 대상 이미지 및 버튼 탐색
     let img = target.tagName === 'IMG' ? target : null;
 
     if (!img) {
@@ -98,42 +125,62 @@
     if (!img) return null;
 
     const src = img.src || img.getAttribute('src') || '';
-    const alt = img.alt || img.getAttribute('alt') || '';
-    const className = (img.className || '').toString();
-    const parent = img.parentElement;
-    const parentClass = (parent?.className || '').toString();
+    const alt = (img.alt || img.getAttribute('alt') || '').trim();
+
+    // 프로필 이미지 URL 패턴(type=f160 등) 또는 SVG 아이콘 배제
+    if (src.includes('type=f160') || src.includes('/profile/') || src.endsWith('.svg')) {
+      return null;
+    }
+
+    // 3. 실제 이모티콘 요소인지 정밀 검증
     const button = img.closest('button, [role="button"]');
     const buttonClass = (button?.className || '').toString();
+    const imgClass = (img.className || '').toString();
 
-    // 팝업 내부 여부
-    const isInsideEmoticonPopup = Boolean(
-      img.closest('#popup_contents, [id*="popup_contents"], [class*="popup_contents"]')
+    // (A) 이모티콘 선택 영역(#emoji_area 또는 ul._list_... 내 버튼) 내부
+    const isInsideEmojiArea = Boolean(
+      img.closest('#emoji_area, [id*="emoji_area"], ul[class*="_list_"]')
     );
 
-    // 클래스명 판별
-    const hasEmoticonClass =
-      className.includes('emoticon') ||
-      className.includes('emoji') ||
-      parentClass.includes('emoticon') ||
-      parentClass.includes('emoji') ||
+    // (B) 클래스명에 emoticon 또는 emoji가 명시된 버튼
+    const isEmoticonButton =
+      buttonClass.includes('_emoticon_') ||
       buttonClass.includes('emoticon') ||
-      buttonClass.includes('emoji');
+      imgClass.includes('_emoticon_') ||
+      imgClass.includes('emoticon');
 
-    // 이미지 URL 패턴
+    // (C) 이모티콘 alt 패턴 ({:코드:} 형태)
+    const hasEmoticonAlt = /^\{:.*:\}$/.test(alt);
+
+    // (D) 명확한 이모티콘 URL 패턴
     const isEmoticonUrl =
-      src.includes('/emoji/') ||
-      src.includes('/subscription/') ||
-      src.includes('type=f60_60') ||
-      src.includes('type=f') ||
-      src.includes('glive');
+      src.includes('/glive/subscription/emoji/') ||
+      src.includes('/glive/icon/') ||
+      src.includes('/subscription/emoji/') ||
+      (src.includes('/emoji/') && !src.includes('/profile/'));
 
-    // 대체 텍스트 패턴 (예: {:slp1:})
-    const hasEmoticonAlt = /^\{:.*:\}$/.test(alt.trim());
-
-    if (isInsideEmoticonPopup || hasEmoticonClass || isEmoticonUrl || hasEmoticonAlt) {
+    if (isInsideEmojiArea && (isEmoticonButton || isEmoticonUrl || hasEmoticonAlt)) {
       return {
         img,
-        alt: alt.trim(),
+        alt,
+        button: button || img,
+        src,
+      };
+    }
+
+    if (isEmoticonButton && (isEmoticonUrl || hasEmoticonAlt || isInsideEmojiArea)) {
+      return {
+        img,
+        alt,
+        button: button || img,
+        src,
+      };
+    }
+
+    if (hasEmoticonAlt && isEmoticonUrl) {
+      return {
+        img,
+        alt,
         button: button || img,
         src,
       };

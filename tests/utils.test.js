@@ -109,6 +109,61 @@ describe('utils.js test suite', () => {
   });
 
   describe('extractEmoticonInfo mock DOM tests', () => {
+    function matchesSelector(node, selector) {
+      if (!node || node.nodeType !== 1) return false;
+      const parts = selector.split(',').map(s => s.trim());
+      return parts.some(part => matchSingle(node, part));
+    }
+
+    function matchSingle(node, sel) {
+      let remaining = sel;
+      const tagMatch = remaining.match(/^([a-zA-Z0-9]+)/);
+      if (tagMatch) {
+        if (node.tagName !== tagMatch[1].toUpperCase()) return false;
+        remaining = remaining.slice(tagMatch[1].length);
+      }
+      if (!remaining) return true;
+
+      while (remaining.length > 0) {
+        if (remaining.startsWith('.')) {
+          const clsMatch = remaining.match(/^\.([a-zA-Z0-9_-]+)/);
+          if (!clsMatch) return false;
+          const cls = clsMatch[1];
+          const classes = (node.className || '').split(/\s+/);
+          if (!classes.includes(cls)) return false;
+          remaining = remaining.slice(clsMatch[0].length);
+        } else if (remaining.startsWith('#')) {
+          const idMatch = remaining.match(/^#([a-zA-Z0-9_-]+)/);
+          if (!idMatch) return false;
+          if (node.id !== idMatch[1]) return false;
+          remaining = remaining.slice(idMatch[0].length);
+        } else if (remaining.startsWith('[')) {
+          const attrMatch = remaining.match(/^\[([a-zA-Z0-9_-]+)(\*?=?)["']?([^"'\]]*)["']?\]/);
+          if (!attrMatch) return false;
+          const [, attrName, op, expectedVal] = attrMatch;
+          let actualVal = '';
+          if (attrName === 'class') {
+            actualVal = node.className || '';
+          } else if (attrName === 'id') {
+            actualVal = node.id || '';
+          } else {
+            actualVal = (node.getAttribute && node.getAttribute(attrName)) || node[attrName] || '';
+          }
+          if (op === '=') {
+            if (actualVal !== expectedVal) return false;
+          } else if (op === '*=') {
+            if (!actualVal.includes(expectedVal)) return false;
+          } else {
+            if (!actualVal && actualVal !== '') return false;
+          }
+          remaining = remaining.slice(attrMatch[0].length);
+        } else {
+          break;
+        }
+      }
+      return true;
+    }
+
     function mockElement(tag, attrs = {}, classes = [], parent = null) {
       const classStr = classes.join(' ');
       const elem = {
@@ -120,12 +175,7 @@ describe('utils.js test suite', () => {
         closest(sel) {
           let curr = elem;
           while (curr) {
-            if (sel.includes(curr.tagName.toLowerCase())) return curr;
-            if (sel.includes('#') && curr.id === sel.replace('#', '')) return curr;
-            for (const cls of classes) {
-              if (sel.includes(cls)) return curr;
-            }
-            if (sel.includes('_emoticon_') && curr.className.includes('_emoticon_')) return curr;
+            if (matchesSelector(curr, sel)) return curr;
             curr = curr.parentElement;
           }
           return null;

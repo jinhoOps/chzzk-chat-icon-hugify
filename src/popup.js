@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     enabled: true,
     snoozedUntil: 0,
     size: 90,
-    showAltBadge: true,
+    showAltBadge: false,
     crispScaling: false,
   };
 

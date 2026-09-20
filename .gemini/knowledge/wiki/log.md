@@ -98,3 +98,15 @@
   - `git grep`을 통해 잔존 구 저장소명 URL 0건 확인 및 단위 테스트 43/43 전원 통과 확인
 - **영향 파일**: `install-online.ps1`, `README.md`, `tests/online_installer.test.js`, `package.json`, `plans/sprint_chzzk_online_installer.md`, `log.md`
 - **상태**: 43/43 테스트 전원 통과, Git 커밋 완료
+
+---
+
+## [2026-09-20] fix | 채팅 입력창 및 프로필 호버 배제 필터 강화 & 이모티콘 코드 뱃지 기본 비활성화
+
+- **작업 내용**: 실제 치지직 채팅 입력 영역 DOM 스니펫 반영 및 사용자 UI 피로도 개선
+  - 프로필 이미지(`_profile_`, `_setting_button_`, `type=f160`), 채팅 입력 에디터(`pre._input_`, `[contenteditable]`), 탭/카테고리(`_category_`, `_menu_`, flicking), 도네이션/도구 버튼(`_donation_`, `_tools_`) 철저 배제
+  - 이모티콘 선택 영역(`#emoji_area`, `ul._list_`), `_emoticon_` 버튼 클래스, `{:코드:}` 패턴 및 유효한 이모티콘 URL 기반 정밀 타겟팅 로직 구축 (`src/utils.js`, `src/content.js`)
+  - 이모티콘 이름({:코드:}) 표시 옵션(`showAltBadge`) 기본값을 `false`로 변경 (`DEFAULT_SETTINGS`, `popup.html`, `popup.js`, `content.js`)
+  - 실제 사용자 HTML 스니펫 기반 회귀 테스트 추가 및 단위 테스트 모의 DOM CSS 셀렉터 매칭 고도화 (`tests/content_logic.test.js`, `tests/utils.test.js`)
+- **영향 파일**: `src/utils.js`, `src/content.js`, `src/popup.html`, `src/popup.js`, `tests/content_logic.test.js`, `tests/utils.test.js`, `.gemini/knowledge/wiki/log.md`
+- **상태**: 45/45 테스트 전원 통과 완료
