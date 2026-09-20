@@ -42,3 +42,18 @@
   - 17개 단위 테스트 (`tests/*.test.js`) 구축 및 전원 통과
 - **영향 파일**: `manifest.json`, `src/*`, `icons/*`, `tests/*`, `scripts/*`, `package.json`, `README.md`, `log.md`
 - **상태**: 구현 및 검증 완료 (`npm test` 17/17 통과)
+
+---
+
+## [2026-09-20] feat | Windows 원클릭 브라우저 런처(Chrome/Whale) 및 Fallback 구현
+
+- **작업 내용**: Windows 환경에서 웹스토어 등록 없이 로컬 압축해제 확장을 1줄 명령으로 즉시 실행/설치하는 브라우저 런처 개발
+  - 스프린트 계약 체결 (`plans/sprint_chzzk_launcher.md`, DoD 수립)
+  - Google Chrome 및 Naver Whale 실행 파일 자동 탐지 (`auto`, `chrome`, `whale`)
+  - 사용자 기본 프로필/레지스트리 훼손 없이 보안 친화적 격리 프로필(`--user-data-dir`) 및 `--load-extension` 결합 실행
+  - `--fallback` 옵션: 브라우저 확장 관리자(`chrome://extensions`, `whale://extensions`) 열람 및 터미널 수동 로드 단계별 가이드 안내
+  - `install.cmd` 및 `install.ps1` 원클릭 래퍼 스크립트 작성 (공백 및 한글 유니코드 경로 지원)
+  - CLI 인자 파싱 및 오류 처리, 표준 종료 코드(0~4) 지원
+  - 18개 런처 단위 테스트 (`tests/launcher.test.js`) 구축, 전체 35개 테스트 전원 통과
+- **영향 파일**: `scripts/launcher.js`, `install.cmd`, `install.ps1`, `tests/launcher.test.js`, `package.json`, `README.md`, `log.md`
+- **상태**: 구현 및 검증 완료 (`npm test` 35/35 통과, dry-run 검증 완료)

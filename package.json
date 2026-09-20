@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.js",
+    "launch": "node scripts/launcher.js",
+    "launch:chrome": "node scripts/launcher.js --browser=chrome",
+    "launch:whale": "node scripts/launcher.js --browser=whale",
+    "launch:fallback": "node scripts/launcher.js --fallback",
     "generate-icons": "node scripts/generate_icons.js"
   },
   "keywords": [
