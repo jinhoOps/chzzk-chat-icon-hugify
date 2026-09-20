@@ -1,25 +1,36 @@
-# 🔍 치지직 채팅 아이콘 확대기 (CHZZK Emoticon Magnifier)
+# CHZZK Chat Icon Hugify
 
-> 치지직(CHZZK) 방송 채팅창 및 이모티콘 팝업에서 아이콘을 채팅에 전송하기 전에 **마우스 호버만으로 크고 선명하게 미리 확인**할 수 있는 확장프로그램입니다.  
-> **Windows 11 + Google Chrome** 환경을 기본 타겟으로 지원하며, **Naver Whale**에서도 완벽하게 동작합니다.
+치지직 이모티콘에 마우스를 올려 크게 미리 보는 확장 프로그램입니다.
 
 ---
 
-## ⚡ 빠른 시작 (원클릭 설치 & 즉시 실행)
+## 빠른 시작 · 설치
 
-작업 폴더 이동이나 `git clone`, Git/Node.js 설치가 **전혀 필요 없습니다**.  
-Windows 11(또는 Windows 10)에서 `PowerShell`을 열고 아래의 **한 줄 명령어**를 복사해 붙여넣으면 즉시 다운로드되어 실행됩니다.
+**Windows 11 + Chrome 기준**입니다. 파일을 미리 내려받거나 개발 도구를 설치할 필요가 없습니다.
 
-### 🌐 1. Google Chrome으로 실행 (기본 권장)
+1. 시작 메뉴에서 **PowerShell**을 검색해 엽니다.
+2. 아래 명령을 복사해 붙여넣고 **Enter**를 누릅니다.
+
 ```powershell
 irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1 | iex
 ```
 
-### 🐳 2. Naver Whale로 실행
+설치 파일을 내려받은 뒤 별도 Chrome 창을 엽니다. 평소 사용하던 창에 추가하려면 아래 **수동 등록 방법**을 펼쳐주세요.
+
+<details>
+<summary>Whale을 사용한다면? — 설치 명령 보기</summary>
+
+위 Chrome 명령 대신 아래 명령을 PowerShell에 붙여넣으세요.
+
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -Browser whale
 ```
-*(또는 간단히: `$b="whale"; irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1 | iex`)*
+
+</details>
+
+## 더 알아보기
+
+필요한 항목만 눌러 펼쳐보세요.
 
 <details>
 <summary>🔄 이미 설치된 버전 갱신하기</summary>
@@ -46,7 +57,7 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 ---
 
 <details>
-<summary>🛠️ 기존 메인 프로필에 영구 등록하고 싶은 경우 (선택)</summary>
+<summary>수동 등록 방법 — 평소 쓰던 브라우저에 추가하거나 확대가 안 될 때</summary>
 
 일상적으로 사용하시는 기본 브라우저 프로필에 확장을 상시 등록해두고 싶다면, 아래 명령어로 확장 관리자 페이지를 열고 안내에 따라 1회 등록하시면 됩니다:
 
@@ -55,6 +66,7 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 ```
 
 **수동 등록 절차:**
+
 1. 브라우저에서 확장 관리자(`chrome://extensions` 또는 `whale://extensions`)가 열립니다.
 2. 우측 상단의 **[개발자 모드]** 토글을 켭니다.
 3. 좌측 상단의 **[압축해제된 확장 프로그램을 로드합니다]**를 클릭합니다.

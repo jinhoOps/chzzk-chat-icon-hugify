@@ -117,4 +117,5 @@
 
 - **작업 내용**: README 상단에는 Windows 11 Chrome 기본 명령과 Whale 명령만 우선 노출하고, 갱신/보안/수동 등록/개발자용 내용을 HTML `<details>` 접기 영역으로 정리
 - **추가 정합성 수정**: 최신 테스트 수를 45개로 갱신
+- **설치 안내 간소화**: 첫 화면에 PowerShell 열기와 Chrome 설치 명령을 배치하고, Whale 설치 및 모든 추가 설명은 기본적으로 접힌 상태로 제공
 - **영향 파일**: `README.md`, `.gemini/knowledge/wiki/log.md`
