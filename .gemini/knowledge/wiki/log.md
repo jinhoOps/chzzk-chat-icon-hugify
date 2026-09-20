@@ -184,3 +184,21 @@
 
 - `GEMINI.md`에 작업 시작 시 `GEMINI.md`와 저장소 루트 `AGENTS.md`를 모두 읽고 적용하라는 절차를 명시했다.
 - `GEMINI.md`는 진입점·빠른 라우터로 유지하고, 상세 운영 규칙의 SSOT는 `AGENTS.md`로 유지한다.
+
+## [2026-09-20] fix | 확장 관리 페이지 실행 보강 및 직접 주소 fallback
+
+- `install-online.ps1`이 선택한 기존 Chrome/Whale 프로필에서 확장 관리 페이지를 새 창으로 열도록 `--new-window` 실행 인자를 추가했다.
+- 브라우저가 이미 실행 중이거나 내부 커맨드라인 URL 전달에 실패할 때를 대비해 설치기 출력에 Chrome/Whale 확장 관리 직접 주소를 함께 표시한다. 실제 실행 중인 Whale에서도 이 fallback 경로를 확인했다.
+- README 빠른 시작과 디스코드 공유용 설치 문서에 자동 이동 실패 시 주소창에 직접 입력할 경로를 추가했다.
+- `tests/profile_installer.test.js`, `tests/online_installer.test.js`에 새 창 인자와 브라우저별 fallback 주소 검증을 추가했다.
+- 계약: [확장 관리 페이지 실행 보강 및 직접 주소 fallback](./plans/sprint_extension_manager_fallback.md).
+
+---
+
+## [2026-09-20] refactor | 단일 목적 이모티콘 확대 UI 정리
+
+- 팝업에서 `px` 크기 표기, 크기 선택, 이모티콘 코드 배지, 픽셀 보정, 10초 임시 중지 기능을 제거하고 확대 사용 토글만 남겼다.
+- 콘텐츠 툴팁은 고정된 내부 크기의 이미지와 접근성용 alt만 렌더링하며, 기존 고해상도 원본 복원과 대상 필터링은 유지한다.
+- 레거시 저장값은 삭제하지 않고 무시하도록 `enabled` 단일 설정으로 정리했다.
+- `tests/popup.test.js` 정적 회귀 검증을 추가하고 `npm test` 57/57, `git diff --check`, JavaScript 구문 검사를 통과했다.
+- 계약: [단일 목적 이모티콘 확대 UI 정리](./plans/sprint_clean_emoticon_magnifier.md).

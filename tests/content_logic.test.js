@@ -5,7 +5,6 @@ import {
   extractEmoticonInfo,
   calculateTooltipPosition,
   isMagnifierActive,
-  getSnoozeRemainingSeconds,
   DEFAULT_SETTINGS
 } from '../src/utils.js';
 
@@ -165,24 +164,7 @@ describe('Chzzk user snippet test suite', () => {
     assert.equal(extractEmoticonInfo(donateBtn), null, 'Donation button must be excluded');
   });
 
-  it('has showAltBadge disabled by default in DEFAULT_SETTINGS', () => {
-    assert.equal(DEFAULT_SETTINGS.showAltBadge, false, 'showAltBadge must be false by default');
-  });
-
-  it('verifies 10-second snooze countdown cycle', () => {
-    const t0 = 1700000000000;
-    const settings = {
-      enabled: true,
-      snoozedUntil: t0 + 10000
-    };
-
-    assert.equal(isMagnifierActive(settings, t0), false);
-    assert.equal(getSnoozeRemainingSeconds(settings, t0), 10);
-    assert.equal(isMagnifierActive(settings, t0 + 4500), false);
-    assert.equal(getSnoozeRemainingSeconds(settings, t0 + 4500), 6);
-    assert.equal(isMagnifierActive(settings, t0 + 9900), false);
-    assert.equal(getSnoozeRemainingSeconds(settings, t0 + 9900), 1);
-    assert.equal(isMagnifierActive(settings, t0 + 10000), true);
-    assert.equal(getSnoozeRemainingSeconds(settings, t0 + 10000), 0);
+  it('keeps only the enabled setting by default', () => {
+    assert.deepEqual(DEFAULT_SETTINGS, { enabled: true });
   });
 });

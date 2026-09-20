@@ -1,35 +1,30 @@
-/* 치지직 채팅 아이콘 확대기 스타일 */
+/* 치지직 채팅 이모티콘 확대 미리보기 */
 
 :root {
-  --chzzk-mag-size: 90px;
   --chzzk-mag-green: #00ffa3;
-  --chzzk-mag-bg: #141517;
   --chzzk-mag-card-bg: #1f2126;
   --chzzk-mag-border: rgba(0, 255, 163, 0.35);
   --chzzk-mag-shadow: 0 10px 28px rgba(0, 0, 0, 0.75), 0 0 16px rgba(0, 255, 163, 0.2);
 }
 
-/* 확대 툴팁 컨테이너 */
 #chzzk-icon-magnifier-tooltip {
   position: fixed;
   z-index: 9999999;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  box-sizing: border-box;
   background: var(--chzzk-mag-card-bg);
   border: 1px solid var(--chzzk-mag-border);
   border-radius: 10px;
-  padding: 8px;
   box-shadow: var(--chzzk-mag-shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
   opacity: 0;
   transform: scale(0.92) translateY(4px);
   transition: opacity 0.14s cubic-bezier(0.16, 1, 0.3, 1), transform 0.14s cubic-bezier(0.16, 1, 0.3, 1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-sizing: border-box;
   user-select: none;
 }
 
@@ -38,82 +33,21 @@
   transform: scale(1) translateY(0);
 }
 
-/* 툴팁 내부 이미지 */
 #chzzk-icon-magnifier-tooltip .chzzk-mag-image-wrap {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 90px;
+  height: 90px;
+  overflow: hidden;
   background: rgba(0, 0, 0, 0.35);
   border-radius: 6px;
-  overflow: hidden;
-  min-width: 48px;
-  min-height: 48px;
 }
 
 #chzzk-icon-magnifier-tooltip img.chzzk-mag-img {
   display: block;
-  width: var(--chzzk-mag-size, 90px);
-  height: var(--chzzk-mag-size, 90px);
+  width: 90px;
+  height: 90px;
   object-fit: contain;
   image-rendering: auto;
-}
-
-#chzzk-icon-magnifier-tooltip img.chzzk-mag-crisp {
-  image-rendering: pixelated;
-}
-
-/* 이모티콘 텍스트 코드 배지 (예: {:slp1:}) */
-#chzzk-icon-magnifier-tooltip .chzzk-mag-alt {
-  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--chzzk-mag-green);
-  background: rgba(0, 255, 163, 0.12);
-  border: 1px solid rgba(0, 255, 163, 0.25);
-  border-radius: 5px;
-  padding: 2px 7px;
-  max-width: 140px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  letter-spacing: -0.2px;
-}
-
-
-/* 일시 중지 / 상태 알림 토스트 */
-#chzzk-mag-toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 9999999;
-  pointer-events: none;
-  background: rgba(20, 21, 23, 0.94);
-  border: 1px solid var(--chzzk-mag-border);
-  border-radius: 8px;
-  padding: 10px 16px;
-  color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-#chzzk-mag-toast.chzzk-mag-toast-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#chzzk-mag-toast .chzzk-mag-toast-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--chzzk-mag-green);
-  box-shadow: 0 0 8px var(--chzzk-mag-green);
 }

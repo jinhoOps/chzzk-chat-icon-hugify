@@ -290,6 +290,7 @@ $launchArgs = @()
 if ($selectedProfile) {
     if ($UserDataDir.Contains('"')) { throw 'Invalid user data path.' }
     $launchArgs = @(
+        '--new-window',
         ('--user-data-dir="{0}"' -f $UserDataDir),
         ('--profile-directory="{0}"' -f $selectedProfile.Directory),
         $targetUrl
@@ -443,6 +444,8 @@ try {
 } catch { throw "Could not open the browser: $($_.Exception.Message)" }
 
 Write-Host ("Profile: {0} [{1}]" -f $selectedProfile.Name, $selectedProfile.Directory)
+Write-Host '확장 관리 페이지가 자동으로 열리지 않으면 주소창에 직접 입력하세요:' -ForegroundColor Yellow
+Write-Host ("확장 관리 주소: {0}" -f $targetUrl) -ForegroundColor Green
 Write-Host '1. 열린 확장 관리 화면에서 [개발자 모드]를 켜세요.'
 Write-Host '2. [압축해제된 확장 프로그램을 로드합니다]를 클릭하세요.'
 Write-Host '3. 폴더 선택 창의 주소창에 아래 경로를 붙여넣고 선택하세요:'

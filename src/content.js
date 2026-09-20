@@ -1,32 +1,23 @@
 /**
- * 치지직 채팅 아이콘 확대기 (CHZZK Emoticon Magnifier)
- * Content Script
+ * 치지직 채팅 이모티콘 커져라! Hugify!
+ * Content script
  */
 
 (function () {
   'use strict';
 
-  // 기본 설정
-  let settings = {
-    enabled: true,
-    snoozedUntil: 0,
-    size: 90,
-    crispScaling: false,
-    showAltBadge: false,
-  };
+  const MAGNIFIER_SIZE = 90;
+  const TOOLTIP_PADDING = 16;
+  let settings = { enabled: true };
 
   let tooltipEl = null;
   let tooltipImg = null;
-  let tooltipAlt = null;
-  let toastEl = null;
-  let toastTimer = null;
   let currentTarget = null;
   let hideTimeout = null;
 
-  // --- 유틸리티 함수 ---
-
   function getHighResImageUrl(url) {
     if (!url || typeof url !== 'string') return '';
+
     try {
       const parsed = new URL(url);
       if (parsed.hostname.includes('pstatic.net')) {
@@ -35,16 +26,17 @@
       }
     } catch {
       if (url.includes('pstatic.net')) {
-        return url.replace(/([?&])type=[^&]*(&|$)/, (m, p1, p2) => (p1 === '?' && p2 ? '?' : ''));
+        return url.replace(/([?&])type=[^&]*(&|$)/, (match, prefix, suffix) => (
+          prefix === '?' && suffix ? '?' : ''
+        ));
       }
     }
+
     return url;
   }
 
-  function isMagnifierActive(currentTime = Date.now()) {
-    if (!settings || settings.enabled === false) return false;
-    if (settings.snoozedUntil && currentTime < settings.snoozedUntil) return false;
-    return true;
+  function isMagnifierActive() {
+    return Boolean(settings && settings.enabled !== false);
   }
 
   function calculateTooltipPosition(
@@ -70,6 +62,7 @@
     if (top < padding) {
       top = anchorRect.bottom + gap;
       placement = 'bottom';
+
       if (top + tooltipHeight > viewportHeight - padding) {
         top = Math.max(padding, viewportHeight - tooltipHeight - padding);
       }
@@ -85,40 +78,31 @@
   function extractEmoticonInfo(target) {
     if (!target || !target.nodeType) return null;
 
-    // 1. 철저한 배제 필터링 (불필요한 아이콘 호버 차단)
-    // (1) 프로필 이미지 및 설정 버튼 제외
     if (target.closest('[class*="_profile_"], [class*="profile"], [class*="_setting_button_"], [class*="setting_button"]')) {
       return null;
     }
 
-    // (2) 채팅 입력창(<pre contenteditable>) 및 입력 영역 내부 요소 제외
     if (target.closest('pre, [contenteditable="true"], [class*="_input_"], [class*="_input_button_"]')) {
       return null;
     }
 
-    // (3) 이모티콘 팝업 상단의 탭/카테고리 버튼 제외 (_category_, _menu_, flicking)
     if (target.closest('[class*="_category_"], [class*="_menu_"], .flicking-viewport, [class*="_flicking_"]')) {
       return null;
     }
 
-    // (4) 후원/치즈 도네이션 및 도구 버튼 제외
     if (target.closest('[class*="_donation_"], [class*="_tools_"], [class*="_action_"]')) {
       return null;
     }
 
-    // (5) 팝업 닫기 버튼 등 제어 버튼 제외
     if (target.closest('button[aria-label="팝업 닫기"], button[aria-label*="닫기"]')) {
       return null;
     }
 
-    // 2. 대상 이미지 및 버튼 탐색
     let img = target.tagName === 'IMG' ? target : null;
 
     if (!img) {
-      const btn = target.closest('button, [role="button"], [class*="_emoticon_"], [class*="emoji"]');
-      if (btn) {
-        img = btn.querySelector('img');
-      }
+      const button = target.closest('button, [role="button"], [class*="_emoticon_"], [class*="emoji"]');
+      if (button) img = button.querySelector('img');
     }
 
     if (!img) return null;
@@ -126,32 +110,22 @@
     const src = img.src || img.getAttribute('src') || '';
     const alt = (img.alt || img.getAttribute('alt') || '').trim();
 
-    // 프로필 이미지 URL 패턴(type=f160 등) 또는 SVG 아이콘 배제
     if (src.includes('type=f160') || src.includes('/profile/') || src.endsWith('.svg')) {
       return null;
     }
 
-    // 3. 실제 이모티콘 요소인지 정밀 검증
     const button = img.closest('button, [role="button"]');
     const buttonClass = (button?.className || '').toString();
     const imgClass = (img.className || '').toString();
-
-    // (A) 이모티콘 선택 영역(#emoji_area 또는 ul._list_... 내 버튼) 내부
     const isInsideEmojiArea = Boolean(
       img.closest('#emoji_area, [id*="emoji_area"], ul[class*="_list_"]')
     );
-
-    // (B) 클래스명에 emoticon 또는 emoji가 명시된 버튼
     const isEmoticonButton =
       buttonClass.includes('_emoticon_') ||
       buttonClass.includes('emoticon') ||
       imgClass.includes('_emoticon_') ||
       imgClass.includes('emoticon');
-
-    // (C) 이모티콘 alt 패턴 ({:코드:} 형태)
     const hasEmoticonAlt = /^\{:.*:\}$/.test(alt);
-
-    // (D) 명확한 이모티콘 URL 패턴
     const isEmoticonUrl =
       src.includes('/glive/subscription/emoji/') ||
       src.includes('/glive/icon/') ||
@@ -159,42 +133,26 @@
       (src.includes('/emoji/') && !src.includes('/profile/'));
 
     if (isInsideEmojiArea && (isEmoticonButton || isEmoticonUrl || hasEmoticonAlt)) {
-      return {
-        img,
-        alt,
-        button: button || img,
-        src,
-      };
+      return { img, alt, button: button || img, src };
     }
 
     if (isEmoticonButton && (isEmoticonUrl || hasEmoticonAlt || isInsideEmojiArea)) {
-      return {
-        img,
-        alt,
-        button: button || img,
-        src,
-      };
+      return { img, alt, button: button || img, src };
     }
 
     if (hasEmoticonAlt && isEmoticonUrl) {
-      return {
-        img,
-        alt,
-        button: button || img,
-        src,
-      };
+      return { img, alt, button: button || img, src };
     }
 
     return null;
   }
-
-  // --- DOM 요소 초기화 ---
 
   function ensureTooltip() {
     if (tooltipEl && document.body.contains(tooltipEl)) return;
 
     tooltipEl = document.createElement('div');
     tooltipEl.id = 'chzzk-icon-magnifier-tooltip';
+    tooltipEl.setAttribute('role', 'tooltip');
     tooltipEl.setAttribute('aria-hidden', 'true');
 
     const imgWrap = document.createElement('div');
@@ -205,53 +163,9 @@
     tooltipImg.alt = '이모티콘 확대 미리보기';
     imgWrap.appendChild(tooltipImg);
 
-    tooltipAlt = document.createElement('div');
-    tooltipAlt.className = 'chzzk-mag-alt';
-
     tooltipEl.appendChild(imgWrap);
-    tooltipEl.appendChild(tooltipAlt);
-
     document.body.appendChild(tooltipEl);
-    applySizeStyle();
   }
-
-  function applySizeStyle() {
-    const size = Number(settings.size) || 90;
-    document.documentElement.style.setProperty('--chzzk-mag-size', `${size}px`);
-
-    if (tooltipImg) {
-      if (settings.crispScaling) {
-        tooltipImg.classList.add('chzzk-mag-crisp');
-      } else {
-        tooltipImg.classList.remove('chzzk-mag-crisp');
-      }
-    }
-  }
-
-  function showToast(message) {
-    if (!toastEl) {
-      toastEl = document.createElement('div');
-      toastEl.id = 'chzzk-mag-toast';
-      const dot = document.createElement('div');
-      dot.className = 'chzzk-mag-toast-dot';
-      toastEl.appendChild(dot);
-      const text = document.createElement('span');
-      text.id = 'chzzk-mag-toast-text';
-      toastEl.appendChild(text);
-      document.body.appendChild(toastEl);
-    }
-
-    const textEl = toastEl.querySelector('#chzzk-mag-toast-text');
-    if (textEl) textEl.textContent = message;
-
-    toastEl.classList.add('chzzk-mag-toast-visible');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-      if (toastEl) toastEl.classList.remove('chzzk-mag-toast-visible');
-    }, 2400);
-  }
-
-  // --- 툴팁 표시 및 숨김 ---
 
   function showTooltip(info) {
     ensureTooltip();
@@ -259,33 +173,18 @@
 
     const anchor = info.button || info.img;
     currentTarget = anchor;
-
     const originalSrc = info.src;
     const highResSrc = getHighResImageUrl(originalSrc);
 
-    // 고해상도 이미지 로드 시도 및 실패 시 썸네일 원본으로 폴백
     tooltipImg.onerror = function () {
-      if (this.src !== originalSrc) {
-        this.src = originalSrc;
-      }
+      if (this.src !== originalSrc) this.src = originalSrc;
     };
     tooltipImg.src = highResSrc;
 
-    // Alt 텍스트 표시 설정
-    if (settings.showAltBadge && info.alt) {
-      tooltipAlt.textContent = info.alt;
-      tooltipAlt.style.display = 'block';
-    } else {
-      tooltipAlt.style.display = 'none';
-    }
-
-    // 위치 계산
-    const showAlt = Boolean(settings.showAltBadge && info.alt);
     const anchorRect = anchor.getBoundingClientRect();
-    const tooltipWidth = (Number(settings.size) || 90) + 16;
-    const tooltipHeight = (Number(settings.size) || 90) + (showAlt ? 40 : 16);
-
-    const pos = calculateTooltipPosition(
+    const tooltipWidth = MAGNIFIER_SIZE + TOOLTIP_PADDING;
+    const tooltipHeight = MAGNIFIER_SIZE + TOOLTIP_PADDING;
+    const position = calculateTooltipPosition(
       anchorRect,
       tooltipWidth,
       tooltipHeight,
@@ -295,8 +194,9 @@
       10
     );
 
-    tooltipEl.style.left = `${pos.left}px`;
-    tooltipEl.style.top = `${pos.top}px`;
+    tooltipEl.style.left = `${position.left}px`;
+    tooltipEl.style.top = `${position.top}px`;
+    tooltipEl.setAttribute('aria-hidden', 'false');
     tooltipEl.classList.add('chzzk-mag-visible');
   }
 
@@ -304,134 +204,78 @@
     clearTimeout(hideTimeout);
     if (!tooltipEl) return;
 
-    if (immediate) {
+    const hide = () => {
       tooltipEl.classList.remove('chzzk-mag-visible');
+      tooltipEl.setAttribute('aria-hidden', 'true');
       currentTarget = null;
+    };
+
+    if (immediate) {
+      hide();
     } else {
-      hideTimeout = setTimeout(() => {
-        if (tooltipEl) tooltipEl.classList.remove('chzzk-mag-visible');
-        currentTarget = null;
-      }, 60);
+      hideTimeout = setTimeout(hide, 60);
     }
   }
 
-  // --- 이벤트 리스너 ---
+  function isTooltipTarget(target) {
+    return Boolean(
+      target &&
+      typeof target.closest === 'function' &&
+      target.closest('#chzzk-icon-magnifier-tooltip')
+    );
+  }
 
-  function handleMouseOver(e) {
+  function handleMouseOver(event) {
     if (!isMagnifierActive()) return;
 
-    const info = extractEmoticonInfo(e.target);
+    const info = extractEmoticonInfo(event.target);
     if (!info) {
-      if (currentTarget && !e.target.closest('#chzzk-icon-magnifier-tooltip')) {
-        hideTooltip();
-      }
+      if (currentTarget && !isTooltipTarget(event.target)) hideTooltip();
       return;
     }
 
     showTooltip(info);
   }
 
-  function handleMouseOut(e) {
+  function handleMouseOut(event) {
     if (!currentTarget) return;
 
-    // 마우스가 현재 대상 외부로 나갔는지 확인
-    const related = e.relatedTarget;
-    if (related && (currentTarget.contains(related) || (tooltipEl && tooltipEl.contains(related)))) {
+    const relatedTarget = event.relatedTarget;
+    if (
+      relatedTarget &&
+      (currentTarget.contains(relatedTarget) || (tooltipEl && tooltipEl.contains(relatedTarget)))
+    ) {
       return;
     }
 
     hideTooltip();
   }
 
-  function handleClick(e) {
-    // 이모티콘을 클릭하여 전송/선택할 때 툴팁 즉시 닫기
-    const info = extractEmoticonInfo(e.target);
-    if (info) {
-      hideTooltip(true);
-    }
+  function handleClick(event) {
+    if (extractEmoticonInfo(event.target)) hideTooltip(true);
   }
-
-  function handleKeyDown(e) {
-    // 단축키: Alt + Z -> 10초 비활성화 토글
-    if (e.altKey && (e.key === 'z' || e.key === 'Z' || e.code === 'KeyZ')) {
-      e.preventDefault();
-      const now = Date.now();
-      if (settings.snoozedUntil && now < settings.snoozedUntil) {
-        // 이미 스누즈 중이면 즉시 해제
-        settings.snoozedUntil = 0;
-        chrome.storage.local.set({ snoozedUntil: 0 });
-        showToast('▶️ 아이콘 확대 기능 활성화');
-      } else {
-        // 10초 스누즈 적용
-        const until = now + 10000;
-        settings.snoozedUntil = until;
-        chrome.storage.local.set({ snoozedUntil: until });
-        hideTooltip(true);
-        showToast('⏸️ 10초간 아이콘 확대 비활성화 (Alt+Z로 해제)');
-      }
-    }
-  }
-
-  // --- 설정 동기화 ---
 
   function initSettings() {
-    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
-      chrome.storage.local.get(['enabled', 'snoozedUntil', 'size', 'crispScaling', 'showAltBadge'], (res) => {
-        if (res) {
-          settings = { ...settings, ...res };
-          applySizeStyle();
-        }
-      });
+    if (typeof chrome === 'undefined' || !chrome.storage?.local) return;
 
-      chrome.storage.onChanged.addListener((changes, area) => {
-        if (area !== 'local') return;
+    chrome.storage.local.get(['enabled'], (result) => {
+      settings = { enabled: result?.enabled !== false };
+    });
 
-        let sizeChanged = false;
-        let enabledChanged = false;
-        let snoozeChanged = false;
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== 'local' || !Object.prototype.hasOwnProperty.call(changes, 'enabled')) return;
 
-        for (const [key, change] of Object.entries(changes)) {
-          settings[key] = change.newValue;
-          if (key === 'size' || key === 'crispScaling') sizeChanged = true;
-          if (key === 'enabled') enabledChanged = true;
-          if (key === 'snoozedUntil') snoozeChanged = true;
-        }
-
-        if (sizeChanged) {
-          applySizeStyle();
-        }
-
-        if (!settings.enabled) {
-          hideTooltip(true);
-          if (enabledChanged) showToast('🛑 아이콘 확대 비활성화됨');
-        } else if (enabledChanged) {
-          showToast('✅ 아이콘 확대 활성화됨');
-        }
-
-        if (snoozeChanged) {
-          const now = Date.now();
-          if (settings.snoozedUntil && now < settings.snoozedUntil) {
-            hideTooltip(true);
-            const remaining = Math.ceil((settings.snoozedUntil - now) / 1000);
-            showToast(`⏸️ ${remaining}초간 아이콘 확대 비활성화`);
-          }
-        }
-      });
-    }
+      settings.enabled = changes.enabled.newValue !== false;
+      if (!settings.enabled) hideTooltip(true);
+    });
   }
-
-  // --- 초기화 구동 ---
 
   function init() {
     initSettings();
-
-    // 이벤트 위임 바인딩
     document.addEventListener('mouseover', handleMouseOver, { passive: true });
     document.addEventListener('mouseout', handleMouseOut, { passive: true });
     document.addEventListener('click', handleClick, { passive: true });
-    document.addEventListener('keydown', handleKeyDown);
-
-    console.log('[CHZZK Icon Magnifier] 치지직 채팅 아이콘 확대기 활성화됨 (단축키: Alt+Z)');
+    console.log('[CHZZK Icon Magnifier] 치지직 채팅 이모티콘 확대가 활성화됨');
   }
 
   if (document.readyState === 'loading') {

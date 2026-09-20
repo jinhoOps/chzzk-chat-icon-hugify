@@ -1,20 +1,10 @@
 /**
- * 치지직 채팅 아이콘 확대기 핵심 유틸리티 모듈
+ * 치지직 채팅 이모티콘 커져라! 핵심 유틸리티 모듈
  */
 
 export const DEFAULT_SETTINGS = {
   enabled: true,
-  snoozedUntil: 0,
-  size: 90, // 60 (원본), 90 (확대), 120 (대형)
-  crispScaling: false,
-  showAltBadge: false,
 };
-
-export const SIZE_PRESETS = [
-  { value: 60, label: '원본 (60x60px)', description: '기본 크기' },
-  { value: 90, label: '확대 (90x90px)', description: '권장 크기 (+50%)' },
-  { value: 120, label: '대형 (120x120px)', description: '2배 확대' },
-];
 
 /**
  * 네이버 치지직 CDN(pstatic)의 썸네일 축소 쿼리스트링(?type=f60_60 등)을 제거하여
@@ -39,31 +29,12 @@ export function getHighResImageUrl(url) {
 }
 
 /**
- * 현재 설정과 시간을 기준으로 확대기 기능 활성화 여부를 판별합니다.
+ * 설정에 따라 이모티콘 확대 기능 활성화 여부를 판별합니다.
  * @param {object} settings 
- * @param {number} currentTime (기본: Date.now())
  * @returns {boolean}
  */
-export function isMagnifierActive(settings, currentTime = Date.now()) {
-  if (!settings || settings.enabled === false) {
-    return false;
-  }
-  if (settings.snoozedUntil && currentTime < settings.snoozedUntil) {
-    return false;
-  }
-  return true;
-}
-
-/**
- * 10초 스누즈의 남은 시간을 초 단위로 계산합니다.
- * @param {object} settings 
- * @param {number} currentTime 
- * @returns {number} 남은 초 (0 이상)
- */
-export function getSnoozeRemainingSeconds(settings, currentTime = Date.now()) {
-  if (!settings || !settings.snoozedUntil) return 0;
-  const diff = settings.snoozedUntil - currentTime;
-  return diff > 0 ? Math.ceil(diff / 1000) : 0;
+export function isMagnifierActive(settings) {
+  return Boolean(settings && settings.enabled !== false);
 }
 
 /**

@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>치지직 아이콘 확대기</title>
+  <title>치지직 이모티콘 커져라! Hugify!</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="container">
-    <!-- 헤더 -->
     <header class="header">
       <div class="brand">
-        <div class="logo-box">
+        <div class="logo-box" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00ffa3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -21,98 +20,28 @@
           </svg>
         </div>
         <div class="title-wrap">
-          <h1 class="title">치지직 아이콘 확대</h1>
-          <span class="version">v1.0.0</span>
+          <h1 class="title">치지직 이모티콘 커져라!</h1>
+          <span class="version">Hugify! · v1.0.0</span>
         </div>
       </div>
-      <div id="status-badge" class="badge badge-active">작동 중</div>
+      <div id="status-badge" class="badge badge-active">사용 중</div>
     </header>
 
-    <!-- 스누즈 상태 배너 (10초 비활성화 활성 시 표시) -->
-    <div id="snooze-banner" class="snooze-banner hidden">
-      <div class="snooze-info">
-        <span class="snooze-icon">⏳</span>
-        <span id="snooze-text">10초 일시 중지 중 (10초 남음)</span>
-      </div>
-      <button id="cancel-snooze-btn" type="button" class="btn-cancel-snooze">즉시 재개</button>
-    </div>
-
-    <!-- 주 제어 섹션 -->
     <section class="section">
-      <!-- 1. 활성화/비활성화 마스터 스위치 -->
       <div class="control-row">
         <div class="control-label">
-          <span class="label-title">확대 기능 사용</span>
-          <span class="label-sub">마우스 호버 시 실시간 확대</span>
+          <span class="label-title">이모티콘 확대</span>
+          <span class="label-sub">마우스를 올리면 크게 보여줍니다</span>
         </div>
         <label class="switch">
           <input type="checkbox" id="toggle-enabled" checked>
           <span class="slider"></span>
         </label>
       </div>
-
-      <!-- 2. 10초 임시 비활성화 버튼 -->
-      <div class="snooze-action-row">
-        <button id="btn-snooze-10s" type="button" class="btn-snooze">
-          <span class="btn-icon">⏸️</span>
-          <span class="btn-text">10초 비활성화</span>
-          <span class="btn-hint">(Alt+Z)</span>
-        </button>
-      </div>
     </section>
 
-    <!-- 확대 크기 옵션 -->
-    <section class="section">
-      <div class="section-title">확대 크기 선택</div>
-      <div class="size-selector">
-        <label class="size-card">
-          <input type="radio" name="size" value="60">
-          <div class="card-content">
-            <span class="size-name">원본</span>
-            <span class="size-px">60×60px</span>
-          </div>
-        </label>
-
-        <label class="size-card">
-          <input type="radio" name="size" value="90" checked>
-          <div class="card-content">
-            <span class="size-tag-recommend">추천</span>
-            <span class="size-name">확대</span>
-            <span class="size-px">90×90px</span>
-          </div>
-        </label>
-
-        <label class="size-card">
-          <input type="radio" name="size" value="120">
-          <div class="card-content">
-            <span class="size-name">대형</span>
-            <span class="size-px">120×120px</span>
-          </div>
-        </label>
-      </div>
-    </section>
-
-    <!-- 세부 옵션 -->
-    <section class="section sub-options">
-      <div class="checkbox-row">
-        <label class="checkbox-label">
-          <input type="checkbox" id="toggle-alt">
-          <span class="checkbox-custom"></span>
-          <span>이모티콘 이름({:코드:}) 표시</span>
-        </label>
-      </div>
-      <div class="checkbox-row">
-        <label class="checkbox-label">
-          <input type="checkbox" id="toggle-crisp">
-          <span class="checkbox-custom"></span>
-          <span>선명한 도트/픽셀 보정 (Pixelated)</span>
-        </label>
-      </div>
-    </section>
-
-    <!-- 푸터 팁 -->
     <footer class="footer">
-      <span>💡 치지직 라이브 채팅창에서 마우스를 올리면 즉시 작동합니다.</span>
+      치지직 채팅 이모티콘에 마우스를 올려보세요.
     </footer>
   </div>
 

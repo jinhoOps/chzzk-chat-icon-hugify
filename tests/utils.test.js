@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import {
   getHighResImageUrl,
   isMagnifierActive,
-  getSnoozeRemainingSeconds,
   calculateTooltipPosition,
   extractEmoticonInfo,
   DEFAULT_SETTINGS
@@ -36,7 +35,7 @@ describe('utils.js test suite', () => {
   });
 
   describe('isMagnifierActive', () => {
-    it('returns true when enabled is true and no snooze', () => {
+    it('returns true when enabled is true', () => {
       assert.equal(isMagnifierActive({ enabled: true }), true);
       assert.equal(isMagnifierActive(DEFAULT_SETTINGS), true);
     });
@@ -45,30 +44,8 @@ describe('utils.js test suite', () => {
       assert.equal(isMagnifierActive({ enabled: false }), false);
     });
 
-    it('returns false when currently snoozed', () => {
-      const now = 100000;
-      const settings = { enabled: true, snoozedUntil: now + 5000 };
-      assert.equal(isMagnifierActive(settings, now), false);
-    });
-
-    it('returns true when snooze has expired', () => {
-      const now = 100000;
-      const settings = { enabled: true, snoozedUntil: now - 1000 };
-      assert.equal(isMagnifierActive(settings, now), true);
-    });
-  });
-
-  describe('getSnoozeRemainingSeconds', () => {
-    it('returns ceiling of remaining seconds', () => {
-      const now = 100000;
-      const settings = { snoozedUntil: now + 9400 };
-      assert.equal(getSnoozeRemainingSeconds(settings, now), 10);
-    });
-
-    it('returns 0 when snooze time is in the past or zero', () => {
-      const now = 100000;
-      assert.equal(getSnoozeRemainingSeconds({ snoozedUntil: now - 500 }, now), 0);
-      assert.equal(getSnoozeRemainingSeconds({ snoozedUntil: 0 }, now), 0);
+    it('ignores legacy snooze values', () => {
+      assert.equal(isMagnifierActive({ enabled: true, snoozedUntil: Date.now() + 5000 }), true);
     });
   });
 

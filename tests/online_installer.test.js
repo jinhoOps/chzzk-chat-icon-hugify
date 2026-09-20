@@ -44,6 +44,13 @@ describe('online installer test suite (install-online.ps1)', () => {
       );
     });
 
+    it('keeps browser-specific extension manager URLs and opens a new window', () => {
+      assert.ok(scriptContent.includes("'chrome://extensions/'"), 'Must keep Chrome extension manager URL');
+      assert.ok(scriptContent.includes("'whale://extensions/'"), 'Must keep Whale extension manager URL');
+      assert.ok(scriptContent.includes("'--new-window'"), 'Must request a new browser window');
+      assert.match(scriptContent, /확장 관리 주소/, 'Must print the direct address fallback');
+    });
+
     it('installs into a stable local app directory, not temporary scratch', () => {
       assert.ok(
         scriptContent.includes('ChzzkIconMagnifier\\app'),
