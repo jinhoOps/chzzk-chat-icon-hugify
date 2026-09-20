@@ -243,7 +243,7 @@ h1 span {
 .footer-links {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  height: 44px;
+  height: 48px;
   gap: 2px;
   padding: 1px;
   background: #eef6fc;
@@ -288,8 +288,7 @@ h1 span {
 }
 
 .footer-link-disabled {
-  cursor: default;
+  cursor: not-allowed;
   filter: grayscale(0.25);
   opacity: 0.42;
-  pointer-events: none;
 }

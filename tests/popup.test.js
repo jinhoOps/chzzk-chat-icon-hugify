@@ -40,12 +40,14 @@ describe('Hugify popup UI', () => {
     assert.match(popupHtml, /aria-label="수땡 Discord"/);
     assert.match(popupHtml, /aria-label="Hugify GitHub 저장소"/);
     assert.match(popupHtml, /class="footer-link footer-link-disabled"[^>]*href="https:\/\/chzzk\.naver\.com\/43c05c91ae59803c7b3f267753b73b65"[^>]*aria-disabled="true"[^>]*tabindex="-1"/s);
+    assert.match(popupHtml, /class="footer-link footer-link-disabled"[^>]*title="오픈카톡 예정"/s);
     assert.match(popupHtml, /target="_blank"/);
     assert.doesNotMatch(popupHtml, /stream-link|stream-image|icons\/suttaeng\.png/);
     assert.doesNotMatch(popupHtml, /PREVIEW|stream-label|external-icon|toggle-enabled|setting-card|switch/);
     assert.doesNotMatch(popupHtml, /toggle-alt|toggle-crisp|snooze|Alt\+Z|version/i);
     assert.doesNotMatch(popupJs, /toggleEnabled/);
     assert.match(popupJs, /statusBadge\.addEventListener\('click'/);
+    assert.match(popupJs, /footer-link-disabled[\s\S]*?event\.preventDefault\(\)/);
     assert.match(popupJs, /sizeRefreshNotice\.hidden\s*=\s*false/);
     assert.match(popupJs, /size/);
     assert.match(popupCss, /#f8fbff|#ffffff|--accent/);
@@ -56,9 +58,9 @@ describe('Hugify popup UI', () => {
     assert.match(popupCss, /#size-120\s*\+\s*\.size-choice\s*\.size-preview[\s\S]*?width:\s*120px/);
     assert.match(popupCss, /\.footer-links[\s\S]*?grid-template-columns:\s*repeat\(4,\s*1fr\)/);
     assert.match(popupCss, /\.footer-link[\s\S]*?justify-content:\s*center/);
-    assert.match(popupCss, /\.footer-links[\s\S]*?height:\s*44px/);
+    assert.match(popupCss, /\.footer-links[\s\S]*?height:\s*48px/);
     assert.match(popupCss, /\.footer-image[\s\S]*?width:\s*40px/);
-    assert.match(popupCss, /\.footer-link-disabled[\s\S]*?pointer-events:\s*none/);
+    assert.doesNotMatch(popupCss, /\.footer-link-disabled[\s\S]*?pointer-events:\s*none/);
     assert.match(popupCss, /\.footer-image/);
     assert.ok(fs.existsSync(path.resolve('fonts/CookieRun-Regular.otf')));
     assert.ok(fs.existsSync(path.resolve('fonts/CookieRun-Bold.otf')));

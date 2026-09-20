@@ -53,6 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
     saveState({ enabled: !state.enabled });
   });
 
+  document.querySelectorAll('.footer-link-disabled').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+    });
+  });
+
   sizeRadios.forEach((radio) => {
     radio.addEventListener('change', () => {
       if (radio.checked) {
