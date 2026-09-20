@@ -2,7 +2,7 @@
 
 치지직 이모티콘, 커져라! 마우스를 올리면 크게 미리 볼 수 있는 확장 프로그램입니다.
 
-현재 배포 버전은 **v1.0.1**입니다. [GitHub Release](https://github.com/jinhoOps/chzzk-chat-icon-hugify/releases/latest)에서 설치 파일을 직접 받을 수도 있습니다.
+현재 배포 버전은 **v1.1.0**입니다. [GitHub Release](https://github.com/jinhoOps/chzzk-chat-icon-hugify/releases/latest)에서 설치 파일을 직접 받을 수도 있습니다.
 
 ---
 
@@ -45,7 +45,7 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 
 처음 설치할 때와 같은 Chrome 명령을 다시 실행하면 최신 GitHub Release를 자동으로 확인합니다.
 
-현재 최신 버전은 [v1.0.1](https://github.com/jinhoOps/chzzk-chat-icon-hugify/releases/tag/v1.0.1)이며, 설치기가 기존 버전과 비교해 필요한 경우에만 갱신합니다.
+현재 최신 버전은 [v1.1.0](https://github.com/jinhoOps/chzzk-chat-icon-hugify/releases/tag/v1.1.0)이며, 설치기가 기존 버전과 비교해 필요한 경우에만 갱신합니다.
 
 - 새 버전이 있으면 최신 파일만 내려받아 기존 설치 폴더를 교체합니다.
 - 이미 최신이면 파일을 다시 받지 않습니다.
@@ -64,7 +64,7 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 확장 기능을 수정한 뒤 `manifest.json`과 `package.json`의 버전을 같은 값으로 올리고 태그를 푸시하면 됩니다.
 
 ```powershell
-# 예: 1.0.1 → 1.0.2
+# 예: 1.1.0 → 1.2.0
 # manifest.json, package.json의 version을 모두 1.0.2로 수정
 npm test
 git add manifest.json package.json src icons README.md

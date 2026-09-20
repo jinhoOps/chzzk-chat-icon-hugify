@@ -3,7 +3,6 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const toggleEnabled = document.getElementById('toggle-enabled');
   const statusBadge = document.getElementById('status-badge');
   const sizeRadios = document.querySelectorAll('input[name="size"]');
   const supportedSizes = [90, 120];
@@ -19,9 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateUI() {
-    toggleEnabled.checked = state.enabled;
     statusBadge.textContent = state.enabled ? 'ON' : 'OFF';
     statusBadge.className = state.enabled ? 'status status-on' : 'status status-off';
+    statusBadge.setAttribute('aria-pressed', String(state.enabled));
+    statusBadge.setAttribute(
+      'aria-label',
+      state.enabled ? '이모티콘 확대 끄기' : '이모티콘 확대 켜기'
+    );
 
     sizeRadios.forEach((radio) => {
       radio.checked = Number(radio.value) === state.size;
@@ -45,8 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUI();
   });
 
-  toggleEnabled.addEventListener('change', () => {
-    saveState({ enabled: toggleEnabled.checked });
+  statusBadge.addEventListener('click', () => {
+    saveState({ enabled: !state.enabled });
   });
 
   sizeRadios.forEach((radio) => {
