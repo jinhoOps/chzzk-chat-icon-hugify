@@ -59,12 +59,12 @@ export function detectBrowser(target = 'auto', env = process.env, existsFn = fs.
   }
 
   if (normalizedTarget === 'auto') {
-    // auto: Naver Whale 우선 확인 (치지직은 네이버 서비스이므로 호환성 우수), 없으면 Chrome
-    for (const p of candidates.whale) {
-      if (existsFn(p)) return { type: 'whale', exePath: p, name: 'Naver Whale' };
-    }
+    // auto: Google Chrome 우선 감지, 없으면 Naver Whale 선택
     for (const p of candidates.chrome) {
       if (existsFn(p)) return { type: 'chrome', exePath: p, name: 'Google Chrome' };
+    }
+    for (const p of candidates.whale) {
+      if (existsFn(p)) return { type: 'whale', exePath: p, name: 'Naver Whale' };
     }
     return null;
   }
@@ -155,7 +155,7 @@ export function printHelp() {
 [옵션]
   --browser=<auto|chrome|whale>, -b <값>
       실행할 브라우저를 선택합니다 (기본값: auto)
-      - auto   : Whale 우선 감지 후 Chrome 자동 선택
+      - auto   : Chrome 우선 감지 후 Whale 자동 선택
       - chrome : Google Chrome 강제 지정
       - whale  : Naver Whale 강제 지정
 

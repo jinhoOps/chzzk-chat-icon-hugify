@@ -70,12 +70,12 @@ describe('launcher.js test suite', () => {
       LocalAppData: 'C:\\MockLocal',
     };
 
-    it('detects Whale in auto mode when Whale is present', () => {
-      const mockExists = (filePath) => filePath.includes('whale.exe');
+    it('detects Chrome in auto mode when both Chrome and Whale are present (Chrome priority)', () => {
+      const mockExists = () => true;
       const detected = detectBrowser('auto', mockEnv, mockExists);
       assert.ok(detected !== null);
-      assert.equal(detected.type, 'whale');
-      assert.equal(detected.name, 'Naver Whale');
+      assert.equal(detected.type, 'chrome');
+      assert.equal(detected.name, 'Google Chrome');
     });
 
     it('detects Chrome in auto mode when only Chrome is present', () => {
@@ -84,6 +84,14 @@ describe('launcher.js test suite', () => {
       assert.ok(detected !== null);
       assert.equal(detected.type, 'chrome');
       assert.equal(detected.name, 'Google Chrome');
+    });
+
+    it('detects Whale in auto mode when only Whale is present (Whale fallback)', () => {
+      const mockExists = (filePath) => filePath.includes('whale.exe');
+      const detected = detectBrowser('auto', mockEnv, mockExists);
+      assert.ok(detected !== null);
+      assert.equal(detected.type, 'whale');
+      assert.equal(detected.name, 'Naver Whale');
     });
 
     it('returns null when requested browser is not installed', () => {

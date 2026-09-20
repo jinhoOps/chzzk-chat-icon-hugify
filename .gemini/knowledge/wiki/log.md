@@ -57,3 +57,15 @@
   - 18개 런처 단위 테스트 (`tests/launcher.test.js`) 구축, 전체 35개 테스트 전원 통과
 - **영향 파일**: `scripts/launcher.js`, `install.cmd`, `install.ps1`, `tests/launcher.test.js`, `package.json`, `README.md`, `log.md`
 - **상태**: 구현 및 검증 완료 (`npm test` 35/35 통과, dry-run 검증 완료)
+
+---
+
+## [2026-09-20] fix | 런처 기본 브라우저 자동 탐지 우선순위 조정 (Chrome -> Whale)
+
+- **작업 내용**: 기본 동작 및 `--browser=auto` 시 탐지 우선순위를 Google Chrome 우선 탐지, 미설치 시 Naver Whale 폴백으로 조정
+  - `scripts/launcher.js` 내 `detectBrowser('auto')` 탐지 순서 변경 (`chrome` -> `whale`) 및 도움말 텍스트 갱신
+  - `tests/launcher.test.js` 테스트 케이스 갱신 (동시 설치 환경 시 Chrome 우선 선택 및 단독 설치 시 Whale 선택 검증)
+  - `README.md` 설명 갱신
+  - `install.cmd` 및 `install.ps1`의 `--dry-run --browser=auto` 검증 통과 (Google Chrome 자동 선택 확인)
+- **영향 파일**: `scripts/launcher.js`, `tests/launcher.test.js`, `README.md`, `log.md`
+- **상태**: 36/36 테스트 전원 통과

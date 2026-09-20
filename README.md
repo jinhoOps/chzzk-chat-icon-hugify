@@ -9,7 +9,7 @@
 Chrome 웹 스토어 등록이나 복잡한 절차 없이, **명령어 한 줄로 브라우저를 즉시 띄워 확장을 확인**할 수 있습니다.  
 공백이나 한글이 포함된 경로에서도 완벽하게 동작합니다.
 
-### 1. 기본 실행 (자동 감지: Naver Whale 우선 → Google Chrome)
+### 1. 기본 실행 (자동 감지: Google Chrome 우선 → Naver Whale)
 ```cmd
 :: CMD 환경
 install.cmd
