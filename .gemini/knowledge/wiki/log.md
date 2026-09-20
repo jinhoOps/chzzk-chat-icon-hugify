@@ -153,8 +153,26 @@
 - 다운로드 파일은 manifest 검증 후 staging에서 기존 설치 폴더와 교체하고, 교체 실패 시 backup 복구를 시도한다.
 - `.github/workflows/release.yml`은 `vX.Y.Z` 태그와 `manifest.json`/`package.json` 버전을 확인한 뒤 확장 런타임 ZIP을 GitHub Release로 만든다.
 - `README.md`에 사용자 갱신과 태그 기반 배포 절차를 추가했다. 이름 표기는 `치지직 이모티콘 커져라! Hugify!`로 유지한다.
-- 검증: `npm test` 56/56 통과, Release ZIP 교체 통합 테스트 통과, Chrome/Whale dry-run 및 PowerShell AST 통과.
+- 검증: `npm test` 58/58 통과, Release ZIP 교체 통합 테스트 통과, Chrome/Whale dry-run 및 PowerShell AST 통과.
 - 계약: [Release 기반 최신 버전 갱신](./plans/sprint_release_update.md).
+
+---
+
+## [2026-09-20] fix | Whale 프로필 우선순위(Profile 1 기본값) 및 Enter 즉시 선택 지원
+
+- **작업 내용**: 네이버 웨일 브라우저 선택 시 실사용 로그인 프로필(`Profile 1`)을 1순위로 표시하고 Enter 키로 기본 선택하도록 개선
+  - `install-online.ps1`: `Get-ExistingProfiles`에 `-BrowserType` 매개변수를 추가하여 브라우저가 `whale`인 경우 `Profile 1`을 `Default`보다 우선 정렬 (Whale은 실제 네이버 로그인 계정이 `Profile 1`에 위치하고 `Default`는 초기 미로그인 스텁인 특성 반영)
+  - `install-online.ps1`: `Select-ExistingProfile`에서 프롬프트를 `프로필 번호 (기본값: 1, 취소: q)`로 개선하고 빈 입력(Enter) 시 1번 항목(`Profile 1` 또는 기본 프로필)을 자동 선택하도록 지원
+  - `tests/profile_installer.test.js`: Whale의 Profile 1 우선순위 및 Enter 기본값 선택, Chrome의 Default 우선순위 보존 단위 테스트 추가
+- **검증**: `npm test` 58/58 전체 테스트 통과
+
+---
+
+## [2026-09-20] fix | 원격 설치기 UTF-8 BOM 제거 및 대화형 브라우저 선택(Chrome/Whale) 지원
+
+- **작업 내용**: 원라인 부트스트랩 명령(`irm ... | iex`) 실행 시 PowerShell 5.1 구문 파싱 예외 해결 및 브라우저 선택 편의성 제공
+  - `install-online.ps1`: UTF-8 BOM(`\uFEFF`) 제거로 `irm | iex` 및 `[scriptblock]::Create` 실행 시 토큰 파싱 에러(식 또는 문에서 예기치 않은 param/CmdletBinding 토큰) 원천 해결
+  - `install-online.ps1`: 스크립트 상단 주석 및 내부 주석을 ASCII로 정제하여 PowerShell 5.1 파일 시스템 ANSI 코드페이지(CP949) 오프셋 불일치 현상 방지
   - `install-online.ps1`: 브라우저 옵션(-Browser) 미지정 시 Chrome과 Whale이 동시 설치되어 있으면 대화형 선택 메뉴(1. Chrome, 2. Whale)를 제공하도록 개선 ($b 단축 변수도 계속 지원)
   - `tests/online_installer.test.js`: UTF-8 BOM 부재 검증 및 `[scriptblock]::Create` 유효성 검증 테스트 추가
 - **영향 파일**: `install-online.ps1`, `tests/online_installer.test.js`, `.gemini/knowledge/wiki/log.md`
