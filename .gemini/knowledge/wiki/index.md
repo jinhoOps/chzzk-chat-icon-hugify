@@ -29,6 +29,9 @@ timestamp: 2026-09-04T00:00:00Z
 - [단일 목적 이모티콘 확대 UI 정리](./plans/sprint_clean_emoticon_magnifier.md)
 - [Hugify 브랜딩 및 아이콘 교체](./plans/sprint_brand_icon_cleanup.md)
 - [Hugify 팝업 리디자인 및 크기 선택](./plans/sprint_popup_redesign.md)
+- [팝업 크기 안내 및 CookieRun 서체 적용](./plans/sprint_popup_font_notice.md)
+- [팝업 하단 아이콘 링크 3종](./plans/sprint_footer_icon_links.md)
+- [팝업 브랜드 링크 및 앱 메뉴 정리](./plans/sprint_popup_app_menu.md)
 *현재 진행 중이거나 예정된 기획/스프린트 문서입니다.*
 
 - [SC-20260920-01: 치지직 채팅 아이콘 확대 크롬 확장프로그램 개발](./plans/sprint_chzzk_icon_magnifier.md)
@@ -52,4 +55,4 @@ timestamp: 2026-09-04T00:00:00Z
 ---
 
 > [!TIP]
-> **Librarian Tip**: 새로운 지식을 추가할 때는 반드시 기존 노드와 표준 마크다운 상대 경로 링크(`[Label](./relative_path.md)`)로 연결하고, `index.md`에 반영하십시오.
+> **Librarian Tip**: 새로운 지식을 추가할 때는 반드시 기존 노드와 표준 마크다운 상대 경로 링크(`[Label](./plans/sprint_popup_app_menu.md)`)로 연결하고, `index.md`에 반영하십시오.

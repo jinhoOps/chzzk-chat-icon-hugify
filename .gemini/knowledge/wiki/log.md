@@ -238,3 +238,51 @@
 - README 핵심 기능/파일 구조를 갱신하고 팝업 회귀 테스트를 확장했다.
 - 검증: `npm test` 61/61 통과, JavaScript 구문 검사 및 `git diff --check` 통과.
 - 계약: [Hugify 팝업 리디자인 및 크기 선택](./plans/sprint_popup_redesign.md).
+
+---
+
+## [2026-09-20] feat | 팝업 크기 변경 안내 및 CookieRun 서체 적용
+
+- 크기 선택 변경 시 `크기 변경 시 적용을 위해 새로고침이 필요합니다.` 안내를 표시하고 팝업의 보이는 `크기` 제목을 제거했다.
+- CookieRun Regular/Bold OTF와 라이선스 출처를 추가하고, GitHub Release ZIP에 `fonts/`가 포함되도록 수정했다.
+- README를 Chrome 빠른 설치 중심으로 줄이고 수동 등록·Whale·업데이트·보안·개발자 정보를 하나의 접힘 영역으로 통합했다.
+- 검증: `npm test` 61/61, `node --check src/popup.js`, `git diff --check`, `codegraph sync` 통과.
+- 계약: [팝업 크기 안내 및 CookieRun 서체 적용](./plans/sprint_popup_font_notice.md).
+
+---
+
+## [2026-09-20] feat | 팝업 하단 아이콘 링크 3종
+
+- 기존 단일 수땡 방송 바로가기를 수땡 치지직 라이브, 수땡 Discord, Hugify GitHub 저장소로 이동하는 3개 아이콘 링크로 교체했다.
+- 제공 이미지 `suttaeng_chzzklive.png`, `suttaeng_discord.png`, `dev-github.png`를 같은 크기의 정사각형 카드로 배치하고 새 탭·접근성 레이블·키보드 포커스를 적용했다.
+- 검증: `npm test` 61/61, `node --check src/popup.js`, `git diff --check` 통과.
+- 계약: [팝업 하단 아이콘 링크 3종](./plans/sprint_footer_icon_links.md).
+
+---
+
+## [2026-09-20] refactor | 팝업 브랜드 링크 및 앱 메뉴 정리
+
+- 상단 브랜드 이미지를 `icon128.png`으로 교체해 42px로 축소 렌더링하고, 수땡 치지직 채널을 새 탭으로 여는 링크로 만들었다.
+- 하단 바로가기를 작은 3열 앱 메뉴 컨테이너로 정리했다.
+- 하단 앱 메뉴의 전체 높이를 44px로 줄이고, GitHub 링크도 새 `dev-github.png`를 다른 두 버튼과 같은 이미지 스타일로 적용했다.
+- 검증: `npm test` 61/61, `node --check src/popup.js`, `git diff --check` 통과.
+- 계약: [팝업 브랜드 링크 및 앱 메뉴 정리](./plans/sprint_popup_app_menu.md).
+
+---
+
+## [2026-09-21] refactor | 프로젝트 작업공간 분리
+
+- 2026-09-20 이후 sandbox에서 생성된 치지직 프로젝트 지식 문서, 계획서, CookieRun 서체 ZIP, Discord 공유 문서를 현재 프로젝트 작업공간으로 이전했다.
+- sandbox는 기존 환경의 경계 커밋(`77d3ab4`, 2026-09-04)으로 복원하고 치지직 원격 연결 및 child 작업공간을 제거했다.
+- 이전 자료의 해시, ZIP 목록, Markdown 인코딩 및 상대 링크를 검증했다.
+- 계약: 작업공간 분리 계획.
+
+---
+
+## [2026-09-20] refine | 카카오 비활성 앱 메뉴 및 40px 아이콘
+
+- 하단 앱 메뉴를 44px 높이의 4열 구성(치지직 · 카카오톡 · Discord · GitHub)으로 변경하고 모든 이미지 크기를 40px로 통일했다.
+- 카카오톡 버튼은 채널 URL을 보관하지만 `aria-disabled`, `tabindex=-1`, `pointer-events: none`으로 비활성화했다.
+- GitHub 링크는 항상 마지막 버튼으로 유지했다.
+- 검증: `npm test` 61/61, `node --check src/popup.js`, `git diff --check` 통과.
+- 계약: [팝업 브랜드 링크 및 앱 메뉴 정리](./plans/sprint_popup_app_menu.md).
