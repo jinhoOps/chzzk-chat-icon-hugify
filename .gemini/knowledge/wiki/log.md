@@ -69,3 +69,18 @@
   - `install.cmd` 및 `install.ps1`의 `--dry-run --browser=auto` 검증 통과 (Google Chrome 자동 선택 확인)
 - **영향 파일**: `scripts/launcher.js`, `tests/launcher.test.js`, `README.md`, `log.md`
 - **상태**: 36/36 테스트 전원 통과
+
+---
+
+## [2026-09-20] feat | Windows 11 원격 원라이너 부트스트랩 설치기 및 README 전면 개편
+
+- **작업 내용**: GitHub README에서 작업 폴더/Git/Node 없이 1줄 명령으로 설치 및 실행 가능한 부트스트랩 인프라 구축
+  - 스프린트 계약 체결 (`plans/sprint_chzzk_online_installer.md`, DoD 수립)
+  - `install-online.ps1` 개발: Windows PowerShell 5.1/7.x 호환, GitHub `main` 브랜치 소스를 `%LOCALAPPDATA%\ChzzkIconMagnifier\app`에 안정적으로 설치 후 Chrome/Whale 격리 프로필 실행
+  - 갱신 옵션(`-Refresh`), 모의 실행(`-DryRun`), 수동 안내(`-Fallback`) 지원
+  - 관리자 권한/레지스트리 수정 배제, 사용자 기존 기본 프로필 변조 배제 (보안 비침습 원칙 준수)
+  - `README.md` 전면 개편: Windows 11 + Chrome 기본 원라이너 및 Whale 전용 코드블럭, 원격 코드 투명성 및 격리 프로필 동작 원리 명시
+  - `install.ps1`에 Node 미설치 시 네이티브 PowerShell 자동 폴백 실행 로직 보강
+  - `tests/online_installer.test.js` 7개 단위 테스트 추가 (정적 URL 검증, AST 파싱, 오프라인 dry-run)
+- **영향 파일**: `install-online.ps1`, `install.ps1`, `tests/online_installer.test.js`, `README.md`, `log.md`
+- **상태**: 43/43 테스트 전원 통과, dry-run 검증 완료

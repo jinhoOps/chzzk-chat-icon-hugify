@@ -1,112 +1,93 @@
 # 🔍 치지직 채팅 아이콘 확대기 (CHZZK Emoticon Magnifier)
 
-> 치지직(CHZZK) 방송 채팅창 및 이모티콘 팝업에서 아이콘을 채팅에 전송하기 전에 **마우스 호버만으로 크고 선명하게 미리 확인**할 수 있는 크롬 / 네이버 웨일 확장프로그램입니다.
+> 치지직(CHZZK) 방송 채팅창 및 이모티콘 팝업에서 아이콘을 채팅에 전송하기 전에 **마우스 호버만으로 크고 선명하게 미리 확인**할 수 있는 확장프로그램입니다.  
+> **Windows 11 + Google Chrome** 환경을 기본 타겟으로 지원하며, **Naver Whale**에서도 완벽하게 동작합니다.
 
 ---
 
-## ⚡ Windows 한 줄 실행 런처 (추천)
+## ⚡ 빠른 시작 (원클릭 설치 & 즉시 실행)
 
-Chrome 웹 스토어 등록이나 복잡한 절차 없이, **명령어 한 줄로 브라우저를 즉시 띄워 확장을 확인**할 수 있습니다.  
-공백이나 한글이 포함된 경로에서도 완벽하게 동작합니다.
+작업 폴더 이동이나 `git clone`, Git/Node.js 설치가 **전혀 필요 없습니다**.  
+Windows 11(또는 Windows 10)에서 `PowerShell`을 열고 아래의 **한 줄 명령어**를 복사해 붙여넣으면 즉시 다운로드되어 실행됩니다.
 
-### 1. 기본 실행 (자동 감지: Google Chrome 우선 → Naver Whale)
+### 🌐 1. Google Chrome으로 실행 (기본 권장)
+```powershell
+irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1 | iex
+```
+
+### 🐳 2. Naver Whale로 실행
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1))) -Browser whale
+```
+*(또는 간단히: `$b="whale"; irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1 | iex`)*
+
+> [!TIP]
+> **최신 버전 갱신(Update)**이 필요할 때는 `-Refresh` 옵션을 붙여 실행하면 GitHub `main`의 최신 소스로 안전하게 재설치됩니다:
+> ```powershell
+> & ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1))) -Refresh
+> ```
+
+---
+
+## 🛡️ 원격 실행 보안 및 동작 원리 안내
+
+- **원격 코드 투명성**: 위 명령은 GitHub 공식 저장소의 [`install-online.ps1`](https://github.com/jinhoOps/chzzk-chat-icon-magnifier/blob/main/install-online.ps1) 스크립트를 다운로드하여 실행합니다. 실행 전 누구나 링크를 통해 원본 코드를 직접 검토하실 수 있습니다.
+- **안정적인 영구 설치 경로**: GitHub `main` 브랜치의 최신 소스를 임시 폴더가 아닌 `%LOCALAPPDATA%\ChzzkIconMagnifier\app`에 안전하게 보관합니다. 실행 후 소스 파일이 임의로 삭제되어 브라우저의 확장 참조가 깨지는 문제를 원천 차단합니다.
+- **격리 프로필(`--user-data-dir`) 사용**: Chromium 보안 정책상 기본 프로필이 이미 켜져 있으면 `--load-extension` 플래그가 무시됩니다. 따라서 기존 브라우저 창과 충돌 없이 확장을 즉시 띄우기 위해 전용 격리 프로필(`%LOCALAPPDATA%\ChzzkIconMagnifier\profile`)을 생성하여 안전하게 실행합니다.
+- **비침습성 보장**: 관리자 권한이나 Windows 레지스트리 수정을 일절 요구하지 않으며, 기존 일상 브라우저 프로필의 설정이나 개발자 모드를 강제로 변조하지 않습니다.
+
+---
+
+## 🛠️ 기존 메인 프로필에 영구 등록하고 싶은 경우 (Fallback)
+
+일상적으로 사용하시는 기본 브라우저 프로필에 확장을 상시 등록해두고 싶다면, 아래 명령어로 확장 관리자 페이지를 열고 안내에 따라 1회 등록하시면 됩니다:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-magnifier/main/install-online.ps1))) -Fallback
+```
+
+**수동 등록 절차:**
+1. 브라우저에서 확장 관리자(`chrome://extensions` 또는 `whale://extensions`)가 열립니다.
+2. 우측 상단의 **[개발자 모드]** 토글을 켭니다.
+3. 좌측 상단의 **[압축해제된 확장 프로그램을 로드합니다]**를 클릭합니다.
+4. 아래 경로를 복사하여 폴더 선택창에 붙여넣습니다:
+   - `C:\Users\<사용자이름>\AppData\Local\ChzzkIconMagnifier\app`
+5. 등록이 완료되면 치지직 라이브에서 영구적으로 호버 확대가 작동합니다.
+
+---
+
+## 💻 로컬 저장소에서 실행하는 방법 (개발자용)
+
+이미 프로젝트를 클론했거나 로컬 폴더에 소스를 다운로드한 경우, 폴더 내의 런처를 직접 사용하실 수 있습니다:
+
 ```cmd
 :: CMD 환경
-install.cmd
+install.cmd                      :: Chrome 자동 실행
+install.cmd --browser=whale      :: Whale 실행
+install.cmd --fallback           :: 확장 관리자 수동 안내
 
 :: PowerShell 환경
 powershell -File install.ps1
+powershell -File install.ps1 --browser=whale
 
-:: 또는 npm 스크립트
-npm run launch
+:: Node.js 환경
+npm run launch                   :: Chrome 실행
+npm run launch:whale             :: Whale 실행
+npm test                         :: 단위 테스트 실행
 ```
-
-### 2. 브라우저 지정 실행
-```cmd
-:: Naver Whale로 실행
-install.cmd --browser=whale
-npm run launch:whale
-
-:: Google Chrome으로 실행
-install.cmd --browser=chrome
-npm run launch:chrome
-```
-
-### 3. 상시 메인 프로필 등록 안내 모드 (Fallback)
-확장 관리자 페이지(`chrome://extensions` 또는 `whale://extensions`)를 열고 터미널에 수동 등록 단계를 안내합니다:
-```cmd
-install.cmd --fallback
-npm run launch:fallback
-```
-
----
-
-## 🛡️ 브라우저 동작 원리 및 프로세스 한계 안내
-
-Chromium 기반 브라우저(Google Chrome, Naver Whale)의 보안 및 프로세스 아키텍처 특성은 다음과 같습니다:
-
-1. **격리 프로필(`--user-data-dir`) 사용 이유**
-   - 이미 메인 Chrome/Whale이 실행 중인 상태에서 기본 프로필로 `--load-extension`을 호출하면, 기존 브라우저 프로세스가 새 명령을 흡수하면서 보안상 확장 로드 플래그를 **무시**합니다.
-   - 따라서 본 런처는 사용자의 기존 프로필이나 레지스트리를 전혀 건드리지 않고, 전용 격리 프로필(`%LOCALAPPDATA%\ChzzkIconMagnifier\profile`)을 생성하여 **기존 브라우저가 켜져 있어도 충돌 없이 확장이 즉시 로드**되도록 안전하게 구동합니다.
-
-2. **메인 일상 프로필에 영구 설치하고 싶은 경우**
-   - 격리 프로필이 아닌 평소 쓰던 기본 브라우저 창에 항상 두고 사용하고 싶다면, `install.cmd --fallback`을 실행하여 브라우저 확장 관리자에서 [압축해제된 확장 프로그램을 로드합니다] 버튼으로 이 폴더를 1회 등록해 주시면 됩니다.
 
 ---
 
 ## ✨ 핵심 기능
 
-1. **마우스 호버 실시간 확대 미리보기**
-   - 치지직 라이브 방송(`https://chzzk.naver.com/live/*`)의 이모티콘 팝업 및 채팅 내 아이콘에 마우스를 올리면 자동으로 확대 툴팁이 뜹니다.
-   - 네이버 CDN(`pstatic.net`)의 썸네일 축소 쿼리스트링(`?type=f60_60`)을 실시간으로 감지/제거하여 **흐릿하지 않은 원본 고해상도 이미지(256px+)**로 선명하게 표시합니다.
-   - 이모티콘 고유 코드명(예: `{:slp1:}`)을 툴팁 하단에 함께 안내합니다.
-
-2. **⏸️ 10초 임시 비활성화 (Snooze 10s)**
-   - 채팅을 빠르게 연타하거나 이모티콘을 가리지 않고 빠르게 선택하고 싶을 때 **10초 동안만 확대를 일시 중지**할 수 있습니다.
-   - 팝업 창에 실시간 잔여 시간 카운트다운 및 **[즉시 재개]** 버튼을 제공합니다.
-   - **단축키 지원**: 치지직 화면에서 언제든 `Alt + Z`를 누르면 10초 비활성화 / 즉시 재개가 토글됩니다.
-
-3. **🛑 상시 활성화 / 중지(비활성화) 토글**
-   - 팝업 상단의 마스터 토글 스위치로 기능을 언제든 켜고 끌 수 있습니다.
-   - 브라우저 스토리지에 설정이 영구 저장되어 새로고침 후에도 유지됩니다.
-
-4. **📏 확대 크기 3단계 옵션**
-   - **원본 (60×60px)**: 기본 원본 규격
-   - **확대 (90×90px)**: 원본 대비 +50% 확대 (가장 시인성이 뛰어난 기본 권장값)
-   - **대형 (120×120px)**: 원본 대비 2배 대형 확대
-   - **픽셀 보정(Pixelated) 옵션**: 픽셀 도트 아트 스타일 이모티콘을 번짐 없이 선명하게 볼 수 있는 보정 모드 지원
-
----
-
-## 💻 CLI 옵션 및 종료 코드 (Exit Codes)
-
-```text
-[사용법]
-  install.cmd [옵션]
-  powershell -File install.ps1 [옵션]
-  node scripts/launcher.js [옵션]
-
-[옵션]
-  --browser=<auto|chrome|whale>, -b <값>
-      실행할 브라우저를 선택합니다 (기본값: auto)
-  --fallback
-      확장 관리자 페이지를 열고 터미널에 수동 등록 가이드를 안내합니다.
-  --dry-run
-      실제 브라우저를 실행하지 않고 탐지된 경로와 실행 인자만 출력합니다.
-  --profile-dir=<경로>
-      격리 테스트 프로필 디렉터리를 직접 지정합니다.
-  --url=<URL>
-      시작 시 열릴 주소를 지정합니다 (기본값: https://chzzk.naver.com/live)
-  --help, -h
-      도움말을 표시합니다.
-
-[종료 코드]
-  0: 정상 실행 또는 Dry-run / Help
-  1: 잘못된 인자 (Unknown options, invalid browser)
-  2: 브라우저 실행 파일 미발견
-  3: manifest.json 미발견
-  4: 프로세스 spawn 실행 오류
-```
+| 기능 | 설명 |
+|---|---|
+| **마우스 호버 즉시 확대** | 이모티콘 버튼(`button[class*="_emoticon_"]`) 또는 이미지에 마우스를 올리면 다크 테마 플로팅 툴팁으로 즉시 확대 표시 |
+| **초고화질 원본 자동 복원** | 네이버 CDN(`pstatic.net`) 주소의 `?type=f60_60` 축소 파라미터를 자동 제거하여, 깨지거나 흐리지 않은 **선명한 원본 해상도(256px+)**로 렌더링 |
+| **⏸️ 10초 비활성화 버튼** | 팝업 내 버튼 클릭 시 10초 동안 확대를 일시 중지 (팝업에 실시간 잔여 초 카운트다운 표시 / **단축키 `Alt + Z` 지원**) |
+| **🛑 중지(비활성화) 토글** | 상시 켜기/끄기 마스터 스위치 제공 (브라우저 스토리지 자동 동기화) |
+| **📏 확대 크기 선택** | **원본 (60×60px)**, **확대 (90×90px, 추천 기본값)**, **대형 (120×120px)** 원클릭 선택 |
+| **이모티콘 코드 표시** | `{:slp1:}` 등 이모티콘 고유 호출 코드를 툴팁 하단에 배지로 함께 안내 |
 
 ---
 
@@ -114,9 +95,10 @@ Chromium 기반 브라우저(Google Chrome, Naver Whale)의 보안 및 프로세
 
 ```
 치지직아이콘/
-├── install.cmd                # Windows CMD 원클릭 실행 스크립트
-├── install.ps1                # Windows PowerShell 원클릭 실행 스크립트
-├── manifest.json              # Chrome/Whale Extension Manifest V3 메인 설정
+├── install-online.ps1         # Windows 11 원격 원라이너 부트스트랩 설치기
+├── install.cmd                # 로컬 Windows CMD 원클릭 실행 스크립트
+├── install.ps1                # 로컬 Windows PowerShell 원클릭 실행 스크립트
+├── manifest.json              # Chrome / Whale Extension Manifest V3 메인 설정
 ├── icons/                     # 확장프로그램 공식 아이콘 (16, 48, 128px)
 ├── src/
 │   ├── content.js             # 치지직 페이지 내 마우스 호버 감지 및 실시간 툴팁 렌더링
@@ -128,7 +110,8 @@ Chromium 기반 브라우저(Google Chrome, Naver Whale)의 보안 및 프로세
 ├── tests/
 │   ├── utils.test.js          # 핵심 유틸리티 단위 테스트
 │   ├── content_logic.test.js  # 사용자 HTML 샘플 호환 및 스누즈 테스트
-│   └── launcher.test.js       # 브라우저 탐지 및 CLI 인자 단위 테스트
+│   ├── launcher.test.js       # 브라우저 탐지 및 CLI 인자 단위 테스트
+│   └── online_installer.test.js # 원격 부트스트랩 AST/인자/오프라인 검증 테스트
 ├── scripts/
 │   ├── launcher.js            # 브라우저 자동 탐지 및 격리 실행 CLI 엔진
 │   └── generate_icons.js      # 무의존성 순수 Node.js PNG 아이콘 생성 스크립트
@@ -143,4 +126,4 @@ Chromium 기반 브라우저(Google Chrome, Naver Whale)의 보안 및 프로세
 ```bash
 npm test
 ```
-*Node.js 내장 테스트 러너(`node:test`)를 사용하여 외부 무거운 종속성 없이 **35개 전체 검증 테스트가 0.4초 이내로 통과**합니다.*
+*Node.js 기본 테스트 러너(`node:test`)를 사용하여 외부 무거운 종속성 없이 **43개 전체 검증 테스트가 3초 이내로 통과**합니다.*

@@ -27,6 +27,7 @@ timestamp: 2026-09-04T00:00:00Z
 
 - [SC-20260920-01: 치지직 채팅 아이콘 확대 크롬 확장프로그램 개발](./plans/sprint_chzzk_icon_magnifier.md)
 - [SC-20260920-02: Windows 원클릭/원라인 브라우저 런처 및 Fallback 구현](./plans/sprint_chzzk_launcher.md)
+- [SC-20260920-03: Windows 11 원격 원라이너 부트스트랩 설치기 및 README 전면 개편](./plans/sprint_chzzk_online_installer.md)
 
 ---
 
