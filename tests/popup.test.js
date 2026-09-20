@@ -18,6 +18,9 @@ describe('Hugify popup UI', () => {
     assert.match(popupHtml, /id="size-120"/);
     assert.match(popupHtml, /90\s*[×x]\s*90px/);
     assert.match(popupHtml, /120\s*[×x]\s*120px/);
+    assert.match(popupHtml, /<small>크게!<\/small>/);
+    assert.match(popupHtml, /<small>더 크게!!<\/small>/);
+    assert.doesNotMatch(popupHtml, /<small>기본<\/small>|<small>크게 보기<\/small>/);
     assert.match(popupHtml, /id="size-refresh-notice"/);
     assert.match(popupHtml, /크기 변경 시 적용을 위해 새로고침이 필요합니다\./);
     assert.doesNotMatch(popupHtml, /id="size-label"|>\s*크기\s*</);
