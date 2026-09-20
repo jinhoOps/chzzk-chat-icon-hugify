@@ -35,7 +35,7 @@ timestamp: 2026-09-04T00:00:00Z
 ## 📜 연대기 및 변경 이력 (Timeline & Logs)
 *작업 결정 사항, 지식 습득, 감사 추적을 위한 연대기 기록입니다.*
 
-- [Master Log](./log.md): 모든 작업과 지식 수집의 연대기적 기록 (Append-only).
+- [Master Log](./log.md): 모든 작업과 지식 수집의 연대기적 기록 (Append-only). README 브랜드 문구 `커져라! Hugify!` 결정 포함.
 
 ---
 
