@@ -21,6 +21,6 @@ test('release workflow publishes only version-matched extension archives', () =>
 });
 
 test('release workflow packages only extension runtime files', () => {
-  assert.match(workflow, /zip -r[\s\S]*manifest\.json[\s\S]*icons[\s\S]*src/);
+  assert.match(workflow, /zip -r[\s\S]*manifest\.json[\s\S]*icons[\s\S]*src[\s\S]*fonts/);
   assert.doesNotMatch(workflow, /zip -r[\s\S]*tests/);
 });

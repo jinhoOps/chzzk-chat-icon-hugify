@@ -11,32 +11,58 @@ const contentJs = read('src/content.js');
 const contentCss = read('src/content.css');
 
 describe('Hugify popup UI', () => {
-  it('exposes the toggle, square size choices, and an icon-only stream shortcut', () => {
+  it('exposes the toggle, image size choices, and four icon-only footer links', () => {
     assert.match(popupHtml, /id="status-badge"[^>]*type="button"/s);
     assert.match(popupHtml, /aria-pressed="true"/);
     assert.match(popupHtml, /id="size-90"/);
     assert.match(popupHtml, /id="size-120"/);
     assert.match(popupHtml, /90\s*[×x]\s*90px/);
     assert.match(popupHtml, /120\s*[×x]\s*120px/);
-    assert.match(popupHtml, /icons\/icon48\.png/);
+    assert.match(popupHtml, /id="size-refresh-notice"/);
+    assert.match(popupHtml, /크기 변경 시 적용을 위해 새로고침이 필요합니다\./);
+    assert.doesNotMatch(popupHtml, /id="size-label"|>\s*크기\s*</);
+    assert.match(popupHtml, /class="brand-icon"[^>]*href="https:\/\/chzzk\.naver\.com\/43c05c91ae59803c7b3f267753b73b65"/s);
+    assert.match(popupHtml, /icons\/icon128\.png/);
+    assert.doesNotMatch(popupHtml, /icons\/icon48\.png/);
     assert.match(popupHtml, /icons\/cha02\.png/);
     assert.match(popupHtml, /class="size-preview"/);
-    assert.match(popupHtml, /icons\/suttaeng\.png/);
-    assert.match(popupHtml, /class="stream-link"/);
-    assert.match(popupHtml, /class="stream-image"/);
-    assert.match(popupHtml, /aria-label="수땡 방송"/);
+    assert.match(popupHtml, /class="footer-links"/);
+    assert.match(popupHtml, /class="footer-link"/);
+    assert.equal((popupHtml.match(/class="footer-link(?:\s|")/g) || []).length, 4);
+    assert.match(popupHtml, /icons\/suttaeng_chzzklive\.png/);
+    assert.match(popupHtml, /icons\/suttaeng_kakao\.png/);
+    assert.match(popupHtml, /icons\/suttaeng_discord\.png/);
+    assert.match(popupHtml, /icons\/dev-github\.png/);
+    assert.match(popupHtml, /https:\/\/chzzk\.naver\.com\/live\/43c05c91ae59803c7b3f267753b73b65/);
+    assert.match(popupHtml, /https:\/\/discord\.gg\/4vuZb5rBRE/);
+    assert.match(popupHtml, /https:\/\/github\.com\/jinhoOps\/chzzk-chat-icon-hugify/);
+    assert.match(popupHtml, /aria-label="수땡 치지직 라이브"/);
+    assert.match(popupHtml, /aria-label="수땡 Discord"/);
+    assert.match(popupHtml, /aria-label="Hugify GitHub 저장소"/);
+    assert.match(popupHtml, /class="footer-link footer-link-disabled"[^>]*href="https:\/\/chzzk\.naver\.com\/43c05c91ae59803c7b3f267753b73b65"[^>]*aria-disabled="true"[^>]*tabindex="-1"/s);
     assert.match(popupHtml, /target="_blank"/);
+    assert.doesNotMatch(popupHtml, /stream-link|stream-image|icons\/suttaeng\.png/);
     assert.doesNotMatch(popupHtml, /PREVIEW|stream-label|external-icon|toggle-enabled|setting-card|switch/);
     assert.doesNotMatch(popupHtml, /toggle-alt|toggle-crisp|snooze|Alt\+Z|version/i);
     assert.doesNotMatch(popupJs, /toggleEnabled/);
     assert.match(popupJs, /statusBadge\.addEventListener\('click'/);
+    assert.match(popupJs, /sizeRefreshNotice\.hidden\s*=\s*false/);
     assert.match(popupJs, /size/);
     assert.match(popupCss, /#f8fbff|#ffffff|--accent/);
+    assert.match(popupCss, /font-family:\s*["']CookieRun/);
+    assert.match(popupCss, /\.brand-icon img[\s\S]*?width:\s*42px/);
+    assert.match(popupCss, /\.size-refresh-notice/);
     assert.match(popupCss, /\.size-preview/);
     assert.match(popupCss, /#size-120\s*\+\s*\.size-choice\s*\.size-preview[\s\S]*?width:\s*120px/);
-    assert.match(popupCss, /\.stream-link[\s\S]*?justify-content:\s*center/);
-    assert.match(popupCss, /\.stream-link[\s\S]*?width:\s*100%/);
-    assert.match(popupCss, /\.stream-image/);
+    assert.match(popupCss, /\.footer-links[\s\S]*?grid-template-columns:\s*repeat\(4,\s*1fr\)/);
+    assert.match(popupCss, /\.footer-link[\s\S]*?justify-content:\s*center/);
+    assert.match(popupCss, /\.footer-links[\s\S]*?height:\s*44px/);
+    assert.match(popupCss, /\.footer-image[\s\S]*?width:\s*40px/);
+    assert.match(popupCss, /\.footer-link-disabled[\s\S]*?pointer-events:\s*none/);
+    assert.match(popupCss, /\.footer-image/);
+    assert.ok(fs.existsSync(path.resolve('fonts/CookieRun-Regular.otf')));
+    assert.ok(fs.existsSync(path.resolve('fonts/CookieRun-Bold.otf')));
+    assert.ok(fs.existsSync(path.resolve('fonts/LICENSE-CookieRun.txt')));
   });
 
   it('keeps the tooltip image-only while allowing a selected size', () => {

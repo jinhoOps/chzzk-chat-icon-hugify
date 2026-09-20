@@ -1,0 +1,47 @@
+CookieRun FONT LICENSE
+
+Copyright © Devsisters Corp.
+
+The CookieRun Typeface is free to use and freely available for all users,
+including for individual and corporate usage.
+The CookieRun Typeface can be used for commercial purposes, such as for
+online or offline usage, products, and advertisements, etc.
+However, it is prohibited to sell or re-sell the CookieRun Typeface for a
+separate fee, or to redistribute the CookieRun Typeface in an arbitrarily
+modified or edited state. The CookieRun Typeface must be used in its original
+form as distributed.
+
+The ten CookieRun Dingbats, which are symbols of the CookieRun IP, are
+prohibited from being used for commercial purposes. Limited usage for
+non-commercial purposes is permitted. However, the ten CookieRun Dingbats may
+not be arbitrarily modified or edited in any form.
+
+The CookieRun Typeface may be embedded, bundled, or redistributed in other
+software, subject to the inclusion of this copyright notice and the license in
+full. If unable to include the license in full, it is required to indicate the
+source of the typeface as CookieRun Typeface.
+
+Example: This page uses the CookieRun Typeface, designed by Devsisters.
+
+However, due to a change in policy following November 01, 2020, both commercial
+and non-commercial usage is prohibited in the following cases.
+
+Prohibited commercial/non-commercial uses: Gaming Industry.
+All uses of the font in the gaming industry are strictly prohibited, including
+embedding or bundling the font in software, or redistributing it in any form.
+This includes the creation of marketing materials and game-related merchandise
+for sale or giveaway.
+
+The CookieRun Typeface usage examples, such as online or offline creatives,
+products, advertisements, etc., may be used for CookieRun and Devsisters'
+promotions. Users of the CookieRun Typeface who do not wish to participate in
+such promotions may contact Devsisters.
+
+Update 2024.05
+The ten CookieRun Dingbats use Unicode U+E000–U+E009.
+
+Official license source (updated 2024.05):
+https://www.cookierunfont.com/static/download/License_ko_en.pdf
+
+This project bundles the original CookieRun Regular and Bold typefaces for its
+extension popup UI. The font files are not modified.

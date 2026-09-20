@@ -10,6 +10,22 @@
   --shadow: 0 12px 30px rgba(75, 137, 190, 0.12);
 }
 
+@font-face {
+  font-family: "CookieRun";
+  src: url("../fonts/CookieRun-Regular.otf") format("opentype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CookieRun";
+  src: url("../fonts/CookieRun-Bold.otf") format("opentype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -21,7 +37,7 @@ body {
   min-height: 280px;
   background: var(--page);
   color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif;
+  font-family: "CookieRun", -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, sans-serif;
   font-size: 13px;
   line-height: 1.4;
   user-select: none;
@@ -58,13 +74,26 @@ body {
   border: 1px solid #d9ebfb;
   border-radius: 14px;
   box-shadow: 0 5px 14px rgba(89, 157, 213, 0.16);
+  text-decoration: none;
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .brand-icon img {
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
+}
+
+.brand-icon:hover {
+  border-color: #b8dafa;
+  box-shadow: 0 8px 18px rgba(75, 137, 190, 0.2);
+  transform: translateY(-1px);
+}
+
+.brand-icon:focus-visible {
+  outline: 3px solid rgba(65, 143, 219, 0.24);
+  outline-offset: 2px;
 }
 
 h1 {
@@ -105,7 +134,7 @@ h1 span {
 }
 
 .size-section,
-.stream-link {
+.footer-link {
   background: var(--surface);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
@@ -120,23 +149,9 @@ h1 span {
   outline-offset: 2px;
 }
 
-h2 {
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 750;
-  letter-spacing: -0.2px;
-}
-
 .size-section {
   padding: 14px;
   border-radius: 14px;
-}
-
-.section-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
 }
 
 .size-options {
@@ -198,6 +213,18 @@ h2 {
   height: 120px;
 }
 
+.size-refresh-notice {
+  margin-top: 10px;
+  padding: 9px 10px;
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border: 1px solid #cde7fb;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.45;
+  text-align: center;
+}
+
 .size-option:hover .size-choice {
   border-color: #b8dafa;
 }
@@ -213,34 +240,56 @@ h2 {
   color: var(--accent-strong);
 }
 
-.stream-link {
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 44px;
+  gap: 2px;
+  padding: 1px;
+  background: #eef6fc;
+  border: 1px solid #d9ebfb;
+  border-radius: 16px;
+}
+
+.footer-link {
   display: flex;
   align-items: center;
-  align-self: stretch;
   justify-content: center;
-  width: 100%;
-  height: 76px;
-  min-height: 76px;
-  padding: 8px;
+  min-height: 0;
+  padding: 0;
   color: var(--ink);
-  border-radius: 14px;
+  border: 0;
+  border-radius: 10px;
   overflow: hidden;
   text-decoration: none;
   transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-.stream-link:hover {
-  border-color: #b8dafa;
+.footer-link:hover {
   box-shadow: 0 14px 30px rgba(75, 137, 190, 0.18);
+  outline: 1px solid #b8dafa;
+  outline-offset: -1px;
   transform: translateY(-1px);
 }
 
-.stream-image {
+.footer-link:focus-visible {
+  outline: 3px solid rgba(65, 143, 219, 0.24);
+  outline-offset: 2px;
+}
+
+.footer-image {
   display: block;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border: 1px solid #d9ebfb;
   border-radius: 12px;
   box-shadow: 0 5px 14px rgba(89, 157, 213, 0.16);
+}
+
+.footer-link-disabled {
+  cursor: default;
+  filter: grayscale(0.25);
+  opacity: 0.42;
+  pointer-events: none;
 }

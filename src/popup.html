@@ -10,9 +10,16 @@
   <main class="popup-shell">
     <header class="hero">
       <div class="brand">
-        <div class="brand-icon">
-          <img src="../icons/icon48.png" alt="">
-        </div>
+        <a
+          class="brand-icon"
+          href="https://chzzk.naver.com/43c05c91ae59803c7b3f267753b73b65"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="수땡 치지직 채널"
+          title="수땡 치지직 채널"
+        >
+          <img src="../icons/icon128.png" alt="">
+        </a>
         <h1>커져라! <span>Hugify!</span></h1>
       </div>
       <button
@@ -24,10 +31,7 @@
       >ON</button>
     </header>
 
-    <section class="size-section" aria-labelledby="size-label">
-      <div class="section-heading">
-        <h2 id="size-label">크기</h2>
-      </div>
+    <section class="size-section" aria-label="확대 옵션">
       <div class="size-options">
         <label class="size-option">
           <input type="radio" id="size-90" name="size" value="90" checked>
@@ -46,18 +50,53 @@
           </span>
         </label>
       </div>
+      <p id="size-refresh-notice" class="size-refresh-notice" role="status" aria-live="polite" hidden>
+        크기 변경 시 적용을 위해 새로고침이 필요합니다.
+      </p>
     </section>
 
-    <a
-      class="stream-link"
-      href="https://chzzk.naver.com/live/43c05c91ae59803c7b3f267753b73b65"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="수땡 방송"
-      title="수땡 방송"
-    >
-      <img class="stream-image" src="../icons/suttaeng.png" alt="">
-    </a>
+    <nav class="footer-links" aria-label="바로가기">
+      <a
+        class="footer-link"
+        href="https://chzzk.naver.com/live/43c05c91ae59803c7b3f267753b73b65"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="수땡 치지직 라이브"
+        title="수땡 치지직 라이브"
+      >
+        <img class="footer-image" src="../icons/suttaeng_chzzklive.png" alt="">
+      </a>
+      <a
+        class="footer-link footer-link-disabled"
+        href="https://chzzk.naver.com/43c05c91ae59803c7b3f267753b73b65"
+        aria-label="수땡 카카오톡 (준비 중)"
+        aria-disabled="true"
+        tabindex="-1"
+        title="카카오톡 링크 준비 중"
+      >
+        <img class="footer-image" src="../icons/suttaeng_kakao.png" alt="">
+      </a>
+      <a
+        class="footer-link"
+        href="https://discord.gg/4vuZb5rBRE"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="수땡 Discord"
+        title="수땡 Discord"
+      >
+        <img class="footer-image" src="../icons/suttaeng_discord.png" alt="">
+      </a>
+      <a
+        class="footer-link"
+        href="https://github.com/jinhoOps/chzzk-chat-icon-hugify"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Hugify GitHub 저장소"
+        title="Hugify GitHub 저장소"
+      >
+        <img class="footer-image" src="../icons/dev-github.png" alt="">
+      </a>
+    </nav>
   </main>
 
   <script src="popup.js"></script>

@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const statusBadge = document.getElementById('status-badge');
   const sizeRadios = document.querySelectorAll('input[name="size"]');
+  const sizeRefreshNotice = document.getElementById('size-refresh-notice');
   const supportedSizes = [90, 120];
 
   let state = {
@@ -54,7 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   sizeRadios.forEach((radio) => {
     radio.addEventListener('change', () => {
-      if (radio.checked) saveState({ size: Number(radio.value) });
+      if (radio.checked) {
+        saveState({ size: Number(radio.value) });
+        sizeRefreshNotice.hidden = false;
+      }
     });
   });
 });

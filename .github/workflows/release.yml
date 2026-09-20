@@ -37,7 +37,7 @@ jobs:
         run: |
           set -euo pipefail
           archive="hugify-extension.zip"
-          zip -r "$archive" manifest.json icons src
+          zip -r "$archive" manifest.json icons src fonts
           unzip -l "$archive" | grep -q 'manifest.json'
           echo "archive=$archive" >> "$GITHUB_OUTPUT"
 
