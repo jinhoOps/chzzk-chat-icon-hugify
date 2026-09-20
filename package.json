@@ -1,6 +1,6 @@
 {
   "name": "chzzk-chat-icon-hugify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "치지직 이모티콘에 마우스를 올리면 커져서 선명하게 미리 확인하는 Chrome 확장 프로그램",
   "type": "module",
   "scripts": {
