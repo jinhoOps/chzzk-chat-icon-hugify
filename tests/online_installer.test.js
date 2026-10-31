@@ -135,4 +135,53 @@ describe('online installer test suite (install-online.ps1)', () => {
       assert.notEqual(res.status, 0, 'Unsupported browser must fail');
     });
   });
+
+  describe('Auto-update scheduled task', () => {
+    it('parses even when Windows PowerShell 5.1 reads the file as ANSI (-File without BOM)', () => {
+      const psCommand = `
+        $t = $null; $e = $null
+        $src = [IO.File]::ReadAllText('${INSTALL_ONLINE_PS1.replace(/\\/g, '\\\\')}', [Text.Encoding]::Default)
+        [void][System.Management.Automation.Language.Parser]::ParseInput($src, [ref]$t, [ref]$e)
+        if ($e -and $e.Count -gt 0) { $e | ForEach-Object { Write-Error ("L{0}: {1}" -f $_.Extent.StartLineNumber, $_.Message) }; exit 1 }
+        exit 0
+      `;
+      const res = spawnSync('powershell', ['-NoProfile', '-Command', psCommand], { encoding: 'utf8' });
+      assert.equal(res.status, 0, `ANSI parse failed: ${res.stderr || res.stdout}`);
+    });
+
+    it('registers a per-user task that runs the saved updater silently', () => {
+      assert.match(scriptContent, /\[switch\]\$AutoUpdate/);
+      assert.match(scriptContent, /\[switch\]\$NoAutoUpdate/);
+      assert.match(scriptContent, /\[switch\]\$RemoveAutoUpdate/);
+      assert.match(scriptContent, /\$AutoUpdateTaskName = 'HugifyAutoUpdate'/);
+      assert.match(scriptContent, /Register-ScheduledTask/);
+      assert.match(scriptContent, /-RunLevel Limited/);
+      assert.match(scriptContent, /-WindowStyle Hidden -File "\{0\}" -AutoUpdate/);
+      assert.match(scriptContent, /New-Object Text\.UTF8Encoding \$true/, 'Updater copy must be saved with a BOM');
+    });
+
+    it('never installs fresh, uses the branch fallback, or opens a browser in -AutoUpdate mode', () => {
+      assert.match(scriptContent, /if \(-not \$AutoUpdate\) \{[\s\S]*?Find-BrowserExe \$Browser/);
+      assert.match(scriptContent, /if \(-not \$latestRelease\) \{ Write-UpdateLog 'skip: release metadata unavailable'; return \}/);
+      assert.match(scriptContent, /if \(-not \$localVersion\) \{ Write-UpdateLog 'skip: extension is not installed'; return \}/);
+      const autoReturn = scriptContent.indexOf("Write-UpdateLog \"done: installed");
+      const browserLaunch = scriptContent.indexOf('Start-Process -FilePath $browserInfo.Exe');
+      assert.ok(autoReturn > 0 && autoReturn < browserLaunch, 'Auto-update must return before launching the browser');
+    });
+
+    it('only registers auto-update for the default install folder', () => {
+      assert.match(scriptContent, /\$usesDefaultInstallDir = -not \$InstallDir/);
+      assert.match(scriptContent, /elseif \(\$usesDefaultInstallDir\) \{[\s\S]*?Register-AutoUpdateTask/);
+    });
+
+    it('reports the auto-update plan in dry-run', () => {
+      const res = spawnSync(
+        'powershell',
+        ['-NoProfile', '-File', INSTALL_ONLINE_PS1, '-DryRun', '-Browser', 'chrome'],
+        { encoding: 'utf8', cwd: REPO_ROOT }
+      );
+      assert.equal(res.status, 0, `Dry-run failed: ${res.stderr}`);
+      assert.match(res.stdout, /Auto update: scheduled task HugifyAutoUpdate/);
+    });
+  });
 });

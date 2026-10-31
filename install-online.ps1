@@ -8,7 +8,10 @@ param(
     [string]$InstallDir,
     [string]$ProfileDir,
     [string]$Profile,
-    [string]$UserDataDir
+    [string]$UserDataDir,
+    [switch]$AutoUpdate,
+    [switch]$NoAutoUpdate,
+    [switch]$RemoveAutoUpdate
 )
 
 $ErrorActionPreference = 'Stop'
@@ -37,11 +40,71 @@ $ExitCodes = @{
     PROCESS_START_ERROR = 4
 }
 
+# Auto-update (Windows scheduled task, current user only)
+$HugifyRoot = Join-Path $env:LOCALAPPDATA 'ChzzkIconMagnifier'
+$AutoUpdateTaskName = 'HugifyAutoUpdate'
+$UpdaterScriptPath = Join-Path $HugifyRoot 'updater.ps1'
+$UpdateLogPath = Join-Path $HugifyRoot 'update.log'
+
+function Write-UpdateLog([string]$Message) {
+    try {
+        if (-not (Test-Path -LiteralPath $HugifyRoot)) { New-Item -ItemType Directory -Path $HugifyRoot -Force | Out-Null }
+        if ((Test-Path -LiteralPath $UpdateLogPath) -and (Get-Item -LiteralPath $UpdateLogPath).Length -gt 65536) {
+            Remove-Item -LiteralPath $UpdateLogPath -Force
+        }
+        Add-Content -LiteralPath $UpdateLogPath -Value ('[{0}] {1}' -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $Message) -Encoding UTF8
+    } catch {}
+}
+
+# Saves this installer (from the given tag) as the local updater script.
+# Written with a UTF-8 BOM so Windows PowerShell 5.1 reads Korean text correctly with -File.
+function Save-UpdaterScript([string]$Ref) {
+    $url = "https://raw.githubusercontent.com/$RepoOwner/$RepoName/$Ref/install-online.ps1"
+    $content = Invoke-RestMethod -Uri $url -Headers @{ 'User-Agent' = 'chzzk-chat-icon-hugify-installer' }
+    if (-not ($content -is [string]) -or $content -notmatch 'AutoUpdateTaskName') {
+        throw "Updater script at $Ref does not support auto-update."
+    }
+    [void][scriptblock]::Create($content)
+    if (-not (Test-Path -LiteralPath $HugifyRoot)) { New-Item -ItemType Directory -Path $HugifyRoot -Force | Out-Null }
+    $tempPath = "$UpdaterScriptPath.tmp"
+    [IO.File]::WriteAllText($tempPath, $content, (New-Object Text.UTF8Encoding $true))
+    Move-Item -LiteralPath $tempPath -Destination $UpdaterScriptPath -Force
+}
+
+function Register-AutoUpdateTask {
+    $userId = [Security.Principal.WindowsIdentity]::GetCurrent().Name
+    $arguments = '-NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File "{0}" -AutoUpdate' -f $UpdaterScriptPath
+    $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument $arguments -WorkingDirectory $HugifyRoot
+    $triggers = @(
+        (New-ScheduledTaskTrigger -AtLogOn -User $userId),
+        (New-ScheduledTaskTrigger -Daily -At '18:00')
+    )
+    $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
+        -ExecutionTimeLimit (New-TimeSpan -Minutes 10) -MultipleInstances IgnoreNew
+    $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
+    Register-ScheduledTask -TaskName $AutoUpdateTaskName -Action $action -Trigger $triggers -Settings $settings `
+        -Principal $principal -Description 'Hugify 확장 프로그램 자동 업데이트 (GitHub Release 확인)' -Force | Out-Null
+}
+
+function Unregister-AutoUpdateTask {
+    if (Get-ScheduledTask -TaskName $AutoUpdateTaskName -ErrorAction SilentlyContinue) {
+        Unregister-ScheduledTask -TaskName $AutoUpdateTaskName -Confirm:$false
+    }
+    if (Test-Path -LiteralPath $UpdaterScriptPath) { Remove-Item -LiteralPath $UpdaterScriptPath -Force }
+}
+
 # 1. Install Directory
+$usesDefaultInstallDir = -not $InstallDir
 if (-not $InstallDir) {
     $InstallDir = Join-Path $env:LOCALAPPDATA "ChzzkIconMagnifier\app"
 }
 if ($ProfileDir) { throw 'ProfileDir is no longer supported. Use -Profile and -UserDataDir for existing profiles.' }
+
+if ($RemoveAutoUpdate) {
+    Unregister-AutoUpdateTask
+    Write-Host '자동 업데이트를 껐습니다. 설치된 확장 파일은 그대로 둡니다.' -ForegroundColor Green
+    return
+}
 
 Write-Host "========================================================================" -ForegroundColor Cyan
 Write-Host " 치지직 이모티콘 커져라! Hugify! 원격 설치 런처" -ForegroundColor Cyan
@@ -234,6 +297,9 @@ function Replace-InstallDirectory([string]$StagingDir, [string]$TargetDir) {
     }
 }
 
+# Browser and profile selection is skipped in -AutoUpdate mode (no prompts, no browser launch).
+if (-not $AutoUpdate) {
+
 # $b variable shortcut support (e.g. $b="whale"; irm ... | iex)
 if (-not $PSBoundParameters.ContainsKey('Browser') -and $b -and ($b -in @('chrome', 'whale', 'auto'))) {
     $Browser = $b
@@ -297,6 +363,8 @@ if ($selectedProfile) {
     )
 }
 
+}
+
 # 4. Resolve the latest distribution and verify the installed version
 $manifestFile = Join-Path $InstallDir "manifest.json"
 $manifestData = Get-ValidManifest $manifestFile
@@ -340,6 +408,14 @@ if ($latestRelease -and $localVersion) {
     $updateReason = "Release $($latestRelease.Version)을 새로 설치합니다."
 }
 
+if ($AutoUpdate) {
+    # Only update an existing install from a stable Release; never install fresh or use the branch fallback.
+    if (-not $latestRelease) { Write-UpdateLog 'skip: release metadata unavailable'; return }
+    if (-not $localVersion) { Write-UpdateLog 'skip: extension is not installed'; return }
+    if (-not $needsDownload) { Write-UpdateLog "skip: installed $localVersion, latest $($latestRelease.Version)"; return }
+    Write-UpdateLog "update: $localVersion -> $($latestRelease.Version)"
+}
+
 if ($DryRun) {
     Write-Host "`n[DRY RUN] 모의 실행 계획:" -ForegroundColor Green
     Write-Host "------------------------------------------------------------------------"
@@ -356,6 +432,8 @@ if ($DryRun) {
     Write-Host "- 소스 버전 : $(if ($sourceVersion) { $sourceVersion } else { 'unknown' })"
     Write-Host "- 소스 다운로드 필요 여부 : $needsDownload (-Refresh: $Refresh)"
     Write-Host "- 판단 : $updateReason"
+    $autoUpdatePlan = if ($NoAutoUpdate -or -not $usesDefaultInstallDir) { 'off' } else { "scheduled task $AutoUpdateTaskName" }
+    Write-Host "- Auto update: $autoUpdatePlan"
     Write-Host "- Mode: Register extension in existing profile"
     Write-Host "------------------------------------------------------------------------"
     Write-Host "검증 완료: 브라우저 및 다운로드가 실행되지 않았습니다 (Dry-run).`n" -ForegroundColor Green
@@ -409,6 +487,7 @@ if ($needsDownload) {
         Write-Host "파일 준비 완료: $InstallDir (버전 $($manifestData.version))" -ForegroundColor Green
     }
     catch {
+        if ($AutoUpdate) { Write-UpdateLog "fail: $($_.Exception.Message)" }
         Write-Host "❌ 다운로드 또는 갱신 실패: $($_.Exception.Message)" -ForegroundColor Red
         if ($MyInvocation.InvocationName -ne '.') { exit $ExitCodes.INSTALL_FAILED }
         return $ExitCodes.INSTALL_FAILED
@@ -437,6 +516,27 @@ if (-not $manifestData) {
     return $ExitCodes.INSTALL_FAILED
 }
 
+if ($AutoUpdate) {
+    Write-UpdateLog "done: installed $($manifestData.version)"
+    try { Save-UpdaterScript $latestRelease.Tag }
+    catch { Write-UpdateLog "warn: updater refresh failed. $($_.Exception.Message)" }
+    return
+}
+
+# Keep the extension updated automatically (only for the default install folder).
+if ($NoAutoUpdate) {
+    try { Unregister-AutoUpdateTask } catch {}
+    Write-Host '자동 업데이트를 사용하지 않습니다.' -ForegroundColor Gray
+} elseif ($usesDefaultInstallDir) {
+    try {
+        Save-UpdaterScript $(if ($latestRelease) { $latestRelease.Tag } else { $RepoBranch })
+        Register-AutoUpdateTask
+        Write-Host '🔄 자동 업데이트를 켰습니다. 로그인할 때와 매일 저녁 6시에 새 버전을 확인합니다.' -ForegroundColor Green
+        Write-Host '   끄려면 설치 명령 끝에 -RemoveAutoUpdate를 붙여 실행하세요.' -ForegroundColor Gray
+    } catch {
+        Write-Warning ("자동 업데이트를 켜지 못했습니다. 새 버전은 설치 명령을 다시 실행해 받으세요. {0}" -f $_.Exception.Message)
+    }
+}
 
 # Open the selected existing profile. Registration is completed by the user.
 try {

@@ -34,7 +34,15 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 
 ### 업데이트 방법
 
-빠른 시작의 설치 명령을 다시 실행하면 최신 GitHub Release를 확인합니다. 새 버전이 있으면 설치 파일을 갱신하고, 확장 관리 화면에서 Hugify의 **새로고침** 버튼을 누른 뒤 치지직 페이지도 새로고침하세요.
+설치 명령을 실행하면 **자동 업데이트**가 켜집니다. Windows 로그인 시와 매일 저녁 6시에 최신 GitHub Release를 확인해 설치 파일을 조용히 갱신합니다. 브라우저를 다시 켜거나 치지직 탭을 모두 닫으면 새 버전이 적용됩니다.
+
+자동 업데이트를 끄려면 `-RemoveAutoUpdate`를 붙여 실행합니다. 처음부터 켜지 않으려면 `-NoAutoUpdate`를 붙여 설치합니다.
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1))) -RemoveAutoUpdate
+```
+
+자동 업데이트 없이 직접 갱신하려면 빠른 시작의 설치 명령을 다시 실행하세요. 새 버전이 있으면 설치 파일을 갱신하니, 확장 관리 화면에서 Hugify의 **새로고침** 버튼을 누른 뒤 치지직 페이지도 새로고침하세요. 새 버전이 나오면 확장 팝업에도 알림이 뜹니다.
 
 같은 버전을 다시 받거나 설치를 복구하려면 `-Refresh`를 붙입니다.
 
@@ -48,6 +56,7 @@ irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/insta
 - 확장 파일은 `%LOCALAPPDATA%\ChzzkIconMagnifier\app`에 저장합니다.
 - 기존 브라우저 프로필을 읽어 선택한 프로필로 확장 관리 화면을 엽니다. 별도 테스트 프로필을 만들지 않습니다.
 - 관리자 권한과 Windows 레지스트리 수정을 요구하지 않습니다. 마지막 확장 등록은 사용자가 직접 클릭합니다.
+- 자동 업데이트는 현재 사용자 권한의 Windows 예약 작업(`HugifyAutoUpdate`) 하나로 동작합니다. 설치한 Release와 같은 버전의 `install-online.ps1`을 `%LOCALAPPDATA%\ChzzkIconMagnifier\updater.ps1`에 저장해 실행하고, 결과는 같은 폴더의 `update.log`에 남깁니다. 정식 Release만 받으며, 설치된 버전보다 낮은 버전으로는 바꾸지 않습니다.
 
 ### 개발자용
 
@@ -60,10 +69,10 @@ npm test
 ```powershell
 npm test
 git add manifest.json package.json src icons fonts README.md
-git commit -m "release: v1.2.0"
+git commit -m "release: vX.Y.Z"
 git push origin main
-git tag v1.2.0
-git push origin v1.2.0
+git tag vX.Y.Z
+git push origin vX.Y.Z
 ```
 
 CookieRun 서체는 팝업 UI에 원본 파일 그대로 번들하며, 사용 조건은 [`fonts/LICENSE-CookieRun.txt`](fonts/LICENSE-CookieRun.txt)에 기록했습니다. 공식 라이선스도 함께 확인하세요: [CookieRun FONT LICENSE](https://www.cookierunfont.com/static/download/License_ko_en.pdf)
