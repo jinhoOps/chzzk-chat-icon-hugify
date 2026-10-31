@@ -81,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const LATEST_RELEASE_API = 'https://api.github.com/repos/jinhoOps/chzzk-chat-icon-hugify/releases/latest';
-const UPDATE_COMMAND = 'irm https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main/install-online.ps1 | iex';
 const UPDATE_CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
 function parseVersion(value) {
@@ -121,7 +120,7 @@ async function fetchLatestTag() {
 async function checkForUpdate() {
   const notice = document.getElementById('update-notice');
   const latestLabel = document.getElementById('update-latest');
-  const copyButton = document.getElementById('update-copy');
+  const openButton = document.getElementById('update-open');
   const releaseLink = document.getElementById('update-link');
   if (!notice) return;
 
@@ -135,14 +134,9 @@ async function checkForUpdate() {
     releaseLink.href = `https://github.com/jinhoOps/chzzk-chat-icon-hugify/releases/tag/${latestTag}`;
     notice.hidden = false;
 
-    copyButton.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(UPDATE_COMMAND);
-        copyButton.textContent = '복사됐어요!';
-      } catch {
-        copyButton.textContent = '복사 실패';
-      }
-      setTimeout(() => { copyButton.textContent = '업데이트 명령 복사'; }, 1600);
+    openButton.addEventListener('click', () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('src/update.html') });
+      window.close();
     });
   } catch {
     // 오프라인이거나 GitHub API 제한이면 알림 없이 넘어갑니다.

@@ -43,6 +43,24 @@ async function reloadIfUpdatedOnDisk() {
   }
 }
 
+// 업데이트 화면에서 파일을 바꾸고 다시 시작한 직후: 치지직 탭을 새로고침하고 완료 화면을 보여줍니다.
+async function finishButtonUpdate() {
+  try {
+    const { justUpdated } = await chrome.storage.local.get('justUpdated');
+    if (!justUpdated) return;
+    await chrome.storage.local.remove('justUpdated');
+    if (justUpdated !== chrome.runtime.getManifest().version) return;
+
+    const chzzkTabs = await chrome.tabs.query({ url: CHZZK_TABS });
+    for (const tab of chzzkTabs) chrome.tabs.reload(tab.id);
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/update.html#done') });
+  } catch {
+    // 완료 안내는 실패해도 업데이트 자체에는 영향이 없습니다.
+  }
+}
+
+finishButtonUpdate();
+
 chrome.alarms.get(UPDATE_ALARM, (alarm) => {
   if (!alarm) chrome.alarms.create(UPDATE_ALARM, { periodInMinutes: 30 });
 });

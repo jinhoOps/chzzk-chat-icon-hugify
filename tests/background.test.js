@@ -8,8 +8,8 @@ const backgroundJs = read('src/background.js');
 const manifest = JSON.parse(read('manifest.json'));
 
 // Runs background.js against a stub chrome API and returns the hooks it registered.
-function loadBackground({ runningVersion, diskVersion, chzzkTabs = [] }) {
-  const calls = { reload: 0, alarmsCreated: [] };
+function loadBackground({ runningVersion, diskVersion, chzzkTabs = [], stored = {} }) {
+  const calls = { reload: 0, alarmsCreated: [], tabsReloaded: [], tabsCreated: [], removed: [] };
   const listeners = {};
   const chrome = {
     runtime: {
@@ -23,8 +23,16 @@ function loadBackground({ runningVersion, diskVersion, chzzkTabs = [] }) {
       create: (name, info) => calls.alarmsCreated.push({ name, info }),
       onAlarm: { addListener: (fn) => { listeners.alarm = fn; } },
     },
+    storage: {
+      local: {
+        get: async (key) => ({ [key]: stored[key] }),
+        remove: async (key) => { calls.removed.push(key); },
+      },
+    },
     tabs: {
       query: async () => chzzkTabs,
+      reload: (id) => calls.tabsReloaded.push(id),
+      create: (info) => calls.tabsCreated.push(info.url),
       onRemoved: { addListener: (fn) => { listeners.tabRemoved = fn; } },
     },
   };
@@ -33,7 +41,36 @@ function loadBackground({ runningVersion, diskVersion, chzzkTabs = [] }) {
   return { ...exports, calls, listeners };
 }
 
+const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+
 describe('background auto-reload', () => {
+  it('after a button update, refreshes chzzk tabs and opens the done page', async () => {
+    const bg = loadBackground({
+      runningVersion: '1.4.0', diskVersion: '1.4.0', chzzkTabs: [{ id: 7 }, { id: 9 }], stored: { justUpdated: '1.4.0' },
+    });
+    await settle();
+    assert.deepEqual(bg.calls.removed, ['justUpdated']);
+    assert.deepEqual(bg.calls.tabsReloaded, [7, 9]);
+    assert.deepEqual(bg.calls.tabsCreated, ['chrome-extension://test/src/update.html#done']);
+  });
+
+  it('ignores a stale update flag from a different version', async () => {
+    const bg = loadBackground({
+      runningVersion: '1.3.0', diskVersion: '1.3.0', chzzkTabs: [{ id: 7 }], stored: { justUpdated: '1.4.0' },
+    });
+    await settle();
+    assert.deepEqual(bg.calls.removed, ['justUpdated']);
+    assert.deepEqual(bg.calls.tabsReloaded, []);
+    assert.deepEqual(bg.calls.tabsCreated, []);
+  });
+
+  it('does nothing on a normal start', async () => {
+    const bg = loadBackground({ runningVersion: '1.3.0', diskVersion: '1.3.0', chzzkTabs: [{ id: 7 }] });
+    await settle();
+    assert.deepEqual(bg.calls.removed, []);
+    assert.deepEqual(bg.calls.tabsCreated, []);
+  });
+
   it('is registered in the manifest with the alarms permission', () => {
     assert.equal(manifest.background?.service_worker, 'src/background.js');
     assert.ok(manifest.permissions.includes('alarms'));

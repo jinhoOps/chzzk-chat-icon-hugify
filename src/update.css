@@ -1,0 +1,200 @@
+:root {
+  --accent: #73b8f5;
+  --accent-strong: #418fdb;
+  --accent-soft: #edf7ff;
+  --page: #f8fbff;
+  --surface: #ffffff;
+  --ink: #20324b;
+  --muted: #7e8da3;
+  --line: #e4edf7;
+  --ok: #2f9e6a;
+  --error: #d1495b;
+}
+
+@font-face {
+  font-family: "CookieRun";
+  src: url("../fonts/CookieRun-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "CookieRun";
+  src: url("../fonts/CookieRun-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 16px;
+  background: var(--page);
+  color: var(--ink);
+  font-family: "CookieRun", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.card {
+  width: 100%;
+  max-width: 480px;
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(75, 137, 190, 0.12);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.head img {
+  border-radius: 12px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+
+h1 span {
+  color: var(--accent-strong);
+}
+
+.versions {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: var(--accent-soft);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.versions strong {
+  color: var(--accent-strong);
+}
+
+.arrow {
+  margin: 0 6px;
+  color: var(--muted);
+}
+
+.guide {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px dashed #cde7fb;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.guide p,
+.guide ol {
+  margin: 0 0 6px;
+}
+
+.guide ol {
+  padding-left: 20px;
+}
+
+.guide .tip {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+code {
+  padding: 1px 5px;
+  background: #f0f5fb;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.primary {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  color: #ffffff;
+  background: var(--accent-strong);
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.primary:hover:not(:disabled) {
+  background: #2f7cc8;
+}
+
+.primary:disabled {
+  background: #b9cde0;
+  cursor: default;
+}
+
+.primary:focus-visible,
+.link:focus-visible {
+  outline: 3px solid rgba(65, 143, 219, 0.3);
+  outline-offset: 2px;
+}
+
+.status {
+  min-height: 1.6em;
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.status.ok {
+  color: var(--ok);
+}
+
+.status.error {
+  color: var(--error);
+}
+
+.link {
+  display: block;
+  margin: 8px auto 0;
+  padding: 0;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+}
+
+.done-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.done-title strong {
+  color: var(--ok);
+}
+
+#update-done p:last-child {
+  margin: 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+[hidden] {
+  display: none !important;
+}

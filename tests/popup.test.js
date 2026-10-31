@@ -81,11 +81,12 @@ describe('Hugify popup UI', () => {
     assert.match(contentCss, /--chzzk-mag-size/);
   });
 
-  it('shows an update notice with a copyable install command', () => {
+  it('shows an update notice that opens the update page', () => {
     assert.match(popupHtml, /id="update-notice"[^>]*hidden/s);
-    assert.match(popupHtml, /id="update-copy"/);
+    assert.match(popupHtml, /id="update-open"/);
     assert.match(popupJs, /api\.github\.com\/repos\/jinhoOps\/chzzk-chat-icon-hugify\/releases\/latest/);
-    assert.match(popupJs, /irm https:\/\/raw\.githubusercontent\.com\/jinhoOps\/chzzk-chat-icon-hugify\/main\/install-online\.ps1 \| iex/);
+    assert.match(popupJs, /chrome\.tabs\.create\(\{ url: chrome\.runtime\.getURL\('src\/update\.html'\) \}\)/);
+    assert.doesNotMatch(popupJs, /install-online\.ps1/);
     assert.match(popupJs, /chrome\.runtime\.getManifest\(\)\.version/);
     assert.match(popupCss, /\.update-notice\[hidden\][\s\S]*?display:\s*none/);
   });
