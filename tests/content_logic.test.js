@@ -5,6 +5,7 @@ import {
   extractEmoticonInfo,
   calculateTooltipPosition,
   isMagnifierActive,
+  shouldMagnifyEmoticon,
   DEFAULT_SETTINGS
 } from '../src/utils.js';
 
@@ -164,7 +165,35 @@ describe('Chzzk user snippet test suite', () => {
     assert.equal(extractEmoticonInfo(donateBtn), null, 'Donation button must be excluded');
   });
 
-  it('keeps enabled and the default size as the only settings', () => {
-    assert.deepEqual(DEFAULT_SETTINGS, { enabled: true, size: 90 });
+  it('keeps enabled, the default size, and chat area as the only settings', () => {
+    assert.deepEqual(DEFAULT_SETTINGS, { enabled: true, size: 90, chatArea: true });
+  });
+
+  it('skips chat-area emoticons when the chat area option is off', () => {
+    const popupContents = createMockNode('div', { id: 'popup_contents' }, []);
+    const emojiArea = createMockNode('div', { id: 'emoji_area' }, [], popupContents);
+    const pickerBtn = createMockNode('button', {}, ['_emoticon_1dr17_172'], emojiArea);
+    const pickerImg = createMockNode('img', {
+      src: 'https://nng-phinf.pstatic.net/glive/subscription/emoji/a/1/1.png?type=f60_60',
+      alt: '{:slp1:}',
+    }, [], pickerBtn);
+
+    const chatList = createMockNode('div', {}, ['_chatting_list_abc']);
+    const chatMsg = createMockNode('span', {}, ['_message_abc'], chatList);
+    const chatImg = createMockNode('img', {
+      src: 'https://nng-phinf.pstatic.net/glive/subscription/emoji/a/1/1.png?type=f60_60',
+      alt: '{:slp1:}',
+    }, [], chatMsg);
+
+    const pickerInfo = extractEmoticonInfo(pickerImg);
+    const chatInfo = extractEmoticonInfo(chatImg);
+    assert.ok(pickerInfo);
+    assert.ok(chatInfo, 'Chat emoticon is still detected');
+
+    assert.equal(shouldMagnifyEmoticon({ chatArea: true }, chatInfo), true);
+    assert.equal(shouldMagnifyEmoticon({}, chatInfo), true, 'Defaults to magnifying chat');
+    assert.equal(shouldMagnifyEmoticon({ chatArea: false }, chatInfo), false);
+    assert.equal(shouldMagnifyEmoticon({ chatArea: false }, pickerInfo), true);
+    assert.equal(shouldMagnifyEmoticon({ chatArea: false }, null), false);
   });
 });

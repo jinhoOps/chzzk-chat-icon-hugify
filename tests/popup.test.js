@@ -22,6 +22,10 @@ describe('Hugify popup UI', () => {
     assert.match(popupHtml, /<small>더 크게<\/small>/);
     assert.doesNotMatch(popupHtml, /<small>기본<\/small>|<small>크게 보기<\/small>|<small>크게!<\/small>|<small>더 크게!!<\/small>/);
     assert.match(popupHtml, /id="size-refresh-notice"/);
+    assert.match(popupHtml, /type="checkbox"[^>]*id="chat-area"/s);
+    assert.match(popupHtml, /채팅창 이모티콘도 확대/);
+    assert.match(popupJs, /saveState\(\{ chatArea: chatAreaCheck\.checked \}\)/);
+    assert.match(contentJs, /chatArea/);
     assert.match(popupHtml, /크기 변경 시 적용을 위해 새로고침이 필요합니다\./);
     assert.doesNotMatch(popupHtml, /id="size-label"|>\s*크기\s*</);
     assert.match(popupHtml, /class="brand-icon"[^>]*href="https:\/\/chzzk\.naver\.com\/43c05c91ae59803c7b3f267753b73b65"/s);

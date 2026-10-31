@@ -5,12 +5,14 @@
 document.addEventListener('DOMContentLoaded', () => {
   const statusBadge = document.getElementById('status-badge');
   const sizeRadios = document.querySelectorAll('input[name="size"]');
+  const chatAreaCheck = document.getElementById('chat-area');
   const sizeRefreshNotice = document.getElementById('size-refresh-notice');
   const supportedSizes = [90, 120];
 
   let state = {
     enabled: true,
     size: 90,
+    chatArea: true,
   };
 
   function normalizeSize(value) {
@@ -27,6 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
       state.enabled ? '이모티콘 확대 끄기' : '이모티콘 확대 켜기'
     );
 
+    chatAreaCheck.checked = state.chatArea;
+
     sizeRadios.forEach((radio) => {
       radio.checked = Number(radio.value) === state.size;
     });
@@ -41,16 +45,21 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.set(nextState, updateUI);
   }
 
-  chrome.storage.local.get(['enabled', 'size'], (result) => {
+  chrome.storage.local.get(['enabled', 'size', 'chatArea'], (result) => {
     state = {
       enabled: result?.enabled !== false,
       size: normalizeSize(result?.size),
+      chatArea: result?.chatArea !== false,
     };
     updateUI();
   });
 
   statusBadge.addEventListener('click', () => {
     saveState({ enabled: !state.enabled });
+  });
+
+  chatAreaCheck.addEventListener('change', () => {
+    saveState({ chatArea: chatAreaCheck.checked });
   });
 
   document.querySelectorAll('.footer-link-disabled').forEach((link) => {

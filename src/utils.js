@@ -5,7 +5,10 @@
 export const DEFAULT_SETTINGS = {
   enabled: true,
   size: 90,
+  chatArea: true,
 };
+
+const EMOTICON_PICKER_SELECTOR = '#popup_contents, #emoji_area, [id*="emoji_area"]';
 
 export const SIZE_PRESETS = [90, 120];
 
@@ -38,6 +41,28 @@ export function getHighResImageUrl(url) {
  */
 export function isMagnifierActive(settings) {
   return Boolean(settings && settings.enabled !== false);
+}
+
+/**
+ * 요소가 이모티콘 선택창(팝업) 내부인지 판별합니다.
+ * @param {Element} element
+ * @returns {boolean}
+ */
+export function isInEmoticonPicker(element) {
+  return Boolean(element?.closest?.(EMOTICON_PICKER_SELECTOR));
+}
+
+/**
+ * 채팅창 영역 확대 옵션에 따라 해당 이모티콘을 확대할지 판별합니다.
+ * chatArea가 꺼져 있으면 이모티콘 선택창 내부만 확대합니다.
+ * @param {object} settings
+ * @param {{ img: Element }} info
+ * @returns {boolean}
+ */
+export function shouldMagnifyEmoticon(settings, info) {
+  if (!info) return false;
+  if (settings?.chatArea !== false) return true;
+  return isInEmoticonPicker(info.img);
 }
 
 /**

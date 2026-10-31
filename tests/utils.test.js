@@ -52,7 +52,7 @@ describe('utils.js test suite', () => {
 
   describe('size settings', () => {
     it('uses 90 as the default and exposes the two supported sizes', () => {
-      assert.deepEqual(DEFAULT_SETTINGS, { enabled: true, size: 90 });
+      assert.deepEqual(DEFAULT_SETTINGS, { enabled: true, size: 90, chatArea: true });
       assert.deepEqual(SIZE_PRESETS, [90, 120]);
     });
 

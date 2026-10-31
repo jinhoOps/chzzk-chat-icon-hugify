@@ -9,7 +9,8 @@
   const DEFAULT_MAGNIFIER_SIZE = 90;
   const MAGNIFIER_SIZES = [90, 120];
   const TOOLTIP_PADDING = 16;
-  let settings = { enabled: true, size: DEFAULT_MAGNIFIER_SIZE };
+  const EMOTICON_PICKER_SELECTOR = '#popup_contents, #emoji_area, [id*="emoji_area"]';
+  let settings = { enabled: true, size: DEFAULT_MAGNIFIER_SIZE, chatArea: true };
 
   let tooltipEl = null;
   let tooltipImg = null;
@@ -38,6 +39,15 @@
 
   function isMagnifierActive() {
     return Boolean(settings && settings.enabled !== false);
+  }
+
+  function isInEmoticonPicker(element) {
+    return Boolean(element?.closest?.(EMOTICON_PICKER_SELECTOR));
+  }
+
+  function shouldMagnify(info) {
+    if (settings.chatArea !== false) return true;
+    return isInEmoticonPicker(info.img);
   }
 
   function getMagnifierSize() {
@@ -240,7 +250,8 @@
   function handleMouseOver(event) {
     if (!isMagnifierActive()) return;
 
-    const info = extractEmoticonInfo(event.target);
+    const found = extractEmoticonInfo(event.target);
+    const info = found && shouldMagnify(found) ? found : null;
     if (!info) {
       if (currentTarget && !isTooltipTarget(event.target)) hideTooltip();
       return;
@@ -270,11 +281,12 @@
   function initSettings() {
     if (typeof chrome === 'undefined' || !chrome.storage?.local) return;
 
-    chrome.storage.local.get(['enabled', 'size'], (result) => {
+    chrome.storage.local.get(['enabled', 'size', 'chatArea'], (result) => {
       const size = Number(result?.size);
       settings = {
         enabled: result?.enabled !== false,
         size: MAGNIFIER_SIZES.includes(size) ? size : DEFAULT_MAGNIFIER_SIZE,
+        chatArea: result?.chatArea !== false,
       };
       applySizeStyle();
     });
@@ -285,6 +297,13 @@
       if (Object.prototype.hasOwnProperty.call(changes, 'enabled')) {
         settings.enabled = changes.enabled.newValue !== false;
         if (!settings.enabled) hideTooltip(true);
+      }
+
+      if (Object.prototype.hasOwnProperty.call(changes, 'chatArea')) {
+        settings.chatArea = changes.chatArea.newValue !== false;
+        if (!settings.chatArea && currentTarget && !isInEmoticonPicker(currentTarget)) {
+          hideTooltip(true);
+        }
       }
 
       if (Object.prototype.hasOwnProperty.call(changes, 'size')) {
