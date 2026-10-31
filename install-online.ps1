@@ -1,18 +1,15 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('chrome', 'whale', 'auto')]
-    [string]$Browser = 'chrome',
     [switch]$Refresh,
     [switch]$DryRun,
-    [switch]$Fallback,
     [string]$InstallDir,
-    [string]$ProfileDir,
-    [string]$Profile,
-    [string]$UserDataDir,
     [switch]$AutoUpdate,
     [switch]$NoAutoUpdate,
     [switch]$RemoveAutoUpdate
 )
+
+# Hugify installer: downloads the latest Release into one fixed folder and explains
+# how to register it in Chrome/Whale. It never picks a browser or profile for the user.
 
 $ErrorActionPreference = 'Stop'
 
@@ -27,17 +24,14 @@ $RepoName   = "chzzk-chat-icon-hugify"
 $RepoBranch = "main"
 $RepoUrl    = "https://github.com/jinhoOps/chzzk-chat-icon-hugify"
 $ZipUrl     = "https://github.com/jinhoOps/chzzk-chat-icon-hugify/archive/refs/heads/main.zip"
-$RawBaseUrl = "https://raw.githubusercontent.com/jinhoOps/chzzk-chat-icon-hugify/main"
 $LatestReleaseApiUrl = "https://api.github.com/repos/$RepoOwner/$RepoName/releases/latest"
 $ReleaseAssetName = "hugify-extension.zip"
 
 # Exit Codes
 $ExitCodes = @{
-    SUCCESS             = 0
-    INVALID_ARG         = 1
-    BROWSER_NOT_FOUND   = 2
-    INSTALL_FAILED      = 3
-    PROCESS_START_ERROR = 4
+    SUCCESS        = 0
+    INVALID_ARG    = 1
+    INSTALL_FAILED = 3
 }
 
 # Auto-update (Windows scheduled task, current user only)
@@ -83,7 +77,7 @@ function Register-AutoUpdateTask {
         -ExecutionTimeLimit (New-TimeSpan -Minutes 10) -MultipleInstances IgnoreNew
     $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
     Register-ScheduledTask -TaskName $AutoUpdateTaskName -Action $action -Trigger $triggers -Settings $settings `
-        -Principal $principal -Description 'Hugify 확장 프로그램 자동 업데이트 (GitHub Release 확인)' -Force | Out-Null
+        -Principal $principal -Description 'Hugify extension auto update (checks GitHub Release)' -Force | Out-Null
 }
 
 function Unregister-AutoUpdateTask {
@@ -93,123 +87,27 @@ function Unregister-AutoUpdateTask {
     if (Test-Path -LiteralPath $UpdaterScriptPath) { Remove-Item -LiteralPath $UpdaterScriptPath -Force }
 }
 
-# 1. Install Directory
+# 1. Install Directory (fixed, so registration and auto-update always use the same folder)
 $usesDefaultInstallDir = -not $InstallDir
 if (-not $InstallDir) {
     $InstallDir = Join-Path $env:LOCALAPPDATA "ChzzkIconMagnifier\app"
 }
-if ($ProfileDir) { throw 'ProfileDir is no longer supported. Use -Profile and -UserDataDir for existing profiles.' }
 
 if ($RemoveAutoUpdate) {
     Unregister-AutoUpdateTask
-    Write-Host '자동 업데이트를 껐습니다. 설치된 확장 파일은 그대로 둡니다.' -ForegroundColor Green
+    Write-Host 'Auto update is off. The installed extension files are kept.' -ForegroundColor Green
+    Write-Host '자동 업데이트를 껐습니다. 설치된 확장 파일은 그대로 둡니다.'
     return
 }
 
-Write-Host "========================================================================" -ForegroundColor Cyan
-Write-Host " 치지직 이모티콘 커져라! Hugify! 원격 설치 런처" -ForegroundColor Cyan
-Write-Host " 저장소: $RepoUrl (Branch: $RepoBranch)" -ForegroundColor Gray
-Write-Host "========================================================================" -ForegroundColor Cyan
-
-# 2. Find Browser Executable
-function Find-BrowserExe ([string]$target) {
-    $progFiles    = $env:ProgramFiles
-    $progFilesX86 = ${env:ProgramFiles(x86)}
-    $localApp     = $env:LOCALAPPDATA
-
-    $chromePaths = @(
-        (Join-Path $progFiles "Google\Chrome\Application\chrome.exe"),
-        (Join-Path $progFilesX86 "Google\Chrome\Application\chrome.exe"),
-        (Join-Path $localApp "Google\Chrome\Application\chrome.exe")
-    )
-    $whalePaths = @(
-        (Join-Path $progFiles "Naver\Naver Whale\Application\whale.exe"),
-        (Join-Path $progFilesX86 "Naver\Naver Whale\Application\whale.exe"),
-        (Join-Path $localApp "Naver\Naver Whale\Application\whale.exe")
-    )
-
-    if ($target -eq 'chrome') {
-        foreach ($p in $chromePaths) {
-            if (Test-Path -LiteralPath $p) { return @{ Type = 'chrome'; Name = 'Google Chrome'; Exe = $p } }
-        }
-        return $null
-    }
-    if ($target -eq 'whale') {
-        foreach ($p in $whalePaths) {
-            if (Test-Path -LiteralPath $p) { return @{ Type = 'whale'; Name = 'Naver Whale'; Exe = $p } }
-        }
-        return $null
-    }
-    if ($target -eq 'auto') {
-        # auto: Chrome first, then Whale
-        foreach ($p in $chromePaths) {
-            if (Test-Path -LiteralPath $p) { return @{ Type = 'chrome'; Name = 'Google Chrome'; Exe = $p } }
-        }
-        foreach ($p in $whalePaths) {
-            if (Test-Path -LiteralPath $p) { return @{ Type = 'whale'; Name = 'Naver Whale'; Exe = $p } }
-        }
-        return $null
-    }
-    return $null
+if (-not $AutoUpdate) {
+    Write-Host "========================================================================" -ForegroundColor Cyan
+    Write-Host " 치지직 이모티콘 커져라! Hugify! 설치" -ForegroundColor Cyan
+    Write-Host " 저장소: $RepoUrl" -ForegroundColor Gray
+    Write-Host "========================================================================" -ForegroundColor Cyan
 }
 
-function Get-ExistingProfiles([string]$Root, [string]$BrowserType = '') {
-    $cache = $null
-    $statePath = Join-Path $Root 'Local State'
-    if (Test-Path -LiteralPath $statePath) {
-        try { $cache = (Get-Content -Raw -Encoding UTF8 -LiteralPath $statePath | ConvertFrom-Json).profile.info_cache }
-        catch { Write-Warning 'Cannot read Local State. Using existing profile folders.' }
-    }
-    if (-not (Test-Path -LiteralPath $Root -PathType Container)) { return @() }
-    $items = @()
-    foreach ($folder in (Get-ChildItem -LiteralPath $Root -Directory | Sort-Object Name)) {
-        if ($folder.Name -notmatch '^(Default|Profile \d+)$') { continue }
-        if (-not (Test-Path -LiteralPath (Join-Path $folder.FullName 'Preferences'))) { continue }
-        $label = $folder.Name
-        if ($cache) {
-            $entry = $cache.PSObject.Properties[$folder.Name]
-            if ($entry -and $entry.Value.name) { $label = [string]$entry.Value.name }
-        }
-        $items += [pscustomobject]@{ Directory=$folder.Name; Name=$label }
-    }
-    # Whale: prioritize signed-in profile (Profile 1) over unauthenticated Default
-    if ($BrowserType -eq 'whale' -and $items.Count -gt 1) {
-        $items = @($items | Sort-Object {
-            if ($_.Directory -eq 'Profile 1') { 0 }
-            elseif ($_.Directory -ne 'Default') { 1 }
-            else { 2 }
-        })
-    }
-    return $items
-}
-
-function Select-ExistingProfile($Profiles, [string]$Requested, [switch]$Preview) {
-    if ($Requested) {
-        $matches = @($Profiles | Where-Object { $_.Directory -eq $Requested })
-        if ($matches.Count -ne 1) { throw "Existing profile not found: $Requested" }
-        return $matches[0]
-    }
-    if ($Profiles.Count -eq 0) {
-        if ($Preview) { return $null }
-        throw '기존 프로필이 없습니다. 브라우저를 먼저 실행하거나 -UserDataDir로 기존 경로를 지정하세요.'
-    }
-    if ($Profiles.Count -eq 1) { return $Profiles[0] }
-    Write-Host '사용할 브라우저 프로필을 선택하세요:'
-    for ($i=0; $i -lt $Profiles.Count; $i++) {
-        Write-Host ('{0}. {1} [{2}]' -f ($i+1), $Profiles[$i].Name, $Profiles[$i].Directory)
-    }
-    if ($Preview) { return $null }
-    while ($true) {
-        $answer = Read-Host '프로필 번호 (기본값: 1, 취소: q)'
-        if ($answer -eq 'q') { throw 'Cancelled.' }
-        if ($answer -eq '' -or $answer -eq '1') { return $Profiles[0] }
-        $number = 0
-        if ([int]::TryParse($answer, [ref]$number) -and $number -ge 1 -and $number -le $Profiles.Count) { return $Profiles[$number-1] }
-        Write-Host '목록에 있는 번호를 입력해주세요.'
-    }
-}
-
-# Version and Release helpers
+# 2. Version and Release helpers
 function ConvertTo-ReleaseVersion([string]$Value) {
     $normalized = ([string]$Value).Trim()
     if ($normalized.StartsWith('v', [StringComparison]::OrdinalIgnoreCase)) {
@@ -297,75 +195,7 @@ function Replace-InstallDirectory([string]$StagingDir, [string]$TargetDir) {
     }
 }
 
-# Browser and profile selection is skipped in -AutoUpdate mode (no prompts, no browser launch).
-if (-not $AutoUpdate) {
-
-# $b variable shortcut support (e.g. $b="whale"; irm ... | iex)
-if (-not $PSBoundParameters.ContainsKey('Browser') -and $b -and ($b -in @('chrome', 'whale', 'auto'))) {
-    $Browser = $b
-}
-
-# Interactive browser selection if not explicitly specified via CLI
-if (-not $PSBoundParameters.ContainsKey('Browser') -and -not $b) {
-    $chromeDetected = Find-BrowserExe 'chrome'
-    $whaleDetected  = Find-BrowserExe 'whale'
-
-    if ($chromeDetected -and $whaleDetected) {
-        if (-not $DryRun) {
-            Write-Host '설치할 브라우저를 선택하세요:' -ForegroundColor Cyan
-            Write-Host '1. Google Chrome'
-            Write-Host '2. Naver Whale'
-            while ($true) {
-                $choice = Read-Host '브라우저 번호 (기본값: 1, 취소: q)'
-                if ($choice -eq 'q') { throw 'Cancelled.' }
-                if ($choice -eq '' -or $choice -eq '1') {
-                    $Browser = 'chrome'
-                    break
-                }
-                if ($choice -eq '2') {
-                    $Browser = 'whale'
-                    break
-                }
-                Write-Host '1 또는 2를 입력해주세요.' -ForegroundColor Yellow
-            }
-        }
-    } elseif ($whaleDetected -and -not $chromeDetected) {
-        $Browser = 'whale'
-    }
-}
-
-$browserInfo = Find-BrowserExe $Browser
-if (-not $browserInfo) {
-    Write-Host "❌ 요청한 브라우저($Browser)의 실행 파일을 찾을 수 없습니다." -ForegroundColor Red
-    Write-Host "   기본 경로에 Google Chrome 또는 Naver Whale이 설치되어 있는지 확인해주세요." -ForegroundColor Yellow
-    if ($MyInvocation.InvocationName -ne '.') { exit $ExitCodes.BROWSER_NOT_FOUND }
-    return $ExitCodes.BROWSER_NOT_FOUND
-}
-
-
-if (-not $UserDataDir) {
-    $relativeRoot = if ($browserInfo.Type -eq 'whale') { 'Naver\Naver Whale\User Data' } else { 'Google\Chrome\User Data' }
-    $UserDataDir = Join-Path $env:LOCALAPPDATA $relativeRoot
-}
-$UserDataDir = [IO.Path]::GetFullPath($UserDataDir)
-$profiles = @(Get-ExistingProfiles $UserDataDir -BrowserType $browserInfo.Type)
-try { $selectedProfile = Select-ExistingProfile $profiles $Profile -Preview:$DryRun }
-catch { throw $_ }
-$targetUrl = if ($browserInfo.Type -eq 'whale') { 'whale://extensions/' } else { 'chrome://extensions/' }
-$launchArgs = @()
-if ($selectedProfile) {
-    if ($UserDataDir.Contains('"')) { throw 'Invalid user data path.' }
-    $launchArgs = @(
-        '--new-window',
-        ('--user-data-dir="{0}"' -f $UserDataDir),
-        ('--profile-directory="{0}"' -f $selectedProfile.Directory),
-        $targetUrl
-    )
-}
-
-}
-
-# 4. Resolve the latest distribution and verify the installed version
+# 3. Resolve the latest distribution and verify the installed version
 $manifestFile = Join-Path $InstallDir "manifest.json"
 $manifestData = Get-ValidManifest $manifestFile
 $latestRelease = $null
@@ -384,6 +214,7 @@ if (-not $DryRun) {
     $sourceLabel = 'main branch fallback (dry-run; Release metadata not requested)'
 }
 
+$wasInstalled = [bool]$manifestData
 $needsDownload = $Refresh -or (-not $manifestData)
 $updateReason = if ($Refresh) { '강제 갱신이 요청되었습니다.' } elseif (-not $manifestData) { '설치 파일이 없거나 유효하지 않습니다.' } else { '현재 설치 버전을 유지합니다.' }
 $localVersion = $null
@@ -417,31 +248,25 @@ if ($AutoUpdate) {
 }
 
 if ($DryRun) {
-    Write-Host "`n[DRY RUN] 모의 실행 계획:" -ForegroundColor Green
-    Write-Host "------------------------------------------------------------------------"
-    Write-Host "- 선택된 브라우저 : $($browserInfo.Name) ($($browserInfo.Type))"
-    Write-Host "- 브라우저 실행파일 : $($browserInfo.Exe)"
-    Write-Host "- 배포 채널 : $sourceLabel"
-    Write-Host "- 원격 소스 다운로드 URL : $sourceUrl"
-    Write-Host "- 앱 설치 위치 : $InstallDir"
-    Write-Host "- Existing profile root: $UserDataDir"
-    Write-Host "- Profile: $($selectedProfile.Directory)"
-    Write-Host "- Arguments: $($launchArgs -join ' ')"
-    if (-not $selectedProfile) { Write-Host "Profile selection required during installation." }
-    Write-Host "- 설치된 버전 : $($manifestData.version)"
-    Write-Host "- 소스 버전 : $(if ($sourceVersion) { $sourceVersion } else { 'unknown' })"
-    Write-Host "- 소스 다운로드 필요 여부 : $needsDownload (-Refresh: $Refresh)"
-    Write-Host "- 판단 : $updateReason"
     $autoUpdatePlan = if ($NoAutoUpdate -or -not $usesDefaultInstallDir) { 'off' } else { "scheduled task $AutoUpdateTaskName" }
-    Write-Host "- Auto update: $autoUpdatePlan"
-    Write-Host "- Mode: Register extension in existing profile"
+    Write-Host "`n[DRY RUN] plan:" -ForegroundColor Green
     Write-Host "------------------------------------------------------------------------"
-    Write-Host "검증 완료: 브라우저 및 다운로드가 실행되지 않았습니다 (Dry-run).`n" -ForegroundColor Green
+    Write-Host "- Source: $sourceLabel"
+    Write-Host "- Download URL: $sourceUrl"
+    Write-Host "- Install folder: $InstallDir"
+    Write-Host "- Installed version: $($manifestData.version)"
+    Write-Host "- Source version: $(if ($sourceVersion) { $sourceVersion } else { 'unknown' })"
+    Write-Host "- Download needed: $needsDownload (-Refresh: $Refresh)"
+    Write-Host "- Reason: $updateReason"
+    Write-Host "- Auto update: $autoUpdatePlan"
+    Write-Host "------------------------------------------------------------------------"
+    Write-Host "Dry-run complete: nothing was downloaded or changed.`n" -ForegroundColor Green
     return
 }
 
+# 4. Download, verify, and atomically replace the install folder
 if ($needsDownload) {
-    Write-Host "📦 $sourceLabel 에서 최신 확장 파일을 내려받는 중입니다..." -ForegroundColor Yellow
+    Write-Host "📦 $sourceLabel 에서 확장 파일을 내려받는 중입니다..." -ForegroundColor Yellow
     Write-Host "   URL: $sourceUrl" -ForegroundColor Gray
 
     $tempZip = Join-Path $env:TEMP "chzzk-magnifier-$([Guid]::NewGuid().ToString('N')).zip"
@@ -449,7 +274,6 @@ if ($needsDownload) {
     $stagingDir = Join-Path (Split-Path -Parent $InstallDir) ".hugify-staging-$([Guid]::NewGuid().ToString('N'))"
 
     try {
-        # Download the Release asset or the main branch fallback archive.
         if (Get-Command Invoke-RestMethod -ErrorAction SilentlyContinue) {
             Invoke-RestMethod -Uri $sourceUrl -OutFile $tempZip
         } else {
@@ -457,10 +281,10 @@ if ($needsDownload) {
         }
 
         if (-not (Test-Path -LiteralPath $tempZip -PathType Leaf)) {
-            throw "다운로드된 ZIP 파일을 찾을 수 없습니다: $tempZip"
+            throw "Downloaded ZIP not found: $tempZip"
         }
 
-        Write-Host "📂 소스 코드 압축을 푸는 중입니다..." -ForegroundColor Yellow
+        Write-Host "📂 압축을 푸는 중입니다..." -ForegroundColor Yellow
         New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
         Expand-Archive -LiteralPath $tempZip -DestinationPath $tempDir -Force
 
@@ -483,8 +307,6 @@ if ($needsDownload) {
         Replace-InstallDirectory $stagingDir $InstallDir
         $manifestData = Get-ValidManifest $manifestFile
         if (-not $manifestData) { throw 'Installed manifest verification failed after replacement.' }
-
-        Write-Host "파일 준비 완료: $InstallDir (버전 $($manifestData.version))" -ForegroundColor Green
     }
     catch {
         if ($AutoUpdate) { Write-UpdateLog "fail: $($_.Exception.Message)" }
@@ -503,15 +325,12 @@ if ($needsDownload) {
             Remove-Item -LiteralPath $stagingDir -Recurse -Force -ErrorAction SilentlyContinue
         }
     }
-} else {
-    Write-Host "✅ 설치 파일을 그대로 사용합니다: $InstallDir" -ForegroundColor Green
-    Write-Host "   $updateReason" -ForegroundColor Gray
 }
 
 # Final manifest.json integrity check
 $manifestData = Get-ValidManifest $manifestFile
 if (-not $manifestData) {
-    Write-Host "❌ manifest.json 검증 실패: 확장 프로그램 파일이 완전하지 않습니다 ($manifestFile)" -ForegroundColor Red
+    Write-Host "❌ manifest.json 검증 실패: 확장 프로그램 파일이 완전하지 않습니다. ($manifestFile)" -ForegroundColor Red
     if ($MyInvocation.InvocationName -ne '.') { exit $ExitCodes.INSTALL_FAILED }
     return $ExitCodes.INSTALL_FAILED
 }
@@ -523,7 +342,7 @@ if ($AutoUpdate) {
     return
 }
 
-# Keep the extension updated automatically (only for the default install folder).
+# 5. Keep the extension updated automatically (only for the default install folder).
 if ($NoAutoUpdate) {
     try { Unregister-AutoUpdateTask } catch {}
     Write-Host '자동 업데이트를 사용하지 않습니다.' -ForegroundColor Gray
@@ -531,24 +350,35 @@ if ($NoAutoUpdate) {
     try {
         Save-UpdaterScript $(if ($latestRelease) { $latestRelease.Tag } else { $RepoBranch })
         Register-AutoUpdateTask
-        Write-Host '🔄 자동 업데이트를 켰습니다. 로그인할 때와 매일 저녁 6시에 새 버전을 확인합니다.' -ForegroundColor Green
-        Write-Host '   끄려면 설치 명령 끝에 -RemoveAutoUpdate를 붙여 실행하세요.' -ForegroundColor Gray
+        Write-Host '🔄 자동 업데이트를 켰습니다. (로그인할 때, 매일 저녁 6시에 새 버전 확인)' -ForegroundColor Green
     } catch {
-        Write-Warning ("자동 업데이트를 켜지 못했습니다. 새 버전은 설치 명령을 다시 실행해 받으세요. {0}" -f $_.Exception.Message)
+        Write-Warning ("자동 업데이트를 켜지 못했습니다. 새 버전은 이 명령을 다시 실행해 받으세요. {0}" -f $_.Exception.Message)
     }
 }
 
-# Open the selected existing profile. Registration is completed by the user.
-try {
-    Start-Process -FilePath $browserInfo.Exe -ArgumentList $launchArgs -ErrorAction Stop | Out-Null
-} catch { throw "Could not open the browser: $($_.Exception.Message)" }
+# 6. Tell the user exactly where the files are and how to register them.
+$copied = $false
+try { Set-Clipboard -Value $InstallDir; $copied = $true } catch {}
 
-Write-Host ("Profile: {0} [{1}]" -f $selectedProfile.Name, $selectedProfile.Directory)
-Write-Host '확장 관리 페이지가 자동으로 열리지 않으면 주소창에 직접 입력하세요:' -ForegroundColor Yellow
-Write-Host ("확장 관리 주소: {0}" -f $targetUrl) -ForegroundColor Green
-Write-Host '1. 열린 확장 관리 화면에서 [개발자 모드]를 켜세요.'
-Write-Host '2. [압축해제된 확장 프로그램을 로드합니다]를 클릭하세요.'
-Write-Host '3. 폴더 선택 창의 주소창에 아래 경로를 붙여넣고 선택하세요:'
-Write-Host $InstallDir -ForegroundColor Green
-Write-Host '4. 선택한 프로필에서 치지직 페이지를 새로고침하세요.'
-Write-Host '파일 준비 완료. 위 브라우저 등록 단계까지 진행하면 설치가 끝납니다.'
+Write-Host ''
+Write-Host "✅ 파일 준비 완료 (버전 $($manifestData.version))" -ForegroundColor Green
+Write-Host ''
+Write-Host '설치 폴더:' -ForegroundColor Cyan
+Write-Host "   $InstallDir" -ForegroundColor Green
+if ($copied) { Write-Host '   (이 경로를 클립보드에 복사해 두었습니다.)' -ForegroundColor Gray }
+Write-Host ''
+
+if ($wasInstalled -and $needsDownload) {
+    Write-Host '이미 브라우저에 등록했다면:' -ForegroundColor Cyan
+    Write-Host '   확장 관리 화면에서 Hugify의 새로고침(↻) 버튼을 누르고, 치지직 페이지도 새로고침하세요.'
+    Write-Host '   (브라우저를 껐다 켜도 새 버전이 적용됩니다.)'
+    Write-Host ''
+}
+
+Write-Host '브라우저에 등록하기 (처음 한 번만):' -ForegroundColor Cyan
+Write-Host '   1. 평소 쓰는 브라우저 주소창에 입력하세요.  Chrome: chrome://extensions   Whale: whale://extensions'
+Write-Host '   2. 개발자 모드를 켭니다.'
+Write-Host '   3. [압축해제된 확장 프로그램을 로드합니다] 버튼을 누릅니다.'
+Write-Host '   4. 폴더 선택 창 위쪽 주소 칸을 클릭하고 Ctrl+V로 위 설치 폴더 경로를 붙여넣은 뒤 Enter를 누릅니다.'
+Write-Host '   5. [폴더 선택]을 누르면 등록 완료입니다. 치지직 페이지를 새로고침하세요.'
+Write-Host ''
