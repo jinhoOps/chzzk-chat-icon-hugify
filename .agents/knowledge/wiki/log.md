@@ -64,3 +64,15 @@
 - **함정**: PowerShell 5.1은 BOM 없는 스크립트를 `-File`로 실행하면 ANSI로 읽음. 한글 바로 뒤 따옴표(예: `'등록 안 함'`)가 파싱을 깨뜨림 → ANSI 파싱 회귀 테스트 추가
 - **검증**: `npm test` 74/74 통과. 비관리자 권한으로 시험용 예약 작업 등록·실행(1.0.0 → 1.2.1 갱신, 결과 0)·해제 확인
 - **미검증**: 실제 브라우저에서 `background.js`의 디스크 manifest 재읽기와 자동 reload 동작
+
+---
+
+## [2026-10-31] release | v1.4.0 채팅 이모티콘 확대 수정, 설치·업데이트 정리
+
+- **채팅 이모티콘 감지 수정**: 채팅 속 이모티콘은 `alt=""`, 버튼 클래스 `_button_<hash>_N`이라 기존 규칙(alt `{:코드:}`, emoticon 클래스, 선택창 내부)에 모두 걸리지 않았음. `[class*="_chatting_message_"]` 안 + 이모티콘 URL(`/glive/icon/`, `/emoji/`)이면 인정. `[class*="_nickname_"]`(팬·치트키 배지)는 제외. 클래스 해시는 빌드마다 바뀌므로 접두어로만 매칭
+- **설치 스크립트 단순화**: 브라우저·프로필 선택과 브라우저 실행 제거. 항상 `%LOCALAPPDATA%\ChzzkIconMagnifier\app`에 설치하고 경로를 클립보드에 복사, Chrome/Whale 등록 단계 출력. 예약 작업은 이 고정 경로만 갱신
+- **README**: PowerShell 설치를 기본으로 친절하게 안내, 직접 압축 풀기 설치는 접힌 영역으로
+- **버튼 업데이트(직접 설치용)**: `src/update.html` + `update-core.js`. File System Access로 설치 폴더를 고르면 Release 태그의 파일을 raw.githubusercontent에서 받아 덮어쓰고 `chrome.runtime.reload()`. Release zip은 최종 리다이렉트에 CORS 헤더가 없어 사용 불가. 고른 폴더의 manifest name/version이 실행 중인 확장과 같아야 함. 전부 받은 뒤 쓰기, manifest.json은 마지막
+- **설정 안내**: 어떤 설정이든 처음 바꿀 때 한 번만 새로고침 안내 (`refreshNoticeSeen`)
+- **검증**: `npm test` 82/82. 채팅 확대는 사용자가 Whale에서 확인. 설치 스크립트는 실제 Release로 임시 폴더 설치 확인
+- **미검증**: 버튼 업데이트의 실제 브라우저 동작(폴더 선택·수정 허용·덮어쓰기·재시작)
