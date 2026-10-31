@@ -8,10 +8,10 @@
 
 1. **역할 식별**: 아래 [Role Routing](#2-role-routing)에서 본인의 역할을 확인하고 지정된 문서만 로드합니다.
 2. **상태 점검**: 작업 전 `git status --short`로 작업 트리의 변경 사항을 확인합니다.
-3. **계약 선언**: 코드 작성 전 반드시 [Sprint Contract](.gemini/skills/core-developer/SPRINT_CONTRACT_TEMPLATE.md)을 작성하여 완료 기준(DoD)을 명시합니다.
+3. **계약 선언**: 코드 작성 전 반드시 [Sprint Contract](.agents/skills/core-developer/SPRINT_CONTRACT_TEMPLATE.md)을 작성하여 완료 기준(DoD)을 명시합니다.
 4. **최소 침습 구현**: 범위를 벗어난 인접 모듈의 임의 리팩터링을 지양합니다.
 5. **독립 검증**: 변경 표면에 해당하는 테스트 및 검증 명령을 실행하여 증거를 확보합니다.
-6. **지식 합성**: 작업 완료 후 사서([wiki-librarian](.gemini/skills/wiki-librarian/SKILL.md)) 프로토콜에 따라 [.gemini/knowledge/wiki/log.md](.gemini/knowledge/wiki/log.md) 및 인덱스를 갱신합니다.
+6. **지식 합성**: 작업 완료 후 사서([wiki-librarian](.agents/skills/wiki-librarian/SKILL.md)) 프로토콜에 따라 [.agents/knowledge/wiki/log.md](.agents/knowledge/wiki/log.md) 및 인덱스를 갱신합니다.
 
 ---
 
@@ -19,11 +19,11 @@
 
 | 역할 | 참조 문서 / 스킬 | 핵심 책임 |
 |---|---|---|
-| **Coordinator** | [AGENTS.md](AGENTS.md), [Operating Principles](.gemini/knowledge/wiki/core/operating_principles.md), [Git Status](file:///.) | 작업 분리, 의존성 관리, 검증 및 위험 요소 취합 |
-| **Planner** | [.gemini/agents/planner.md](.gemini/agents/planner.md), [Architecture Reference](.gemini/knowledge/wiki/core/architecture_reference.md) | 요구사항 분석, UX/데이터 플로우 정의, 인수 조건(DoD) 수립 |
-| **Developer** | [.gemini/agents/developer.md](.gemini/agents/developer.md), [.gemini/skills/core-developer/SKILL.md](.gemini/skills/core-developer/SKILL.md) | 스프린트 계약 체결, 계약 준수 TDD 구현, 회귀 최소화 |
-| **Evaluator** | [.gemini/agents/evaluator.md](.gemini/agents/evaluator.md), [.gemini/skills/orchestration/SKILL.md](.gemini/skills/orchestration/SKILL.md) | 계약 기준 독립 검증, 회귀 테스트, 결함 피드백 루프백 |
-| **Librarian** | [.gemini/skills/wiki-librarian/SKILL.md](.gemini/skills/wiki-librarian/SKILL.md), [.gemini/knowledge/wiki/index.md](.gemini/knowledge/wiki/index.md) | 지식 합성, 연대기적 로그(`log.md`) 기록, 위키 위생 및 링크 검증 |
+| **Coordinator** | [AGENTS.md](AGENTS.md), [Operating Principles](.agents/knowledge/wiki/core/operating_principles.md), [Git Status](file:///.) | 작업 분리, 의존성 관리, 검증 및 위험 요소 취합 |
+| **Planner** | [.agents/agents/planner.md](.agents/agents/planner.md), [Architecture Reference](.agents/knowledge/wiki/core/architecture_reference.md) | 요구사항 분석, UX/데이터 플로우 정의, 인수 조건(DoD) 수립 |
+| **Developer** | [.agents/agents/developer.md](.agents/agents/developer.md), [.agents/skills/core-developer/SKILL.md](.agents/skills/core-developer/SKILL.md) | 스프린트 계약 체결, 계약 준수 TDD 구현, 회귀 최소화 |
+| **Evaluator** | [.agents/agents/evaluator.md](.agents/agents/evaluator.md), [.agents/skills/orchestration/SKILL.md](.agents/skills/orchestration/SKILL.md) | 계약 기준 독립 검증, 회귀 테스트, 결함 피드백 루프백 |
+| **Librarian** | [.agents/skills/wiki-librarian/SKILL.md](.agents/skills/wiki-librarian/SKILL.md), [.agents/knowledge/wiki/index.md](.agents/knowledge/wiki/index.md) | 지식 합성, 연대기적 로그(`log.md`) 기록, 위키 위생 및 링크 검증 |
 
 ---
 
@@ -54,7 +54,7 @@
 1. 최신 사용자 지시
 2. 공식 활성 요구사항 / 기획서
 3. 승인된 스프린트 계약서
-4. 위키 핵심 헌법 ([Operating Principles](.gemini/knowledge/wiki/core/operating_principles.md))
+4. 위키 핵심 헌법 ([Operating Principles](.agents/knowledge/wiki/core/operating_principles.md))
 5. 현재 코드와 테스트의 실제 동작
 6. 과거 Git 커밋 이력 및 아카이브
 
@@ -76,8 +76,8 @@
 
 ## 7. Canonical Documents Map (핵심 문서 맵)
 
-- **마스터 지식 인덱스**: [.gemini/knowledge/wiki/index.md](.gemini/knowledge/wiki/index.md)
-- **운영 헌법**: [.gemini/knowledge/wiki/core/operating_principles.md](.gemini/knowledge/wiki/core/operating_principles.md)
-- **지식 하네스 명세**: [.gemini/knowledge/wiki/core/knowledge_harness.md](.gemini/knowledge/wiki/core/knowledge_harness.md)
-- **아키텍처 기준선**: [.gemini/knowledge/wiki/core/architecture_reference.md](.gemini/knowledge/wiki/core/architecture_reference.md)
-- **연대기적 감사 로그**: [.gemini/knowledge/wiki/log.md](.gemini/knowledge/wiki/log.md)
+- **마스터 지식 인덱스**: [.agents/knowledge/wiki/index.md](.agents/knowledge/wiki/index.md)
+- **운영 헌법**: [.agents/knowledge/wiki/core/operating_principles.md](.agents/knowledge/wiki/core/operating_principles.md)
+- **지식 하네스 명세**: [.agents/knowledge/wiki/core/knowledge_harness.md](.agents/knowledge/wiki/core/knowledge_harness.md)
+- **아키텍처 기준선**: [.agents/knowledge/wiki/core/architecture_reference.md](.agents/knowledge/wiki/core/architecture_reference.md)
+- **연대기적 감사 로그**: [.agents/knowledge/wiki/log.md](.agents/knowledge/wiki/log.md)

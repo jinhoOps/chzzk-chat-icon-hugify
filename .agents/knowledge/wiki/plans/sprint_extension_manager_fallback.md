@@ -29,9 +29,9 @@ Windows 원격 설치기가 기존에 선택한 Chrome/Whale 프로필에서 확
 | `tests/online_installer.test.js` | 수정 | 주소 상수와 새 창 실행 계약 검증 |
 | `README.md` | 수정 | 빠른 시작에 Chrome/Whale 직접 주소 추가 |
 | `discord-share.md` | 수정 | 공유용 설치 절차의 직접 주소 추가 |
-| `.gemini/knowledge/wiki/plans/sprint_extension_manager_fallback.md` | 생성 | 본 스프린트 계약 |
-| `.gemini/knowledge/wiki/index.md` | 수정 | 새 계획 링크 등록 |
-| `.gemini/knowledge/wiki/log.md` | 수정 | 변경 결정과 검증 기록 |
+| `.agents/knowledge/wiki/plans/sprint_extension_manager_fallback.md` | 생성 | 본 스프린트 계약 |
+| `.agents/knowledge/wiki/index.md` | 수정 | 새 계획 링크 등록 |
+| `.agents/knowledge/wiki/log.md` | 수정 | 변경 결정과 검증 기록 |
 
 ## 4. 기술적 제약 및 규칙 (Technical Constraints)
 

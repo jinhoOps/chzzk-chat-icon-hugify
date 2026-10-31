@@ -4,12 +4,7 @@
   "description": "치지직 이모티콘에 마우스를 올리면 커져서 선명하게 미리 확인하는 Chrome 확장 프로그램",
   "type": "module",
   "scripts": {
-    "test": "node --test tests/*.test.js",
-    "launch": "node scripts/launcher.js",
-    "launch:chrome": "node scripts/launcher.js --browser=chrome",
-    "launch:whale": "node scripts/launcher.js --browser=whale",
-    "launch:fallback": "node scripts/launcher.js --fallback",
-    "generate-icons": "node scripts/generate_icons.js"
+    "test": "node --test tests/*.test.js"
   },
   "keywords": [
     "chzzk",

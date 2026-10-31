@@ -28,7 +28,7 @@
 ## 3. 영향 범위 및 수정 파일 (Scope & Blast Radius)
 | 파일 경로 | 작업 유형 | 변경 목적 |
 |---|---|---|
-| `.gemini/knowledge/wiki/plans/sprint_chzzk_launcher.md` | 생성 | 스프린트 계약서 선언 |
+| `.agents/knowledge/wiki/plans/sprint_chzzk_launcher.md` | 생성 | 스프린트 계약서 선언 |
 | `scripts/launcher.js` | 생성 | 브라우저 탐지, 인자 생성, 실행 및 fallback 처리 Node CLI |
 | `install.cmd` | 생성 | Windows CMD 원클릭/원라인 실행 스크립트 |
 | `install.ps1` | 생성 | Windows PowerShell 원클릭/원라인 실행 스크립트 |

@@ -15,7 +15,7 @@ description: Open Knowledge Format (OKF) v0.1 규격에 따라 프로젝트 지�
 1. **Raw Sources (`/raw/` 또는 사용자 프롬프트)**:
    - 가공되지 않은 사용자 요청, 외부 레퍼런스, 원시 데이터.
    - 수정 불가능한 불변 데이터로 취급합니다.
-2. **The Wiki (`.gemini/knowledge/wiki/`)**:
+2. **The Wiki (`.agents/knowledge/wiki/`)**:
    - OKF 규격에 따라 구조화된 마크다운 문서군 (`core/`, `phases/`, `archive/`).
    - 지속적으로 정제되고 합성되는 프로젝트의 집단 지성입니다.
 3. **The Schema (`AGENTS.md`, `index.md`, `SKILL.md`)**:
@@ -32,7 +32,7 @@ description: Open Knowledge Format (OKF) v0.1 규격에 따라 프로젝트 지�
 - **상호 연결**: 고립된 페이지를 만들지 않고, 항상 표준 마크다운 상대 경로 링크(`[표시 이름](./relative_path.md)`)로 연결합니다.
 
 ### 2) 연대기적 감사 로그 (Chronological Logging)
-- `.gemini/knowledge/wiki/log.md`에 append-only 형식으로 기록합니다.
+- `.agents/knowledge/wiki/log.md`에 append-only 형식으로 기록합니다.
 - 형식: `## [YYYY-MM-DD] <operation> | <작업 제목>`
   - `<operation>`: `ingest`, `refactor`, `decision`, `archive` 등
 

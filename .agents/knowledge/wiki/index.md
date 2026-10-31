@@ -23,16 +23,27 @@ timestamp: 2026-09-04T00:00:00Z
 ---
 
 ## 🚀 활성 작업 (Active Development & Plans)
+- [기존 프로필 설치 지원](./plans/sprint_existing_profile.md)
+- [Release 기반 최신 버전 갱신](./plans/sprint_release_update.md)
+- [확장 관리 페이지 실행 보강 및 직접 주소 fallback](./plans/sprint_extension_manager_fallback.md)
+- [단일 목적 이모티콘 확대 UI 정리](./plans/sprint_clean_emoticon_magnifier.md)
+- [Hugify 브랜딩 및 아이콘 교체](./plans/sprint_brand_icon_cleanup.md)
+- [Hugify 팝업 리디자인 및 크기 선택](./plans/sprint_popup_redesign.md)
+- [팝업 크기 안내 및 CookieRun 서체 적용](./plans/sprint_popup_font_notice.md)
+- [팝업 하단 아이콘 링크 3종](./plans/sprint_footer_icon_links.md)
+- [팝업 브랜드 링크 및 앱 메뉴 정리](./plans/sprint_popup_app_menu.md)
 *현재 진행 중이거나 예정된 기획/스프린트 문서입니다.*
 
-- *(새로운 기능이나 마일스톤 기획서가 작성되면 여기에 등록됩니다)*
+- [SC-20260920-01: 치지직 채팅 아이콘 확대 크롬 확장프로그램 개발](./plans/sprint_chzzk_icon_magnifier.md)
+- [SC-20260920-02: Windows 원클릭/원라인 브라우저 런처 및 Fallback 구현](./plans/sprint_chzzk_launcher.md)
+- [SC-20260920-03: Windows 11 원격 원라이너 부트스트랩 설치기 및 README 전면 개편](./plans/sprint_chzzk_online_installer.md)
 
 ---
 
 ## 📜 연대기 및 변경 이력 (Timeline & Logs)
 *작업 결정 사항, 지식 습득, 감사 추적을 위한 연대기 기록입니다.*
 
-- [Master Log](./log.md): 모든 작업과 지식 수집의 연대기적 기록 (Append-only).
+- [Master Log](./log.md): 모든 작업과 지식 수집의 연대기적 기록 (Append-only). README 브랜드 문구 `커져라! Hugify!` 결정 포함.
 
 ---
 
@@ -44,4 +55,4 @@ timestamp: 2026-09-04T00:00:00Z
 ---
 
 > [!TIP]
-> **Librarian Tip**: 새로운 지식을 추가할 때는 반드시 기존 노드와 표준 마크다운 상대 경로 링크(`[Label](./relative_path.md)`)로 연결하고, `index.md`에 반영하십시오.
+> **Librarian Tip**: 새로운 지식을 추가할 때는 반드시 기존 노드와 표준 마크다운 상대 경로 링크(`[Label](./plans/sprint_popup_app_menu.md)`)로 연결하고, `index.md`에 반영하십시오.

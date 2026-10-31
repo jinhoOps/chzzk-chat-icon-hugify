@@ -39,7 +39,7 @@
 ## 3. 영향 범위 및 수정 파일 (Scope & Blast Radius)
 | 파일 경로 | 작업 유형 | 변경 목적 |
 |---|---|---|
-| `.gemini/knowledge/wiki/plans/sprint_chzzk_icon_magnifier.md` | 생성 | 스프린트 계약서 선언 |
+| `.agents/knowledge/wiki/plans/sprint_chzzk_icon_magnifier.md` | 생성 | 스프린트 계약서 선언 |
 | `manifest.json` | 생성 | Chrome Extension Manifest V3 설정 |
 | `src/content.js` | 생성 | 치지직 DOM 이모티콘 호버 감지, 툴팁 표시 및 위치 계산, 스누즈 제어 |
 | `src/content.css` | 생성 | 확대 툴팁 스타일 및 다크 테마 애니메이션 |

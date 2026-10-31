@@ -4,3 +4,4 @@
 *.log
 *-wal
 *-shm
+codegraph.db

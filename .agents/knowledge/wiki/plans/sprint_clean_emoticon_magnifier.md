@@ -35,8 +35,8 @@
 | `tests/utils.test.js` | 수정 | 단일 목적 활성화 로직 검증 |
 | `tests/content_logic.test.js` | 수정 | 제거된 부가 설정 검증 정리 |
 | `README.md` | 수정 | 핵심 기능을 이모티콘 확대 중심으로 정리 |
-| `.gemini/knowledge/wiki/index.md` | 수정 | 새 계획 링크 등록 |
-| `.gemini/knowledge/wiki/log.md` | 수정 | 변경 결정과 검증 기록 |
+| `.agents/knowledge/wiki/index.md` | 수정 | 새 계획 링크 등록 |
+| `.agents/knowledge/wiki/log.md` | 수정 | 변경 결정과 검증 기록 |
 
 ## 4. 기술적 제약 및 규칙 (Technical Constraints)
 

@@ -18,17 +18,22 @@ timestamp: 2026-09-04T00:00:00Z
 ```
 .
 ├── AGENTS.md                  # 에이전트 마스터 라우터 및 역할 안내
-├── GEMINI.md                  # Gemini/Antigravity 상호 운용 라우터
-├── README.md                  # 프로젝트 소개 및 개발 환경 가이드
-├── .gemini/                   # 에이전트 하네스 엔지니어링 코어
+├── README.md                  # 설치·업데이트 안내 (PowerShell 기본, 직접 설치는 접힌 영역)
+├── manifest.json              # MV3 확장 매니페스트 (버전 = package.json = 릴리즈 태그)
+├── install-online.ps1         # 고정 폴더 설치 + 자동 업데이트 예약 작업 (irm | iex)
+├── .github/workflows/         # v*.*.* 태그 푸시 시 hugify-extension.zip 릴리즈
+├── .agents/                   # 에이전트 하네스 엔지니어링 코어
 │   ├── agents/                # 특화 서브에이전트 페르소나 정의
 │   ├── skills/                # 자율 실행 스킬 모음
 │   └── knowledge/wiki/        # OKF v0.1 기반 LLM-Wiki 지식 베이스
 │       ├── index.md           # 마스터 지식 토폴로지 지도
 │       ├── log.md             # 연대기적 변경 및 결정 로그
 │       ├── core/              # 핵심 원칙 및 아키텍처
+│       ├── plans/             # 스프린트 계약서
 │       └── archive/           # 만료된 문서 보관소
-└── src/                       # 애플리케이션 소스 코드 (프로젝트 확장 시)
+├── src/                       # 확장 코드 (content, popup, background, update 화면)
+├── icons/, fonts/             # 제공 아이콘, CookieRun 서체
+└── tests/                     # node --test 테스트
 ```
 
 ---

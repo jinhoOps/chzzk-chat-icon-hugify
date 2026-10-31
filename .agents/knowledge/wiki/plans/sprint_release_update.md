@@ -37,9 +37,9 @@ Release가 아직 없거나 GitHub API를 사용할 수 없는 환경에서는 �
 | `tests/online_installer.test.js` | 수정 | Release/fallback/버전 갱신 계약 검증 |
 | `tests/release_workflow.test.js` | 생성 | GitHub Actions 패키징·태그 검증 정적 테스트 |
 | `README.md` | 수정 | 사용자 갱신 및 개발자 배포 절차 문서화 |
-| `.gemini/knowledge/wiki/plans/sprint_release_update.md` | 생성 | 본 스프린트 계약 |
-| `.gemini/knowledge/wiki/index.md` | 수정 | 새 계획 링크 등록 |
-| `.gemini/knowledge/wiki/log.md` | 수정 | 변경 결정과 검증 기록 |
+| `.agents/knowledge/wiki/plans/sprint_release_update.md` | 생성 | 본 스프린트 계약 |
+| `.agents/knowledge/wiki/index.md` | 수정 | 새 계획 링크 등록 |
+| `.agents/knowledge/wiki/log.md` | 수정 | 변경 결정과 검증 기록 |
 
 ---
 

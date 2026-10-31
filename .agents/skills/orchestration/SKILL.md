@@ -6,7 +6,7 @@ description: 프로젝트의 자율 다중 에이전트 협업 오케스트레�
 # `orchestration` Skill
 
 이 스킬은 프로젝트 내에서 기획(Planner), 개발(Developer), 평가(Evaluator), 사서(Librarian) 에이전트가 협업하는 프로세스를 정의합니다.
-모든 서브에이전트 정의(`.gemini/agents/`) 및 작업 흐름의 단일 진실 공급원(SSOT)입니다.
+모든 서브에이전트 정의(`.agents/agents/`) 및 작업 흐름의 단일 진실 공급원(SSOT)입니다.
 
 ---
 
@@ -78,8 +78,8 @@ sequenceDiagram
 ### 4단계: 지식 합성 (Librarian)
 - **입력**: 완료된 기능 코드, 검증 결과
 - **산출물**:
-  - `.gemini/knowledge/wiki/log.md` 연대기 로그 추가
-  - `.gemini/knowledge/wiki/index.md` 갱신
+  - `.agents/knowledge/wiki/log.md` 연대기 로그 추가
+  - `.agents/knowledge/wiki/index.md` 갱신
   - 필요 시 `core/` 내 아키텍처/운영 문서 업데이트
 
 ---

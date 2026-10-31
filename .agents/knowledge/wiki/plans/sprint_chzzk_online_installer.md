@@ -33,13 +33,13 @@
 ## 3. 영향 범위 및 수정 파일 (Scope & Blast Radius)
 | 파일 경로 | 작업 유형 | 변경 목적 |
 |---|---|---|
-| `.gemini/knowledge/wiki/plans/sprint_chzzk_online_installer.md` | 생성 | 스프린트 계약서 선언 |
+| `.agents/knowledge/wiki/plans/sprint_chzzk_online_installer.md` | 생성 | 스프린트 계약서 선언 |
 | `install-online.ps1` | 생성 | Windows PowerShell 5.1+ 원격 부트스트랩 설치 및 런처 스크립트 |
 | `install.ps1` | 수정 | Node.js 미설치 환경 대비 네이티브 PowerShell 폴백 실행 지원 강화 |
 | `tests/online_installer.test.js` | 생성 | 부트스트랩 스크립트 정적 AST 구문 검증, URL 정합성, 인자/경로 단위 테스트 |
 | `README.md` | 수정 | Windows 11 + Chrome/Whale 1줄 설치 섹션 및 원격 보안 안내 전면 개편 |
-| `.gemini/knowledge/wiki/index.md` | 수정 | 스프린트 계약서 등록 |
-| `.gemini/knowledge/wiki/log.md` | 수정 | 지식 감사 추적 로그 갱신 |
+| `.agents/knowledge/wiki/index.md` | 수정 | 스프린트 계약서 등록 |
+| `.agents/knowledge/wiki/log.md` | 수정 | 지식 감사 추적 로그 갱신 |
 
 ---
 
