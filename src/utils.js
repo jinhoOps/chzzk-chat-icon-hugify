@@ -155,6 +155,11 @@ export function extractEmoticonInfo(target) {
     return null;
   }
 
+  // (6) 채팅 닉네임 영역(팬 배지, 치트키 배지 등) 제외
+  if (target.closest('[class*="_nickname_"]')) {
+    return null;
+  }
+
   // 2. 대상 이미지 및 버튼 탐색
   let img = target.tagName === 'IMG' ? target : null;
 
@@ -221,6 +226,18 @@ export function extractEmoticonInfo(target) {
   }
 
   if (hasEmoticonAlt && isEmoticonUrl) {
+    return {
+      img,
+      alt,
+      button: button || img,
+      src,
+    };
+  }
+
+  // (E) 채팅 메시지 속 이모티콘: alt가 비어 있고 버튼 클래스도 _button_xxx라 URL로 판별
+  // 예) <div class="_chatting_message_w9pvh_21">…<button class="_button_w9pvh_18"><img alt="" src=".../glive/icon/cha09.png">
+  const isInChatMessage = Boolean(img.closest('[class*="_chatting_message_"]'));
+  if (isInChatMessage && isEmoticonUrl) {
     return {
       img,
       alt,

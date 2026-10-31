@@ -114,6 +114,10 @@
       return null;
     }
 
+    if (target.closest('[class*="_nickname_"]')) {
+      return null;
+    }
+
     let img = target.tagName === 'IMG' ? target : null;
 
     if (!img) {
@@ -157,6 +161,11 @@
     }
 
     if (hasEmoticonAlt && isEmoticonUrl) {
+      return { img, alt, button: button || img, src };
+    }
+
+    const isInChatMessage = Boolean(img.closest('[class*="_chatting_message_"]'));
+    if (isInChatMessage && isEmoticonUrl) {
       return { img, alt, button: button || img, src };
     }
 

@@ -169,6 +169,40 @@ describe('Chzzk user snippet test suite', () => {
     assert.deepEqual(DEFAULT_SETTINGS, { enabled: true, size: 90, chatArea: true });
   });
 
+  it('detects real chat emoticons (empty alt, hashed _button_ class) but not nickname badges', () => {
+    // Mirrors the live chzzk chat DOM; class hashes (w9pvh, 1mc5x...) change between builds.
+    const log = createMockNode('div', { role: 'log' }, ['_container_8lqsk_1']);
+    const item = createMockNode('div', {}, ['_item_8lqsk_7'], log);
+    const container = createMockNode('div', {}, ['_container_w9pvh_1'], item);
+    const message = createMockNode('div', {}, ['_chatting_message_w9pvh_21'], container);
+
+    const nicknameBtn = createMockNode('button', { type: 'button' }, ['_nickname_w9pvh_33'], message);
+    const nickWrap = createMockNode('span', {}, ['_container_1mc5x_2', '_is_message_1mc5x_5'], nicknameBtn);
+    const badgeIcon = createMockNode('span', {}, ['_icon_1mc5x_15'], nickWrap);
+    const badgeImg = createMockNode('img', {
+      src: 'https://ssl.pstatic.net/static/nng/glive/badge/fan_03.png', alt: '', width: 18, height: 18,
+    }, [], badgeIcon);
+
+    const text = createMockNode('span', {}, ['_text_w9pvh_1'], message);
+    const emoBtn = createMockNode('button', { type: 'button' }, ['_button_w9pvh_18'], text);
+    const emoImg = createMockNode('img', {
+      src: 'https://ssl.pstatic.net/static/nng/glive/icon/cha09.png', alt: '', width: 24, height: 24,
+    }, [], emoBtn);
+
+    const fromImg = extractEmoticonInfo(emoImg);
+    assert.ok(fromImg, 'Chat emoticon img must be detected');
+    assert.equal(fromImg.src, 'https://ssl.pstatic.net/static/nng/glive/icon/cha09.png');
+    assert.equal(fromImg.button, emoBtn);
+    assert.ok(extractEmoticonInfo(emoBtn), 'Hovering the emoticon button must also work');
+
+    assert.equal(extractEmoticonInfo(badgeImg), null, 'Fan badge next to the nickname must be excluded');
+    assert.equal(extractEmoticonInfo(nicknameBtn), null, 'Nickname button must be excluded');
+    assert.equal(extractEmoticonInfo(text), null, 'Plain chat text must not trigger');
+
+    assert.equal(shouldMagnifyEmoticon({ chatArea: true }, fromImg), true);
+    assert.equal(shouldMagnifyEmoticon({ chatArea: false }, fromImg), false);
+  });
+
   it('skips chat-area emoticons when the chat area option is off', () => {
     const popupContents = createMockNode('div', { id: 'popup_contents' }, []);
     const emojiArea = createMockNode('div', { id: 'emoji_area' }, [], popupContents);
