@@ -367,3 +367,70 @@ h1 span {
   outline: 3px solid rgba(65, 143, 219, 0.24);
   outline-offset: 2px;
 }
+
+.update-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  background: #fff8e8;
+  border: 1px solid #f5dfa8;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.update-notice[hidden] {
+  display: none;
+}
+
+.update-title {
+  color: #7a5a12;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.update-title strong {
+  color: #b9770e;
+}
+
+.update-help {
+  color: #9a8150;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.update-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.update-button {
+  padding: 6px 12px;
+  color: #ffffff;
+  background: #e8a317;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.update-button:hover {
+  background: #d18f0b;
+  transform: translateY(-1px);
+}
+
+.update-button:focus-visible,
+.update-link:focus-visible {
+  outline: 3px solid rgba(232, 163, 23, 0.3);
+  outline-offset: 2px;
+}
+
+.update-link {
+  color: #9a7a2e;
+  font-size: 11px;
+}
