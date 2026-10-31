@@ -26,3 +26,13 @@
   - `AGENTS.md` 및 지식 하네스에 CodeGraph 운영 가이드라인 반영
 - **영향 파일**: `.codegraph/.gitignore`, `AGENTS.md`, `log.md`
 - **상태**: 인덱스 정상 초기화 완료 (`codegraph status` 검증 통과)
+
+---
+
+## [2026-10-31] release | v1.2.0 채팅창 이모티콘 확대 토글
+
+- **작업 내용**: 팝업에 "채팅창 이모티콘도 확대" 토글 추가 (`chatArea` 설정, 기본 ON)
+  - OFF면 이모티콘 선택창(`#popup_contents`, `#emoji_area`) 안에서만 확대
+  - 새로고침 없이 `chrome.storage.onChanged`로 즉시 반영
+- **영향 파일**: `src/content.js`, `src/utils.js`, `src/popup.html`, `src/popup.js`, `src/popup.css`, `tests/*`, `manifest.json`, `package.json`
+- **검증**: `npm test` 62/62 통과. 실제 치지직 페이지 확인은 미실시
