@@ -48,3 +48,19 @@
   - GitHub API가 `Access-Control-Allow-Origin: *`라 추가 권한 불필요. 실패 시 조용히 무시
 - **영향 파일**: `src/popup.html`, `src/popup.js`, `src/popup.css`, `tests/popup.test.js`, `manifest.json`, `package.json`
 - **검증**: `npm test` 64/64 통과
+
+---
+
+## [2026-10-31] release | v1.3.0 자동 업데이트 (예약 작업)
+
+- **배경**: 압축해제 확장은 브라우저가 자동 업데이트하지 않음. 확장은 자기 폴더에 쓸 수 없으므로 외부(예약 작업)가 파일을 교체
+- **결정**: 예약 작업(A) 채택. 파일 접근 API(B)는 매번 권한 확인과 숨김 폴더 선택 부담, Release zip이 CORS로 막힘. Native Messaging(C)은 레지스트리 필요
+- **설치 스크립트** (`install-online.ps1`)
+  - 기본 설치 폴더일 때 사용자 권한 예약 작업 `HugifyAutoUpdate` 등록 (로그인 시 + 매일 18:00)
+  - 작업은 `%LOCALAPPDATA%\ChzzkIconMagnifier\updater.ps1`(설치한 Release 태그의 스크립트, UTF-8 BOM 저장)을 `-AutoUpdate`로 실행
+  - `-AutoUpdate`: 프롬프트/브라우저 실행 없음, 정식 Release만, 기존 설치만 갱신, 다운그레이드 금지, `update.log`에 기록
+  - `-NoAutoUpdate`, `-RemoveAutoUpdate`로 끄기
+- **확장** (`src/background.js`): 30분마다·브라우저 시작·탭 닫힘 시 디스크의 manifest 버전을 확인, 더 높고 치지직 탭이 없으면 `chrome.runtime.reload()`
+- **함정**: PowerShell 5.1은 BOM 없는 스크립트를 `-File`로 실행하면 ANSI로 읽음. 한글 바로 뒤 따옴표(예: `'등록 안 함'`)가 파싱을 깨뜨림 → ANSI 파싱 회귀 테스트 추가
+- **검증**: `npm test` 74/74 통과. 비관리자 권한으로 시험용 예약 작업 등록·실행(1.0.0 → 1.2.1 갱신, 결과 0)·해제 확인
+- **미검증**: 실제 브라우저에서 `background.js`의 디스크 manifest 재읽기와 자동 reload 동작
