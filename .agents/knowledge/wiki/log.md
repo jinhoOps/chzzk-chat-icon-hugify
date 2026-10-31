@@ -36,3 +36,15 @@
   - 새로고침 없이 `chrome.storage.onChanged`로 즉시 반영
 - **영향 파일**: `src/content.js`, `src/utils.js`, `src/popup.html`, `src/popup.js`, `src/popup.css`, `tests/*`, `manifest.json`, `package.json`
 - **검증**: `npm test` 62/62 통과. 실제 치지직 페이지 확인은 미실시
+
+---
+
+## [2026-10-31] release | v1.2.1 팝업 새 버전 알림
+
+- **배경**: 압축해제 확장이라 브라우저 자동 업데이트가 안 됨. 사용자가 새 버전을 놓치지 않게 알림 추가
+- **작업 내용**: 팝업을 열면 GitHub `releases/latest` 태그와 설치 버전을 비교해 새 버전 배너 표시
+  - 업데이트 명령(`install-online.ps1`) 복사 버튼과 릴리즈 링크 제공
+  - 결과를 `chrome.storage.local.updateCheck`에 6시간 캐시 (비인증 API 한도 60회/시간 대응)
+  - GitHub API가 `Access-Control-Allow-Origin: *`라 추가 권한 불필요. 실패 시 조용히 무시
+- **영향 파일**: `src/popup.html`, `src/popup.js`, `src/popup.css`, `tests/popup.test.js`, `manifest.json`, `package.json`
+- **검증**: `npm test` 64/64 통과
