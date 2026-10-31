@@ -21,12 +21,13 @@ describe('Hugify popup UI', () => {
     assert.match(popupHtml, /<small>크게<\/small>/);
     assert.match(popupHtml, /<small>더 크게<\/small>/);
     assert.doesNotMatch(popupHtml, /<small>기본<\/small>|<small>크게 보기<\/small>|<small>크게!<\/small>|<small>더 크게!!<\/small>/);
-    assert.match(popupHtml, /id="size-refresh-notice"/);
+    assert.match(popupHtml, /id="settings-refresh-notice"[^>]*hidden/s);
     assert.match(popupHtml, /type="checkbox"[^>]*id="chat-area"/s);
     assert.match(popupHtml, /채팅창 이모티콘도 확대/);
     assert.match(popupJs, /saveState\(\{ chatArea: chatAreaCheck\.checked \}\)/);
     assert.match(contentJs, /chatArea/);
-    assert.match(popupHtml, /크기 변경 시 적용을 위해 새로고침이 필요합니다\./);
+    assert.match(popupHtml, /바뀌지 않으면 치지직 페이지를 새로고침해 주세요\./);
+    assert.doesNotMatch(popupHtml, /크기 변경 시 적용을 위해 새로고침이 필요합니다/);
     assert.doesNotMatch(popupHtml, /id="size-label"|>\s*크기\s*</);
     assert.match(popupHtml, /class="brand-icon"[^>]*href="https:\/\/chzzk\.naver\.com\/43c05c91ae59803c7b3f267753b73b65"/s);
     assert.match(popupHtml, /icons\/icon128\.png/);
@@ -55,12 +56,14 @@ describe('Hugify popup UI', () => {
     assert.doesNotMatch(popupJs, /toggleEnabled/);
     assert.match(popupJs, /statusBadge\.addEventListener\('click'/);
     assert.match(popupJs, /footer-link-disabled[\s\S]*?event\.preventDefault\(\)/);
-    assert.match(popupJs, /sizeRefreshNotice\.hidden\s*=\s*false/);
+    // Shown once, on the first change of any setting (saveState is shared by ON/OFF, size, and chat area).
+    assert.match(popupJs, /function saveState\(nextState\) \{\s*showRefreshNoticeOnce\(\);/);
+    assert.match(popupJs, /if \(result\?\.refreshNoticeSeen\) return;\s*refreshNotice\.hidden = false;\s*chrome\.storage\.local\.set\(\{ refreshNoticeSeen: true \}\);/);
     assert.match(popupJs, /size/);
     assert.match(popupCss, /#f8fbff|#ffffff|--accent/);
     assert.match(popupCss, /font-family:\s*["']CookieRun/);
     assert.match(popupCss, /\.brand-icon img[\s\S]*?width:\s*42px/);
-    assert.match(popupCss, /\.size-refresh-notice/);
+    assert.match(popupCss, /\.settings-refresh-notice/);
     assert.match(popupCss, /\.size-preview/);
     assert.match(popupCss, /#size-120\s*\+\s*\.size-choice\s*\.size-preview[\s\S]*?width:\s*120px/);
     assert.match(popupCss, /\.footer-links[\s\S]*?grid-template-columns:\s*repeat\(4,\s*1fr\)/);

@@ -214,8 +214,7 @@ h1 span {
   height: 120px;
 }
 
-.size-refresh-notice {
-  margin-top: 10px;
+.settings-refresh-notice {
   padding: 9px 10px;
   color: var(--accent-strong);
   background: var(--accent-soft);

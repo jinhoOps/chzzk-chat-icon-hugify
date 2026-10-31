@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusBadge = document.getElementById('status-badge');
   const sizeRadios = document.querySelectorAll('input[name="size"]');
   const chatAreaCheck = document.getElementById('chat-area');
-  const sizeRefreshNotice = document.getElementById('size-refresh-notice');
+  const refreshNotice = document.getElementById('settings-refresh-notice');
   const supportedSizes = [90, 120];
 
   let state = {
@@ -36,7 +36,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 설정을 처음 바꿀 때 한 번만 새로고침 안내를 보여줍니다.
+  function showRefreshNoticeOnce() {
+    chrome.storage.local.get('refreshNoticeSeen', (result) => {
+      if (result?.refreshNoticeSeen) return;
+      refreshNotice.hidden = false;
+      chrome.storage.local.set({ refreshNoticeSeen: true });
+    });
+  }
+
   function saveState(nextState) {
+    showRefreshNoticeOnce();
     state = {
       ...state,
       ...nextState,
@@ -72,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
     radio.addEventListener('change', () => {
       if (radio.checked) {
         saveState({ size: Number(radio.value) });
-        sizeRefreshNotice.hidden = false;
       }
     });
   });
